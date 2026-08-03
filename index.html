@@ -320,7 +320,7 @@ mark {
 }
 
 /* Tab 小标签 */
-.mini-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.mini-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
 .mini-tab {
     font-size: 12px;
     padding: 6px 14px;
@@ -334,6 +334,53 @@ mark {
 }
 .mini-tab:hover { color: var(--text); border-color: #c9cfdf; }
 .mini-tab.active { background: rgba(77,141,255,.1); color: var(--blue); border-color: var(--blue); }
+.refresh-btn {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    cursor: pointer;
+    background: var(--card2);
+    transition: all .2s ease;
+    font-family: inherit;
+    margin-left: auto;
+}
+.refresh-btn:hover { border-color: var(--accent); background: rgba(255,94,98,.08); }
+.refresh-btn.loading { opacity: .5; pointer-events: none; }
+.refresh-btn.loading::before { content: "⟳ "; }
+.update-time {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--muted);
+    margin-left: auto;
+}
+.update-time.live { color: var(--green); }
+.update-time.offline { color: var(--accent); }
+.hot-loading {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--muted);
+    font-size: 13px;
+}
+.hot-loading .spin {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    vertical-align: -4px;
+    margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.hot-item .link-out {
+    color: var(--blue);
+    font-size: 12px;
+    text-decoration: none;
+    margin-left: 8px;
+}
+.hot-item .link-out:hover { text-decoration: underline; }
 
 /* 爆款拆解 */
 .video-card {
@@ -528,117 +575,6 @@ tr:hover td { background: #fafbfe; }
 .todo-item.done .todo-text { color: var(--muted); text-decoration: line-through; }
 .todo-text { flex: 1; }
 
-/* 账号定位 */
-.acc-search { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
-.acc-input {
-    flex: 1;
-    min-width: 220px;
-    padding: 12px 16px;
-    font-size: 14px;
-    font-family: inherit;
-    color: var(--text);
-    background: var(--card);
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    outline: none;
-    transition: border-color .2s, box-shadow .2s;
-}
-.acc-input:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(77,141,255,.12); }
-.acc-btn {
-    padding: 12px 22px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-    background: var(--grad-main);
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: opacity .2s, transform .2s;
-    white-space: nowrap;
-}
-.acc-btn:hover { opacity: .9; transform: translateY(-1px); }
-.acc-btn:active { transform: translateY(0); }
-.acc-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-.acc-chip {
-    font-size: 12px;
-    color: var(--muted);
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 5px 12px;
-    cursor: pointer;
-    transition: .2s;
-    font-family: inherit;
-}
-.acc-chip:hover { color: var(--blue); border-color: var(--blue); background: rgba(77,141,255,.08); }
-.acc-loading { display: none; text-align: center; padding: 46px 0; color: var(--muted); font-size: 13px; }
-.acc-loading.show { display: block; }
-.spinner {
-    width: 30px; height: 30px;
-    margin: 0 auto 12px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.acc-report { display: none; margin-top: 16px; }
-.acc-report.show { display: block; animation: fadeIn .3s ease; }
-.acc-hero {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    background: linear-gradient(135deg, rgba(255,94,98,.08), rgba(255,157,92,.08));
-    border: 1px solid #ffe0da;
-    border-radius: 14px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-}
-.acc-avatar {
-    width: 54px; height: 54px;
-    border-radius: 50%;
-    background: var(--grad-main);
-    color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px; font-weight: 700;
-    flex-shrink: 0;
-}
-.acc-hero-info { flex: 1; min-width: 200px; }
-.acc-name { font-size: 17px; font-weight: 700; }
-.acc-tags { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
-.acc-tag { font-size: 11px; background: rgba(255,94,98,.1); color: var(--accent); border-radius: 12px; padding: 3px 9px; font-weight: 600; }
-.acc-stats { display: flex; gap: 22px; margin-top: 10px; flex-wrap: wrap; }
-.acc-stat b { font-size: 16px; }
-.acc-stat span { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
-.acc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
-.acc-block { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
-.acc-block h4 { font-size: 13px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-.acc-block h4::before { content: ""; width: 3px; height: 14px; border-radius: 2px; background: var(--grad-main); }
-.acc-list { list-style: none; }
-.acc-list li {
-    font-size: 13px;
-    padding: 7px 0;
-    border-bottom: 1px dashed #e6e9f2;
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    line-height: 1.5;
-}
-.acc-list li:last-child { border-bottom: none; }
-.acc-list li b { color: var(--accent); font-weight: 600; flex-shrink: 0; }
-.acc-diff { font-size: 13px; line-height: 1.7; }
-.acc-warn {
-    font-size: 12px;
-    color: #c99700;
-    background: rgba(242,183,5,.1);
-    border-radius: 10px;
-    padding: 10px 14px;
-    margin-top: 14px;
-    line-height: 1.8;
-}
-
 /* 底部 */
 .footer {
     text-align: center;
@@ -752,7 +688,7 @@ tr:hover td { background: #fafbfe; }
     </div>
     <div class="search-wrap">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
-        <input type="text" class="search-input" id="searchInput" placeholder="搜索热点、视频、选题、计划、公式、账号...">
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索热点、视频、选题、计划、公式...">
         <button class="search-clear" id="searchClear" aria-label="清除">✕</button>
     </div>
     <div class="date" id="todayDate"></div>
@@ -762,7 +698,6 @@ tr:hover td { background: #fafbfe; }
     <button class="tab active" data-tab="dashboard">数据看板</button>
     <button class="tab" data-tab="hotspot">实时热点</button>
     <button class="tab" data-tab="analysis">爆款拆解</button>
-    <button class="tab" data-tab="account">账号定位</button>
     <button class="tab" data-tab="ideas">选题灵感</button>
     <button class="tab" data-tab="plan">发布计划</button>
     <button class="tab" data-tab="formula">爆款公式</button>
@@ -873,11 +808,12 @@ tr:hover td { background: #fafbfe; }
 <!-- ============ 实时热点 ============ -->
 <div class="section" id="hotspot">
     <div class="card">
-        <div class="card-title"><span class="dot"></span>实时热点榜</div>
+        <div class="card-title"><span class="dot"></span>实时热点榜 <span class="update-time" id="hotUpdate"></span></div>
         <div class="mini-tabs">
             <button class="mini-tab active" data-plat="dy">抖音</button>
-            <button class="mini-tab" data-plat="xhs">小红书</button>
             <button class="mini-tab" data-plat="wb">微博</button>
+            <button class="mini-tab" data-plat="tt">头条</button>
+            <button class="refresh-btn" id="hotRefresh">刷新</button>
         </div>
         <div class="search-status" id="hotStatus"></div>
         <div id="hotList"></div>
@@ -890,31 +826,6 @@ tr:hover td { background: #fafbfe; }
         <div class="card-title"><span class="dot" style="background:var(--purple)"></span>爆款视频拆解库</div>
         <div class="search-status" id="analysisStatus"></div>
         <div class="grid-3" style="margin-top:4px" id="videoList"></div>
-    </div>
-</div>
-
-<!-- ============ 账号定位 ============ -->
-<div class="section" id="account">
-    <div class="card">
-        <div class="card-title"><span class="dot" style="background:var(--accent)"></span>账号定位 · 对标账号分析</div>
-        <div class="mini-tabs">
-            <button class="mini-tab active" data-accplat="dy">抖音</button>
-            <button class="mini-tab" data-accplat="xhs">小红书</button>
-            <button class="mini-tab" data-accplat="sp">视频号</button>
-        </div>
-        <div class="acc-search">
-            <input type="text" class="acc-input" id="accInput" placeholder="输入对标账号名称，例如：张三糖水铺">
-            <button class="acc-btn" id="accBtn">自动生成定位</button>
-        </div>
-        <div class="acc-chips" id="accChips">
-            <span class="acc-chip">张三糖水铺</span>
-            <span class="acc-chip">凌晨糖水研究所</span>
-            <span class="acc-chip">喵喵甜品屋</span>
-            <span class="acc-chip">城市咖啡日记</span>
-        </div>
-        <div class="search-status" id="accountStatus"></div>
-        <div class="acc-loading" id="accLoading"><div class="spinner"></div>正在抓取对标账号数据，自动生成定位分析…</div>
-        <div class="acc-report" id="accReport"></div>
     </div>
 </div>
 
@@ -978,34 +889,34 @@ var HOT_DATA = {
           shot: ["开场2秒：店内全景，镜头扫过冒着冷气的冰柜，配字“同城热搜第一”",
                  "4秒：特写舀糖水、加小料的动作，收音用勺子碰撞碗边的清脆声",
                  "3秒：顾客大口喝糖水的真实反应，拍出爽感",
-                 "结尾3秒：露出定位+同城话题标签，字幕“来一碗糖水，清凉一夏”"] },
+                 "结尾3秒：露出定位+同城话题标签，字幕“来一碗糖水，清凉一夏”"] }
         { t: "奶茶店隐藏喝法合集", m: "娱乐榜 · 上升12位", heat: 92,
           time: "20-25秒", cam: "三连拍+卡点剪辑",
           bgm: "快节奏卡点BGM · 律动感强的洗脑音乐",
           shot: ["开场2秒：对着镜头问“这些隐藏喝法你都知道吗？”制造悬念",
                  "每款喝法5秒×3款：点单→特写加料→喝一口，节奏踩点切换",
-                 "结尾3秒：征集互动“你的隐藏喝法是什么？评论区见”"] },
+                 "结尾3秒：征集互动“你的隐藏喝法是什么？评论区见”"] }
         { t: "甜品店老板的一天vlog", m: "美食榜 · 播放破百万", heat: 87,
           time: "25-35秒", cam: "手持跟拍+延时摄影",
           bgm: "温暖叙事感BGM · 治愈系钢琴",
           shot: ["3秒：凌晨到店，门开灯亮的延时镜头",
                  "6秒：备料环节——洗芒果、煮西米露的慢镜头，突出细节",
                  "8秒：营业高峰出餐+顾客反馈，真实忙碌感",
-                 "4秒：打烊收拾+老板对着镜头说一句心里话，升华情绪"] },
+                 "4秒：打烊收拾+老板对着镜头说一句心里话，升华情绪"] }
         { t: "教你复刻网红杨枝甘露", m: "美食榜 · 上升8位", heat: 79,
           time: "20-25秒", cam: "俯拍+近景特写",
           bgm: "轻快教程风BGM · 节奏感电子乐",
           shot: ["3秒：成品杨枝甘露特写+字幕“网红款，在家5分钟搞定”",
                  "3秒：材料展示摆一排，字幕标注用量",
                  "12秒：分步骤制作，每步字幕+步骤序号，镜头从正上方俯拍",
-                 "结尾4秒：成品展示+弹幕“建议收藏，做给家人喝”"] },
+                 "结尾4秒：成品展示+弹幕“建议收藏，做给家人喝”"] }
         { t: "广州糖水店排队实录", m: "同城榜 · 热度上升中", heat: 74,
           time: "20秒", cam: "跟拍+街头采访",
           bgm: "纪实感BGM · 轻快粤语风",
           shot: ["3秒：远景拍排队队伍，字幕“周末下午3点”",
                  "6秒：移步进店，拍出餐速度、店员手速",
                  "8秒：随机采访排队顾客“为什么愿意排队”，真实出镜",
-                 "结尾3秒：“你最想尝哪一碗？评论区投票”"] },
+                 "结尾3秒：“你最想尝哪一碗？评论区投票”"] }
         { t: "夏季消暑甜品TOP10", m: "种草榜 · 上升5位", heat: 68,
           time: "45-60秒", cam: "产品轮播+数字特效",
           bgm: "清爽夏日风BGM · 明快节奏",
@@ -1013,41 +924,42 @@ var HOT_DATA = {
                  "每款4秒×10款：产品特写+舀一勺，字幕标名字和价格",
                  "结尾4秒：“第1名猜到了吗？评论区告诉我你心中的TOP1”"] }
     ],
-    xhs: [
-        { t: "三亚必打卡甜品店合集", m: "旅游笔记 · 收藏1.2万", heat: 90,
-          time: "20秒", cam: "封面大字+实拍",
-          bgm: "清新治愈系BGM · 海岛度假风",
-          shot: ["3秒：封面大字“三亚必打卡甜品店”，配店铺门头画面",
-                 "每款4秒：招牌甜品特写+价格标注，镜头放低拍出食欲感",
-                 "5秒：店内环境+打卡拍照点，适合转发收藏",
-                 "结尾3秒：地址+营业时间，字幕“收藏这份攻略”"] },
-        { t: "学生党也能做的减脂糖水", m: "美食笔记 · 收藏9千", heat: 84,
-          time: "20秒", cam: "俯拍教程",
-          bgm: "轻快小清新BGM",
-          shot: ["2秒：开场“宿舍里也能做的减脂糖水”",
-                 "4秒：食材展示+热量标注（多少大卡）",
-                 "10秒：制作过程分步，突出“免煮”“低卡”卖点",
-                 "结尾4秒：成品+总结“这碗才150大卡，放心吃”"] },
-        { t: "糖水店的摆盘美学", m: "颜值笔记 · 上升15位", heat: 77,
-          time: "15秒", cam: "慢镜头特写",
-          bgm: "高级感钢琴BGM",
-          shot: ["4秒：慢镜头拍甜品上桌那一刻，氛围光打在碗上",
-                 "5秒：勺子轻舀、拉丝、果肉晃动的特写镜头",
-                 "3秒：店内环境+灯光氛围",
-                 "结尾3秒：“拍照打卡首选，随手一拍都是大片”"] },
-        { t: "本地人私藏糖水地图", m: "城市笔记 · 热度上升", heat: 71,
-          time: "25秒", cam: "地图动线+探店",
-          bgm: "旅行记录风BGM",
-          shot: ["3秒：手绘地图/地图APP视角开场，标出3个打卡点",
-                 "每店6秒×3家：门口→招牌→尝一口，动线清晰",
-                 "结尾3秒：“完整地图放评论区，记得保存”"] },
-        { t: "一家店靠一碗糖水爆火", m: "探店笔记 · 点赞2.4万", heat: 65,
-          time: "25秒", cam: "故事化剪辑",
-          bgm: "故事感叙事BGM",
-          shot: ["3秒：爆火前后对比画面（老照片/排队实况）",
-                 "8秒：招牌糖水制作全过程特写，突出匠心",
-                 "6秒：店主采访片段“一开始只是不想辜负客人”",
-                 "结尾4秒：故事总结+“这样的店，值得你跑一趟”"] }
+    tt: [
+        { t: "夏日消暑甜品成外卖顶流", m: "热点榜 · 上升3位", heat: 92,
+          time: "20-25秒", cam: "外卖开箱+实拍",
+          bgm: "明快节奏BGM",
+          shot: ["3秒：外卖订单截图/热搜关键词开场",
+                 "10秒：消暑甜品制作+配送开箱实拍，突出“一口清凉”",
+                 "5秒：顾客试吃反应+同城热度评论截图",
+                 "结尾3秒：“你家附近的糖水店上榜了吗？”"] }
+        { t: "年轻人为什么爱上深夜甜品", m: "热议 · 阅读2.8亿", heat: 87,
+          time: "25秒", cam: "街头采访+场景混剪",
+          bgm: "氛围感轻音乐",
+          shot: ["3秒：热搜话题开场“深夜甜品为何火了”",
+                 "10秒：随机采访年轻顾客“为什么深夜想吃糖水”",
+                 "8秒：深夜店铺场景+出餐画面",
+                 "结尾4秒：“你的深夜治愈甜品是哪碗？”"] }
+        { t: "网红糖水店排队两小时", m: "同城榜 · 热度飙升", heat: 80,
+          time: "20秒", cam: "排队跟拍+延时",
+          bgm: "纪实感BGM",
+          shot: ["4秒：排队实况延时镜头+字幕“下午2点已排队2小时”",
+                 "8秒：进店拍摄招牌糖水+顾客点单",
+                 "5秒：采访顾客“排这么久值吗”",
+                 "结尾3秒：“你会为它排队吗？”"] }
+        { t: "糖水届的文艺复兴", m: "文化榜 · 热度上升", heat: 73,
+          time: "20秒", cam: "国风拍摄",
+          bgm: "国风轻音乐",
+          shot: ["3秒：开场“老祖宗的糖水美学火了”",
+                 "10秒：传统糖水品类展示（红豆沙/绿豆沙/杏仁露）",
+                 "4秒：现代糖水店创新做法对比",
+                 "结尾3秒：“你心中的糖水白月光是哪款？”"] }
+        { t: "夏日饮品测评：谁是真消暑神器", m: "测评榜 · 上升6位", heat: 68,
+          time: "25秒", cam: "横评拍摄",
+          bgm: "轻快测评BGM",
+          shot: ["3秒：多款饮品一字排开开场",
+                 "14秒：逐款试喝+客观点评（甜度/冰爽/性价比）",
+                 "5秒：揭晓推荐TOP1",
+                 "结尾3秒：“你们还喝过什么神仙饮品？”"] }
     ],
     wb: [
         { t: "今年最火的夏日饮品", m: "热搜榜 · 第8位", heat: 82,
@@ -1056,21 +968,21 @@ var HOT_DATA = {
           shot: ["3秒：微博热搜截图开场，红框标出关键词",
                  "8秒：饮品制作+试喝测评，客观点评",
                  "4秒：网友评论截图轮播，增加讨论度",
-                 "结尾3秒：“你觉得实至名归吗？评论区聊”"] },
+                 "结尾3秒：“你觉得实至名归吗？评论区聊”"] }
         { t: "网友偶遇明星排队买糖水", m: "娱乐榜 · 上升20位", heat: 78,
           time: "20秒", cam: "现场运镜+素材拼接",
           bgm: "吃瓜八卦风BGM · 悬疑感节奏",
           shot: ["4秒：开场“有网友在三亚偶遇明星排队买糖水”",
                  "5秒：店内外环境，拍出“就在这家店”的实感",
                  "6秒：网友拍摄画面拼接，打码+配乐",
-                 "结尾3秒：“本地人去打卡过的举手！”"] },
+                 "结尾3秒：“本地人去打卡过的举手！”"] }
         { t: "广东人的糖水血脉觉醒", m: "话题榜 · 阅读3亿", heat: 73,
           time: "20秒", cam: "生活场景混剪",
           bgm: "粤语怀旧风BGM",
           shot: ["2秒：开场“广东人的糖水DNA动了”",
                  "6秒：糖水日常场景——家里的、路边的、老字号的",
                  "8秒：不同糖水品类轮播（绿豆沙、双皮奶、龟苓膏…）",
-                 "结尾4秒：“你心里那碗糖水是？评论区认亲”"] },
+                 "结尾4秒：“你心里那碗糖水是？评论区认亲”"] }
         { t: "开甜品店的年轻人", m: "财经榜 · 热议中", heat: 61,
           time: "25秒", cam: "人物访谈+跟拍",
           bgm: "励志向BGM",
@@ -1166,6 +1078,78 @@ var TODOS = [
 var currentPlat = "dy";
 var currentTab = "dashboard";
 
+/* ===== 实时热点 API ===== */
+var LIVE_API = "https://hot-api.vhan.eu.org/v2?type=all";
+var LIVE_DATA = { dy: null, wb: null, tt: null };
+var liveLoaded = false;
+var liveTimer = null;
+
+function convertLiveItem(it, idx) {
+    return {
+        t: it.title || "",
+        m: "实时热度 " + (it.hot || "") + " · 在线榜单",
+        heat: Math.max(35, 100 - idx * 6),
+        time: "20-30秒",
+        cam: "手机竖屏实拍",
+        bgm: "平台当日热门BGM · 与热搜话题同款配乐",
+        shot: ["开场3秒：直接抛出热点关键词做标题钩子——“【" + (it.title || "今日热点") + "】你怎么看？”，吸引停留",
+               "10秒：结合自家糖水店实拍——制作过程、顾客真实反应、店内氛围，多角度切换",
+               "5秒：加入本地元素（三亚/同城地标/本地口音），蹭同城流量",
+               "结尾3秒：引导互动“这个热点你站哪边？”+ 添加同城话题标签"],
+        url: it.url || it.mobil_url || ""
+    };
+}
+
+function getLiveList(plat) {
+    return LIVE_DATA[plat];
+}
+
+function loadLiveHot(showLoading) {
+    var refreshBtn = document.getElementById("hotRefresh");
+    var updateEl = document.getElementById("hotUpdate");
+    if (!refreshBtn || !updateEl) return;
+    refreshBtn.classList.add("loading");
+    if (showLoading && !liveLoaded && currentTab === "hotspot") {
+        document.getElementById("hotList").innerHTML = '<div class="hot-loading"><span class="spin"></span>正在获取实时热点，请稍候...</div>';
+    }
+    fetch(LIVE_API)
+        .then(function(r){
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+        })
+        .then(function(json){
+            var groups = json.data || [];
+            function pick(ids) {
+                for (var i = 0; i < groups.length; i++) {
+                    for (var j = 0; j < ids.length; j++) {
+                        if (groups[i].id === ids[j]) return groups[i].data || [];
+                    }
+                }
+                return null;
+            }
+            var dy = pick(["douyinHot", "dyHot", "douyin"]);
+            var wb = pick(["wbHot", "weibo"]);
+            var tt = pick(["toutiao", "touTiao"]);
+            if (dy) LIVE_DATA.dy = dy.map(convertLiveItem).slice(0, 10);
+            if (wb) LIVE_DATA.wb = wb.map(convertLiveItem).slice(0, 10);
+            if (tt) LIVE_DATA.tt = tt.map(convertLiveItem).slice(0, 10);
+            liveLoaded = !!(dy || wb || tt);
+            var now = new Date();
+            var hm = ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2);
+            updateEl.textContent = "已联网更新 " + hm;
+            updateEl.className = "update-time live";
+            renderCurrent();
+        })
+        .catch(function(){
+            updateEl.textContent = "联网失败 · 显示本地数据";
+            updateEl.className = "update-time offline";
+            renderCurrent();
+        })
+        .then(function(){
+            refreshBtn.classList.remove("loading");
+        });
+}
+
 /* ===== 工具函数 ===== */
 function esc(s) {
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -1227,17 +1211,19 @@ function renderTop3() {
 
 function renderHot() {
     var q = getQuery();
-    var list = HOT_DATA[currentPlat].filter(function(item){ return matchAny(q, [item.t, item.m, item.bgm, item.cam, item.shot.join(" ")]); });
+    var source = getLiveList(currentPlat) || HOT_DATA[currentPlat] || [];
+    var list = source.filter(function(item){ return matchAny(q, [item.t, item.m, item.bgm, item.cam, (item.shot||[]).join(" ")]); });
     var html = "";
     list.forEach(function(item, i){
         var rankCls = i === 0 ? "r1" : i === 1 ? "r2" : i === 2 ? "r3" : "";
-        var shotHtml = item.shot.map(function(s, si){
+        var shotHtml = (item.shot || []).map(function(s, si){
             return '<div class="shot-step"><span class="step-num">' + (si+1) + '</span><span>' + hl(s) + '</span></div>';
         }).join("");
+        var linkHtml = item.url ? ' <a class="link-out" href="' + esc(item.url) + '" target="_blank" rel="noopener">查看原文 ↗</a>' : "";
         html += '<div class="hot-item">' +
             '<div class="hot-rank ' + rankCls + '">' + (i+1) + '</div>' +
             '<div class="hot-content">' +
-                '<div class="title">' + hl(item.t) + '</div>' +
+                '<div class="title">' + hl(item.t) + linkHtml + '</div>' +
                 '<div class="meta">' + hl(item.m) + '</div>' +
                 '<div class="hot-bar"><div class="fill" style="width:' + item.heat + '%"></div></div>' +
                 '<button class="shot-btn" onclick="toggleShot(this)">拍摄方案</button>' +
@@ -1368,7 +1354,6 @@ function renderCurrent() {
     if (currentTab === "dashboard") { renderTop3(); }
     else if (currentTab === "hotspot") { renderHot(); }
     else if (currentTab === "analysis") { renderVideos(); }
-    else if (currentTab === "account") { renderAccount(); }
     else if (currentTab === "ideas") { renderIdeas(); }
     else if (currentTab === "plan") { renderPlans(); }
     else if (currentTab === "formula") { renderFormulas(); }
@@ -1403,15 +1388,26 @@ searchClear.addEventListener("click", function(){
     searchInput.focus();
 });
 
-/* ===== 平台切换（实时热点） ===== */
-document.querySelectorAll(".mini-tab[data-plat]").forEach(function(btn){
+/* ===== 平台切换 ===== */
+document.querySelectorAll(".mini-tab").forEach(function(btn){
     btn.addEventListener("click", function(){
-        document.querySelectorAll(".mini-tab[data-plat]").forEach(function(b){ b.classList.remove("active"); });
+        document.querySelectorAll(".mini-tab").forEach(function(b){ b.classList.remove("active"); });
         btn.classList.add("active");
         currentPlat = btn.dataset.plat;
         renderHot();
+        if (!liveLoaded) loadLiveHot(false);
     });
 });
+
+/* ===== 刷新按钮 ===== */
+document.getElementById("hotRefresh").addEventListener("click", function(){
+    loadLiveHot(true);
+});
+
+/* ===== 每 5 分钟自动刷新实时热点 ===== */
+liveTimer = setInterval(function(){
+    if (liveLoaded || currentTab === "hotspot") loadLiveHot(false);
+}, 5 * 60 * 1000);
 
 /* ===== 待办勾选 ===== */
 function toggleTodo(el){
@@ -1492,174 +1488,10 @@ function toggleShot(btn){
         now.getFullYear() + "年" + (now.getMonth()+1) + "月" + now.getDate() + "日 · 周" + week[now.getDay()];
 })();
 
-/* ===== 账号定位 ===== */
-var accPlat = "dy";
-var lastAccName = "";
-
-var ACC_DOMAINS = [
-    { keys: ["糖水","甜品","甜","奶茶","咖啡","饮品","餐饮","美食","吃","糖"], name: "美食甜品", pos: "同城甜品探店官", dirs: ["治愈系探店实录", "低成本高颜值教程", "门店日常vlog", "同城美食地图"] },
-    { keys: ["萌","宠","猫","狗","喵","汪"], name: "萌宠生活", pos: "治愈系萌宠博主", dirs: ["宠物养成记录", "人宠互动剧情", "宠物冷知识", "萌宠治愈日常"] },
-    { keys: ["穿搭","服装","潮","美妆","护肤","变美","时尚"], name: "时尚美妆", pos: "变美干货种草官", dirs: ["每日穿搭公式", "变美干货教程", "开箱测评", "氛围感出片"] },
-    { keys: ["健身","运动","减脂","瘦","瑜伽"], name: "健身塑形", pos: "自律健身教练", dirs: ["跟练打卡系列", "减脂餐教程", "体态矫正干货", "健身前后对比"] },
-    { keys: ["旅行","旅游","户外","露营","探店"], name: "旅行探店", pos: "城市探索向导", dirs: ["城市宝藏地图", "穷游攻略", "酒店民宿测评", "旅行Vlog"] },
-    { keys: ["母婴","宝宝","育儿","亲子","宝妈"], name: "母婴育儿", pos: "科学育儿妈妈", dirs: ["育儿知识干货", "母婴好物测评", "亲子互动日常", "辅食教程"] },
-    { keys: ["数码","手机","电脑","科技","测评"], name: "数码科技", pos: "硬核数码玩家", dirs: ["新品开箱测评", "数码干货教程", "真实使用体验", "科技冷知识"] },
-    { keys: ["家居","装修","收纳","改造","生活"], name: "家居生活", pos: "小户型改造家", dirs: ["小户型改造", "收纳整理干货", "家居好物分享", "生活仪式感"] }
-];
-var ACC_DEFAULT = { name: "美食甜品", pos: "同城甜品探店官", dirs: ["治愈系探店实录", "低成本高颜值教程", "门店日常vlog", "同城美食地图"] };
-
-var ACC_POS_POOL = [
-    "{name} · {domain} | 只做{dir}，不做大杂烩",
-    "{domain}垂类 {name} | 真实感 + 强人设 = 高完播",
-    "{name}：{domain}界最会讲故事的人",
-    "{domain} {name} | 素人视角，主打真实与同频"
-];
-var ACC_DIFF = [
-    "聚焦「{domain}」单一垂类赛道，人设词锁定「{pos}」，不与大V拼价格、拼数量，改拼真实感与同城信任，形成「小而美」的差异化心智。",
-    "避开同质化的「打卡式」内容，主打「{dir}」细分切口，用确定性选题+稳定更新频率，在垂直赛道建立搜索与推荐双入口的占位优势。",
-    "对标账号的优势在规模与话题度，你的机会在「{dir}」的垂直深度与人格化表达，每一条都带明确人设口吻，让粉丝记住的是「人」而不是「视频」。"
-];
-var ACC_IDEAS = [
-    "{dir}：{name} 的一天（真实感拉满）",
-    "挑战用10元做出百元效果的{domain}",
-    "顾客第1口的真实反应合集（对镜感）",
-    "本地人私藏的{domain}地图（同城向）",
-    "从0到1：{name} 起号第7天复盘",
-    "路人盲测：能喝出贵和便宜的差别吗？"
-];
-var ACC_PLAN = [
-    "第1-2天 账号装修：头像/昵称/简介统一人设，主页封面用「结果前置」",
-    "第3-4天 连发 3 条「{dir}」测试素材，观察完播率与推荐占比",
-    "第5-6天 复刻对标账号 1 条高赞选题，加上自己的差异化开场钩子",
-    "第7天 复盘数据：留存率 >35% 的选题方向加码，低于 25% 的果断放弃"
-];
-var ACC_WARN = [
-    "新手期不要日更超过 1 条，保证每条「黄金3秒」的质量优先；",
-    "避免直接搬运对标账号的脚本与画面，平台会判定低质限流；",
-    "前 10 条以「测方向」为主，不做大额投流，等自然流量验证后再放大。"
-];
-var ACC_PLAT = {
-    dy: { name: "抖音", fans: "推荐流 + 同城双入口，粉丝画像偏 18-35 岁，爆款率参考约 1/10" },
-    xhs: { name: "小红书", fans: "搜索笔记 + 收藏驱动，女性用户占比高，适合教程/清单/合集类内容" },
-    sp: { name: "视频号", fans: "社交推荐 + 微信生态转发，中青年用户占比高，适合同城到店类内容" }
-};
-
-function hashCode(s) {
-    var h = 7;
-    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-    return h;
-}
-
-function generateAccountReport(name, plat) {
-    var seed = hashCode(name + plat);
-    function rnd(n) { seed = (seed * 1103515245 + 12345) >>> 0; return seed % n; }
-    var lower = name.toLowerCase();
-    var domain = null;
-    for (var i = 0; i < ACC_DOMAINS.length; i++) {
-        var d = ACC_DOMAINS[i];
-        var hit = false;
-        for (var j = 0; j < d.keys.length; j++) {
-            if (lower.indexOf(d.keys[j]) !== -1) { hit = true; break; }
-        }
-        if (hit) { domain = d; break; }
-    }
-    domain = domain || ACC_DEFAULT;
-    var dir = domain.dirs[rnd(domain.dirs.length)];
-    var pos = ACC_POS_POOL[rnd(ACC_POS_POOL.length)]
-        .replace("{name}", name).replace("{domain}", domain.name).replace("{dir}", dir);
-    var fans = (4 + rnd(28)) + "." + rnd(10) + "万";
-    var plays = (10 + rnd(50)) + "." + rnd(10) + "万";
-    var rate = (6 + rnd(8)) + "." + rnd(10) + "%";
-    var hits = 1 + rnd(3);
-    var diff = ACC_DIFF[rnd(ACC_DIFF.length)]
-        .replace("{domain}", domain.name).replace("{pos}", pos.split("：")[0]).replace("{dir}", dir);
-    var ideas = ACC_IDEAS.map(function(t){
-        return t.replace("{dir}", dir).replace("{name}", name).replace("{domain}", domain.name);
-    }).slice(0, 5);
-    var pct = [40, 35, 25];
-    var p = ACC_PLAT[plat];
-    var plan = ACC_PLAN.map(function(t){ return t.replace("{dir}", dir); });
-    var html = "";
-    html += '<div class="acc-hero">' +
-        '<div class="acc-avatar">' + esc(name.charAt(0)) + '</div>' +
-        '<div class="acc-hero-info">' +
-            '<div class="acc-name">' + esc(name) + ' · 账号定位诊断</div>' +
-            '<div class="acc-tags"><span class="acc-tag">' + esc(domain.name) + '</span><span class="acc-tag">' + esc(p.name) + '</span><span class="acc-tag">垂类深挖</span></div>' +
-            '<div class="acc-stats">' +
-                '<div class="acc-stat"><b>' + fans + '</b><span>估算粉丝</span></div>' +
-                '<div class="acc-stat"><b>' + plays + '</b><span>近30天播放</span></div>' +
-                '<div class="acc-stat"><b>' + rate + '</b><span>平均互动率</span></div>' +
-                '<div class="acc-stat"><b>' + hits + '</b><span>近30天爆款数</span></div>' +
-            '</div>' +
-        '</div>' +
-    '</div>';
-    html += '<div class="acc-grid">';
-    html += '<div class="acc-block"><h4>人设定位</h4><div class="acc-diff">' + esc(pos) + '</div>' +
-        '<div class="acc-diff" style="margin-top:8px;color:var(--muted);font-size:12px">' + esc(p.fans) + '</div></div>';
-    html += '<div class="acc-block"><h4>内容赛道占比</h4><ul class="acc-list">';
-    domain.dirs.slice(0, 3).forEach(function(x, i){
-        html += '<li><span>' + esc(x) + '</span><b>' + pct[i] + '%</b></li>';
-    });
-    html += '</ul></div>';
-    html += '<div class="acc-block"><h4>差异化定位</h4><div class="acc-diff">' + esc(diff) + '</div></div>';
-    html += '<div class="acc-block"><h4>自动生成 · 5个爆款选题</h4><ul class="acc-list">';
-    ideas.forEach(function(t){ html += '<li>' + esc(t) + '</li>'; });
-    html += '</ul></div>';
-    html += '</div>';
-    html += '<div class="acc-block" style="margin-top:14px"><h4>起号执行建议（7天）</h4><ul class="acc-list">';
-    plan.forEach(function(t){ html += '<li>' + esc(t) + '</li>'; });
-    html += '</ul></div>';
-    html += '<div class="acc-warn">⚠ ' + esc(ACC_WARN.join("")) + '</div>';
-    return html;
-}
-
-function runAccountGen() {
-    var input = document.getElementById("accInput");
-    var name = input.value.trim();
-    if (!name) { input.focus(); return; }
-    lastAccName = name;
-    document.getElementById("accLoading").classList.add("show");
-    var report = document.getElementById("accReport");
-    report.classList.remove("show");
-    report.innerHTML = "";
-    setTimeout(function(){
-        report.innerHTML = generateAccountReport(lastAccName, accPlat);
-        report.classList.add("show");
-        document.getElementById("accLoading").classList.remove("show");
-        renderCurrent();
-    }, 1300);
-}
-
-function renderAccount() {
-    if (!lastAccName) return;
-    var el = document.getElementById("accReport");
-    var q = getQuery();
-    var match = !q || lastAccName.toLowerCase().indexOf(q.toLowerCase()) !== -1;
-    el.classList.toggle("show", match);
-    showStatus("accountStatus", match ? 1 : 0);
-}
-
-document.getElementById("accBtn").addEventListener("click", runAccountGen);
-document.getElementById("accInput").addEventListener("keydown", function(e){
-    if (e.key === "Enter") runAccountGen();
-});
-document.querySelectorAll(".acc-chip").forEach(function(chip){
-    chip.addEventListener("click", function(){
-        document.getElementById("accInput").value = chip.textContent;
-        runAccountGen();
-    });
-});
-document.querySelectorAll(".mini-tab[data-accplat]").forEach(function(btn){
-    btn.addEventListener("click", function(){
-        document.querySelectorAll(".mini-tab[data-accplat]").forEach(function(b){ b.classList.remove("active"); });
-        btn.classList.add("active");
-        accPlat = btn.dataset.accplat;
-        if (lastAccName) runAccountGen();
-    });
-});
-
 /* ===== 初始化 ===== */
 renderCurrent();
+/* 首次加载实时热点 */
+loadLiveHot(true);
 </script>
 </body>
 </html>
