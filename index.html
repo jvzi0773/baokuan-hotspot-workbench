@@ -3,718 +3,1663 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>社交平台爆款内容工作台 v2.0 | HotSpot Workbench</title>
+<title>爆款视频热点工作台</title>
 <style>
 :root {
-  --bg:#f5f6f8; --card-bg:#ffffff; --border:#e5e7eb; --text:#1f2937; --text-dim:#6b7280;
-  --accent:#4f46e5; --accent2:#6366f1; --douyin:#1f2937; --bilibili:#1f2937; --xhs:#1f2937;
-  --kuaishou:#1f2937; --weibo:#1f2937; --green:#10b981; --blue:#4f46e5; --gold:#f59e0b; --purple:#8b5cf6;
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --card2: #f8fafc;
+    --border: #e6e9f2;
+    --text: #1f2430;
+    --muted: #6b7385;
+    --accent: #ff5e62;
+    --accent2: #ff9d5c;
+    --blue: #4d8dff;
+    --green: #22c98f;
+    --purple: #a06bff;
+    --yellow: #f2b705;
+    --radius: 14px;
+    --shadow: 0 2px 10px rgba(31,36,48,.06);
+    --grad-main: linear-gradient(135deg, #ff5e62, #ff9d5c);
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;min-height:100vh;overflow-x:hidden;}
-.header{background:#ffffff;border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
-.header-left{display:flex;align-items:center;gap:12px;}
-.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),#ff6b35);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;}
-.title-group h1{font-size:18px;font-weight:700;}
-.title-group span{font-size:11px;color:var(--text-dim);}
-.header-right{display:flex;align-items:center;gap:16px;}
-.live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 8px var(--green);}50%{opacity:0.5;box-shadow:0 0 2px var(--green);}}
-.refresh-time{font-size:12px;color:var(--text-dim);}
-.btn{padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--card-bg);color:var(--text);cursor:pointer;font-size:13px;transition:all 0.2s;}
-.btn:hover{border-color:var(--accent);background:#f0f0ff;}
-.search-input{padding:8px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg);font-size:13px;width:220px;outline:none;transition:all 0.2s;color:var(--text);}
-.search-input:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(79,70,229,0.12);}
-.new-badge{background:linear-gradient(135deg,#ff6b35,#ff2d55);color:#fff;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600;margin-right:4px;animation:pulse 1.5s infinite;}
-.empty-tip{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-dim);font-size:14px;}
-
-.main-container{max-width:1500px;margin:0 auto;padding:20px 24px;}
-.tab-nav{display:flex;gap:4px;margin-bottom:20px;background:var(--card-bg);border-radius:12px;padding:4px;border:1px solid var(--border);overflow-x:auto;}
-.tab-btn{padding:10px 20px;border-radius:10px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;font-size:13px;font-weight:500;transition:all 0.2s;white-space:nowrap;}
-.tab-btn.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(79,70,229,0.25);}
-.tab-btn:hover:not(.active){color:var(--text);background:#f0f0ff;}
-
-.tab-content{display:none;}
-.tab-content.active{display:block;}
-
-.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px;}
-.stat-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;}
-.stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
-.stat-info h3{font-size:20px;font-weight:700;}
-.stat-info p{font-size:10px;color:var(--text-dim);margin-top:2px;}
-
-.platform-filter{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
-.pf-tag{padding:6px 14px;border-radius:16px;border:1px solid var(--border);background:var(--card-bg);color:var(--text-dim);cursor:pointer;font-size:12px;transition:all 0.2s;}
-.pf-tag.active{background:var(--accent);border-color:var(--accent);color:#fff;}
-.pf-tag:hover:not(.active){border-color:var(--accent2);}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(370px,1fr));gap:14px;}
-.card{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all 0.2s;}
-.card:hover{border-color:var(--accent2);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.06);}
-.card-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f3f4f6;}
-.p-badge{padding:4px 10px;border-radius:12px;font-size:10px;font-weight:600;color:#fff;}
-.p-badge.douyin{background:var(--douyin);}
-.p-badge.bilibili{background:var(--bilibili);}
-.p-badge.xiaohongshu{background:var(--xhs);}
-.p-badge.kuaishou{background:var(--kuaishou);}
-.p-badge.weibo{background:var(--weibo);}
-.hot-tag{background:rgba(79,70,229,0.08);color:var(--accent);padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600;}
-.card-body{padding:12px 16px;}
-.card-title{font-size:14px;font-weight:600;line-height:1.4;margin-bottom:6px;}
-.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
-.tag{padding:2px 7px;border-radius:5px;font-size:10px;background:#f3f4f6;color:var(--text-dim);}
-.card-stats{display:flex;gap:14px;margin-bottom:10px;font-size:11px;color:var(--text-dim);flex-wrap:wrap;}
-.bgm-row{background:linear-gradient(90deg,rgba(139,92,246,0.06),transparent);border-left:3px solid var(--purple);padding:8px 12px;margin:8px 0;border-radius:0 8px 8px 0;font-size:11px;}
-.bgm-row strong{color:var(--purple);}
-.copy-row{background:rgba(79,70,229,0.04);border-left:3px solid var(--blue);padding:8px 12px;margin:8px 0;border-radius:0 8px 8px 0;font-size:11px;color:var(--text-dim);line-height:1.5;}
-.copy-row strong{color:var(--blue);}
-.card-footer{padding:8px 16px;border-top:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--text-dim);}
-
-.prompt-panel{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.prompt-card{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:16px;}
-.prompt-card h3{font-size:14px;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
-.prompt-card h3 .num{background:var(--accent);color:#fff;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
-.prompt-card .desc{font-size:11px;color:var(--text-dim);margin-bottom:10px;line-height:1.5;}
-.prompt-card textarea{width:100%;min-height:120px;background:#f9fafb;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-size:11px;font-family:'SF Mono','Consolas',monospace;resize:vertical;line-height:1.5;}
-.prompt-card .btn-row{display:flex;gap:8px;margin-top:10px;}
-.copied-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:600;z-index:999;animation:fadeOut 2s forwards;}
-@keyframes fadeOut{0%,70%{opacity:1;}100%{opacity:0;}}
-
-.bgm-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.bgm-card{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:16px;}
-.bgm-card h3{font-size:14px;margin-bottom:12px;}
-
-.trend-panel{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:14px;}
-.trend-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f3f4f6;font-size:12px;}
-.trend-item:last-child{border-bottom:none;}
-
-.workflow{display:flex;align-items:center;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;}
-.wf-step{padding:8px 16px;border-radius:20px;border:1px dashed var(--border);font-size:12px;color:var(--text-dim);white-space:nowrap;}
-.wf-step.done{border-color:var(--green);color:var(--green);border-style:solid;}
-.wf-step.current{border-color:var(--accent);color:var(--accent);border-style:solid;}
-.wf-arrow{color:var(--text-dim);font-size:14px;}
-
-@media(max-width:768px){
-  .stats-row{grid-template-columns:repeat(2,1fr);}
-  .grid{grid-template-columns:1fr;}
-  .prompt-panel{grid-template-columns:1fr;}
-  .bgm-grid{grid-template-columns:1fr;}
-  .tab-btn{padding:8px 12px;font-size:11px;}
-  .search-input{width:110px;}
-  .header-right{gap:8px;}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 60px;
+    -webkit-font-smoothing: antialiased;
 }
+/* 顶部 */
+.header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 26px 32px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    position: relative;
+}
+.header-left { display: flex; align-items: center; gap: 14px; }
+.header h1 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: .5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.header h1 .logo {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--grad-main);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 17px; color: #fff;
+}
+.header .sub {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 4px;
+}
+.header .date {
+    font-size: 13px;
+    color: var(--muted);
+    background: var(--card2);
+    border: 1px solid var(--border);
+    padding: 7px 16px;
+    border-radius: 22px;
+    white-space: nowrap;
+}
+/* 搜索框 */
+.search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.search-wrap svg {
+    position: absolute;
+    left: 14px;
+    width: 16px; height: 16px;
+    stroke: var(--muted);
+    pointer-events: none;
+}
+.search-input {
+    width: 320px;
+    max-width: 100%;
+    padding: 11px 16px 11px 40px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 24px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s, background .2s;
+}
+.search-input::placeholder { color: var(--muted); }
+.search-input:focus {
+    border-color: var(--blue);
+    background: var(--card);
+    box-shadow: 0 0 0 4px rgba(77,141,255,.12);
+}
+.search-clear {
+    position: absolute;
+    right: 10px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: #dde1ec;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.search-clear:hover { background: #ccd2e0; }
+.search-clear.show { display: inline-flex; }
+/* 结果提示 */
+.search-status {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 0 4px 10px;
+    display: none;
+}
+.search-status.show { display: block; }
+.search-status b { color: var(--blue); }
+mark {
+    background: rgba(242,183,5,.35);
+    color: inherit;
+    border-radius: 3px;
+    padding: 0 1px;
+}
+/* 空状态 */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-size: 13px;
+}
+.empty-state .icon {
+    font-size: 30px;
+    margin-bottom: 10px;
+    opacity: .6;
+}
+
+/* Tab 导航 */
+.tabs {
+    display: flex;
+    gap: 4px;
+    padding: 14px 32px 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    flex-wrap: wrap;
+}
+.tab {
+    padding: 11px 18px;
+    font-size: 14px;
+    color: var(--muted);
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-bottom: 2px solid transparent;
+    transition: all .2s ease;
+    font-family: inherit;
+}
+.tab:hover { color: var(--text); }
+.tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+}
+
+/* 主容器 */
+.container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 22px 32px;
+}
+.section { display: none; }
+.section.active { display: block; animation: fadeIn .25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* KPI 卡片 */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+}
+.kpi {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.kpi:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(31,36,48,.1); }
+.kpi::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--blue);
+    border-radius: 0 3px 3px 0;
+}
+.kpi.g::before { background: var(--green); }
+.kpi.o::before { background: var(--accent2); }
+.kpi.p::before { background: var(--purple); }
+.kpi .label {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.kpi .value {
+    font-size: 30px;
+    font-weight: 800;
+    margin-top: 8px;
+    letter-spacing: .5px;
+    color: var(--text);
+}
+.kpi .delta {
+    font-size: 12px;
+    margin-top: 6px;
+    color: var(--muted);
+}
+.delta .up { color: var(--green); font-weight: 600; }
+.delta .down { color: var(--accent); font-weight: 600; }
+
+/* 卡片通用 */
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+.card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.card-title .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+/* 热点榜 */
+.hot-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 8px;
+    border-bottom: 1px solid #eef1f7;
+}
+.hot-item:last-child { border-bottom: none; }
+.hot-rank {
+    width: 26px; height: 26px;
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 13px;
+    flex-shrink: 0;
+    background: #f0f2f8;
+    color: var(--muted);
+}
+.hot-rank.r1 { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+.hot-rank.r2 { background: linear-gradient(135deg, #ff8a5c, #ffc53d); color: #fff; }
+.hot-rank.r3 { background: linear-gradient(135deg, var(--purple), #c9a8ff); color: #fff; }
+.hot-content { flex: 1; min-width: 0; }
+.hot-content .title {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.hot-content .meta { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.hot-heat {
+    width: 56px;
+    flex-shrink: 0;
+    text-align: right;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent2);
+}
+.hot-bar {
+    height: 4px;
+    background: #eef1f7;
+    border-radius: 3px;
+    margin-top: 6px;
+    overflow: hidden;
+}
+.hot-bar .fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+}
+
+/* Tab 小标签 */
+.mini-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.mini-tab {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    background: var(--card2);
+    transition: all .2s ease;
+    font-family: inherit;
+}
+.mini-tab:hover { color: var(--text); border-color: #c9cfdf; }
+.mini-tab.active { background: rgba(77,141,255,.1); color: var(--blue); border-color: var(--blue); }
+
+/* 爆款拆解 */
+.video-card {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all .2s ease;
+}
+.video-card:hover { border-color: #c9cfdf; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(31,36,48,.08); }
+.video-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.video-title { font-size: 14px; font-weight: 700; line-height: 1.4; }
+.badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    font-weight: 600;
+}
+.badge.hot { background: rgba(255,94,98,.1); color: var(--accent); }
+.badge.new { background: rgba(34,201,143,.1); color: var(--green); }
+.badge.trend { background: rgba(160,107,255,.1); color: var(--purple); }
+.video-stats { display: flex; gap: 14px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+.video-stats b { color: var(--text); font-weight: 600; }
+.formula-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.formula-tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 5px;
+    background: rgba(77,141,255,.08);
+    color: var(--blue);
+}
+
+/* 数据图表 */
+.chart-box {
+    background: var(--card2);
+    border-radius: 10px;
+    padding: 14px;
+}
+.chart-legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-color { width: 10px; height: 10px; border-radius: 3px; }
+.bar-chart { display: flex; align-items: flex-end; gap: 12px; height: 150px; padding-top: 10px; }
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+.bar {
+    width: 100%;
+    max-width: 32px;
+    border-radius: 6px 6px 3px 3px;
+    position: relative;
+    transition: .3s;
+    min-height: 4px;
+}
+.bar:hover { filter: brightness(.95); }
+.bar .val {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+}
+.bar-label { font-size: 11px; color: var(--muted); }
+
+.line-chart { position: relative; height: 150px; }
+.line-chart svg { width: 100%; height: 100%; }
+.grid-line { stroke: #e6e9f2; stroke-width: 1; }
+.axis-label { fill: var(--muted); font-size: 10px; }
+
+/* 选题库 */
+.idea-card {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    transition: all .2s ease;
+}
+.idea-card:hover { border-color: #c9cfdf; }
+.idea-num {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--grad-main);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 13px;
+    flex-shrink: 0;
+}
+.idea-body { flex: 1; }
+.idea-title { font-size: 14px; font-weight: 600; }
+.idea-desc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+.idea-meta { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.idea-status {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 5px;
+}
+.idea-status.plan { background: rgba(77,141,255,.1); color: var(--blue); }
+
+/* 发布计划表 */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+    text-align: left;
+    padding: 10px 12px;
+    color: var(--muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    background: var(--card2);
+}
+td { padding: 12px; border-bottom: 1px solid #eef1f7; vertical-align: middle; }
+tr:hover td { background: #fafbfe; }
+.td-title { font-weight: 600; }
+.status-pill {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-weight: 600;
+}
+.status-pill.published { background: rgba(34,201,143,.1); color: var(--green); }
+.status-pill.pending { background: rgba(242,183,5,.12); color: #c99700; }
+.status-pill.draft { background: rgba(107,115,133,.1); color: var(--muted); }
+
+/* 爆款公式 */
+.formula-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+.formula-card {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+    transition: all .2s ease;
+}
+.formula-card:hover { border-color: #c9cfdf; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(31,36,48,.08); }
+.formula-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+}
+.formula-card.f1::before { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+.formula-card.f2::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
+.formula-card.f3::before { background: linear-gradient(90deg, var(--green), var(--blue)); }
+.formula-card.f4::before { background: linear-gradient(90deg, var(--yellow), var(--accent2)); }
+.formula-name { font-size: 14px; font-weight: 700; }
+.formula-desc { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+.formula-example {
+    margin-top: 10px;
+    font-size: 12px;
+    background: var(--card);
+    border-radius: 8px;
+    padding: 10px 12px;
+    border-left: 3px solid var(--blue);
+    line-height: 1.6;
+    color: var(--text);
+}
+
+/* 待办清单 */
+.todo-list { display: flex; flex-direction: column; gap: 2px; }
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 8px;
+    border-bottom: 1px solid #eef1f7;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background .2s;
+    border-radius: 8px;
+}
+.todo-item:last-child { border-bottom: none; }
+.todo-item:hover { background: #fafbfe; }
+.todo-check {
+    width: 18px; height: 18px;
+    border-radius: 5px;
+    border: 2px solid #c9cfdf;
+    flex-shrink: 0;
+    transition: .2s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #fff;
+}
+.todo-item.done .todo-check {
+    background: var(--green);
+    border-color: var(--green);
+}
+.todo-item.done .todo-text { color: var(--muted); text-decoration: line-through; }
+.todo-text { flex: 1; }
+
+/* 账号定位 */
+.acc-search { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
+.acc-input {
+    flex: 1;
+    min-width: 220px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+}
+.acc-input:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(77,141,255,.12); }
+.acc-btn {
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--grad-main);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity .2s, transform .2s;
+    white-space: nowrap;
+}
+.acc-btn:hover { opacity: .9; transform: translateY(-1px); }
+.acc-btn:active { transform: translateY(0); }
+.acc-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.acc-chip {
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: .2s;
+    font-family: inherit;
+}
+.acc-chip:hover { color: var(--blue); border-color: var(--blue); background: rgba(77,141,255,.08); }
+.acc-loading { display: none; text-align: center; padding: 46px 0; color: var(--muted); font-size: 13px; }
+.acc-loading.show { display: block; }
+.spinner {
+    width: 30px; height: 30px;
+    margin: 0 auto 12px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.acc-report { display: none; margin-top: 16px; }
+.acc-report.show { display: block; animation: fadeIn .3s ease; }
+.acc-hero {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: linear-gradient(135deg, rgba(255,94,98,.08), rgba(255,157,92,.08));
+    border: 1px solid #ffe0da;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+.acc-avatar {
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    background: var(--grad-main);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 700;
+    flex-shrink: 0;
+}
+.acc-hero-info { flex: 1; min-width: 200px; }
+.acc-name { font-size: 17px; font-weight: 700; }
+.acc-tags { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.acc-tag { font-size: 11px; background: rgba(255,94,98,.1); color: var(--accent); border-radius: 12px; padding: 3px 9px; font-weight: 600; }
+.acc-stats { display: flex; gap: 22px; margin-top: 10px; flex-wrap: wrap; }
+.acc-stat b { font-size: 16px; }
+.acc-stat span { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+.acc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+.acc-block { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+.acc-block h4 { font-size: 13px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.acc-block h4::before { content: ""; width: 3px; height: 14px; border-radius: 2px; background: var(--grad-main); }
+.acc-list { list-style: none; }
+.acc-list li {
+    font-size: 13px;
+    padding: 7px 0;
+    border-bottom: 1px dashed #e6e9f2;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    line-height: 1.5;
+}
+.acc-list li:last-child { border-bottom: none; }
+.acc-list li b { color: var(--accent); font-weight: 600; flex-shrink: 0; }
+.acc-diff { font-size: 13px; line-height: 1.7; }
+.acc-warn {
+    font-size: 12px;
+    color: #c99700;
+    background: rgba(242,183,5,.1);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-top: 14px;
+    line-height: 1.8;
+}
+
+/* 底部 */
+.footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 28px;
+}
+
+/* 拍摄方案面板 */
+.shot-btn {
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--blue);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .2s ease;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.shot-btn:hover { border-color: var(--blue); background: rgba(77,141,255,.06); }
+.shot-btn.open { background: var(--blue); color: #fff; border-color: var(--blue); }
+.shot-panel {
+    display: none;
+    margin-top: 10px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+.shot-panel.open { display: block; animation: fadeIn .2s ease; }
+.shot-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.shot-step {
+    display: flex;
+    gap: 10px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--text);
+    padding: 5px 0;
+}
+.shot-step .step-num {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: rgba(77,141,255,.12);
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+.shot-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+}
+.shot-tag {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(160,107,255,.1);
+    color: var(--purple);
+}
+.shot-tag.time { background: rgba(34,201,143,.1); color: var(--green); }
+.shot-tag.cam { background: rgba(242,183,5,.12); color: #c99700; }
+
+/* Toast */
+#toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #3a4152;
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 24px;
+    font-size: 13px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.18);
+    opacity: 0;
+    transition: .3s;
+    z-index: 999;
+}
+#toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 </style>
 </head>
 <body>
 
-<header class="header">
-  <div class="header-left">
-    <div class="logo-icon">⚡</div>
-    <div class="title-group">
-      <h1>社交平台爆款内容工作台 v2.0</h1>
-      <span>热点监控 · 选题创作 · 脚本生成 · BGM推荐 · 全链路运营 — 2026-07-30</span>
+<div class="header">
+    <div class="header-left">
+        <div>
+            <h1><span class="logo">火</span>爆款视频热点工作台</h1>
+            <div class="sub">短视频内容创作 · 热点追踪 · 爆款拆解 · 数据看板</div>
+        </div>
     </div>
-  </div>
-  <div class="header-right">
-    <input class="search-input" id="searchInput" type="text" placeholder="🔍 搜索热点 / 标签 / 作者..." oninput="onSearch(this.value)">
-    <div class="live-dot"></div>
-    <span class="refresh-time" id="refreshTime">实时监控中</span>
-    <button class="btn" onclick="location.reload()">🔄 刷新数据</button>
-  </div>
-</header>
-
-<div class="main-container">
-
-<div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('hot')">🔥 热点监控</button>
-  <button class="tab-btn" onclick="switchTab('topic')">🎯 选题创作</button>
-  <button class="tab-btn" onclick="switchTab('copywriting')">✍️ 文案/脚本</button>
-  <button class="tab-btn" onclick="switchTab('bgm')">🎵 BGM推荐</button>
-  <button class="tab-btn" onclick="switchTab('publish')">📊 发布策略</button>
-  <button class="tab-btn" onclick="switchTab('position')">🧭 账号定位</button>
+    <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="搜索热点、视频、选题、计划、公式、账号...">
+        <button class="search-clear" id="searchClear" aria-label="清除">✕</button>
+    </div>
+    <div class="date" id="todayDate"></div>
 </div>
 
-<!-- TAB 1: 热点监控 -->
-<div class="tab-content active" id="tab-hot">
-  <div class="stats-row">
-    <div class="stat-card"><div class="stat-icon" style="background:rgba(254,44,85,0.15)">📱</div><div class="stat-info"><h3 id="c-douyin">5</h3><p>抖音爆款</p></div></div>
-    <div class="stat-card"><div class="stat-icon" style="background:rgba(251,114,153,0.15)">📺</div><div class="stat-info"><h3 id="c-bilibili">3</h3><p>B站热门</p></div></div>
-    <div class="stat-card"><div class="stat-icon" style="background:rgba(255,36,66,0.15)">📕</div><div class="stat-info"><h3 id="c-xhs">4</h3><p>小红书爆款</p></div></div>
-    <div class="stat-card"><div class="stat-icon" style="background:rgba(255,73,6,0.15)">⚡</div><div class="stat-info"><h3 id="c-kuaishou">2</h3><p>快手热门</p></div></div>
-    <div class="stat-card"><div class="stat-icon" style="background:rgba(230,22,45,0.15)">🌐</div><div class="stat-info"><h3 id="c-total">18</h3><p>今日热点</p></div></div>
-  </div>
-  <div class="platform-filter">
-    <span class="pf-tag active" onclick="filterPlatform('all',this)">🔥 全部</span>
-    <span class="pf-tag" onclick="filterPlatform('douyin',this)">📱 抖音</span>
-    <span class="pf-tag" onclick="filterPlatform('bilibili',this)">📺 B站</span>
-    <span class="pf-tag" onclick="filterPlatform('xiaohongshu',this)">📕 小红书</span>
-    <span class="pf-tag" onclick="filterPlatform('kuaishou',this)">⚡ 快手</span>
-    <span class="pf-tag" onclick="filterPlatform('weibo',this)">🌐 微博</span>
-    <span class="pf-tag" onclick="filterPlatform('trending',this)">🚀 趋势上升</span>
-  </div>
-  <div class="grid" id="cardsGrid"></div>
-  <div class="trend-panel" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
-    <div><h3 style="font-size:13px;margin-bottom:12px;">🎵 今日爆款BGM排行</h3><div id="bgmList"></div></div>
-    <div><h3 style="font-size:13px;margin-bottom:12px;">📈 热点趋势图谱</h3><div id="trendList"></div></div>
-  </div>
+<div class="tabs">
+    <button class="tab active" data-tab="dashboard">数据看板</button>
+    <button class="tab" data-tab="hotspot">实时热点</button>
+    <button class="tab" data-tab="analysis">爆款拆解</button>
+    <button class="tab" data-tab="account">账号定位</button>
+    <button class="tab" data-tab="ideas">选题灵感</button>
+    <button class="tab" data-tab="plan">发布计划</button>
+    <button class="tab" data-tab="formula">爆款公式</button>
+    <button class="tab" data-tab="todo">任务清单</button>
 </div>
 
-<!-- TAB 2: 选题创作 -->
-<div class="tab-content" id="tab-topic">
-  <div class="workflow">
-    <span class="wf-step done">① 账号定位</span><span class="wf-arrow">→</span>
-    <span class="wf-step done">② 受众画像</span><span class="wf-arrow">→</span>
-    <span class="wf-step current">③ 爆款选题</span><span class="wf-arrow">→</span>
-    <span class="wf-step">④ 脚本文案</span><span class="wf-arrow">→</span>
-    <span class="wf-step">⑤ 发布复盘</span>
-  </div>
-  <div class="prompt-panel">
-    <div class="prompt-card">
-      <h3><span class="num">3</span>爆款选题挖掘</h3>
-      <div class="desc">基于当前热点+你的赛道，生成10个爆款选题，含爆款逻辑分析、内容形式建议和预估爆款指数。方括号[ ]内替换为你的实际情况。</div>
-      <textarea id="prompt-topic" readonly>你是一位爆款内容选题分析师。
+<div class="container">
 
-当前信息：
-- 平台：[抖音 / 小红书 / 视频号]
-- 赛道：[填入你的赛道]
-- 账号定位：[填入一句话定位]
-- 近期热点：[AI公司收购旧书销毁 / C罗结婚 / 一箭双星 / A股大涨 / 苹果5万亿]
-
-请输出10个爆款选题，每个包含：
-1. 选题标题（吸引眼球，但不过度标题党）
-2. 爆款逻辑（情绪共鸣 / 实用价值 / 猎奇心理 / 争议性 / 蹭热点）
-3. 内容形式建议（口播 / 剧情 / 教程 / 测评 / vlog / 图文）
-4. 预估爆款指数（1-10分）
-
-选题要求：3个蹭热点 + 4个常青 + 3个争议/互动选题</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-topic')">📋 复制提示词</button></div>
+<!-- ============ 数据看板 ============ -->
+<div class="section active" id="dashboard">
+    <div class="kpi-grid">
+        <div class="kpi">
+            <div class="label">今日总播放</div>
+            <div class="value">128.6万</div>
+            <div class="delta"><span class="up">▲ 12.4%</span> 较昨日</div>
+        </div>
+        <div class="kpi g">
+            <div class="label">今日新增粉丝</div>
+            <div class="value">3,208</div>
+            <div class="delta"><span class="up">▲ 8.1%</span> 较昨日</div>
+        </div>
+        <div class="kpi o">
+            <div class="label">平均互动率</div>
+            <div class="value">6.8%</div>
+            <div class="delta"><span class="up">▲ 1.2pt</span> 行业均值 3.5%</div>
+        </div>
+        <div class="kpi p">
+            <div class="label">待发布内容</div>
+            <div class="value">12</div>
+            <div class="delta"><span class="down">▼ 3 条</span> 需今日完成</div>
+        </div>
     </div>
-    <div class="prompt-card">
-      <h3><span class="num">4</span>爆款选题拆解</h3>
-      <div class="desc">拆解一条爆款内容，提取可复用的方法论和内容公式。</div>
-      <textarea id="prompt-breakdown" readonly>你是短视频爆款拆解专家。
 
-爆款内容信息：
-- 平台：[抖音 / 小红书]
-- 内容标题：[填入标题]
-- 内容形式：[口播 / 剧情 / 教程]
-- 大致数据：[播放量 / 点赞 / 评论]
-- 内容核心：[简要描述内容]
-
-请拆解：
-1. 钩子分析：前3秒/封面用了什么钩子（好奇/恐惧/利益/情绪/反差）
-2. 结构拆解：按时间段拆解（0-3秒/3-15秒/15-30秒）
-3. 情绪曲线：标注高潮点
-4. 爆款因子：火的3个核心原因
-5. 可复用模板：提取一个内容公式
-6. 我的改编建议：如何用到[你的赛道]</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-breakdown')">📋 复制提示词</button></div>
+    <div class="grid-2">
+        <div class="card">
+            <div class="card-title"><span class="dot"></span>近 7 日播放趋势（万次）</div>
+            <div class="chart-box">
+                <div class="chart-legend">
+                    <div class="legend-item"><span class="legend-color" style="background:#4d8dff"></span>播放量</div>
+                    <div class="legend-item"><span class="legend-color" style="background:#22c98f"></span>互动量</div>
+                </div>
+                <div class="line-chart" id="lineChart"></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title"><span class="dot" style="background:var(--green)"></span>账号流量构成</div>
+            <div class="chart-box">
+                <div class="chart-legend">
+                    <div class="legend-item"><span class="legend-color" style="background:var(--accent)"></span>推荐页</div>
+                    <div class="legend-item"><span class="legend-color" style="background:var(--blue)"></span>关注页</div>
+                    <div class="legend-item"><span class="legend-color" style="background:var(--yellow)"></span>搜索</div>
+                </div>
+                <div class="bar-chart" id="barChart"></div>
+            </div>
+        </div>
     </div>
-    <div class="prompt-card">
-      <h3><span class="num">15</span>热点借势判断</h3>
-      <div class="desc">热点出现时快速判断是否值得跟进，以及怎么切入。</div>
-      <textarea id="prompt-hotjudge" readonly>你是热点营销策划师。
 
-热点信息：
-- 热点事件：[简要描述]
-- 热点来源：[微博热搜 / 抖音热榜 / 小红书热点]
-- 当前热度：[刚爆发2小时内 / 发酵中 / 大面积刷屏]
-- 我的赛道：[填入]
-
-请分析：
-1. 生命周期预判：还能火多久（小时/天/周）
-2. 赛道匹配度（1-10分）
-3. 风险评估：争议/负面/封号风险
-4. 内容方向建议：3个具体选题角度
-5. 时效要求：最晚何时发出才有流量
-6. 最终建议：跟 / 不跟 / 观望</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-hotjudge')">📋 复制提示词</button></div>
+    <div style="margin-top:16px" class="grid-3">
+        <div class="card">
+            <div class="card-title"><span class="dot" style="background:var(--purple)"></span>本周爆款 TOP3</div>
+            <div class="search-status" id="top3Status"></div>
+            <div id="top3List"></div>
+        </div>
+        <div class="card">
+            <div class="card-title"><span class="dot" style="background:var(--yellow)"></span>核心爆款指标</div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+                <div>
+                    <div style="font-size:12px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:6px"><span>3秒完播率</span><b>68%</b></div>
+                    <div class="hot-bar"><div class="fill" style="width:68%"></div></div>
+                </div>
+                <div>
+                    <div style="font-size:12px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:6px"><span>整体完播率</span><b>42%</b></div>
+                    <div class="hot-bar"><div class="fill" style="width:42%;background:linear-gradient(90deg,var(--blue),var(--purple))"></div></div>
+                </div>
+                <div>
+                    <div style="font-size:12px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:6px"><span>主页进线率</span><b>23%</b></div>
+                    <div class="hot-bar"><div class="fill" style="width:23%;background:linear-gradient(90deg,var(--green),var(--blue))"></div></div>
+                </div>
+                <div>
+                    <div style="font-size:12px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:6px"><span>转粉率</span><b>11%</b></div>
+                    <div class="hot-bar"><div class="fill" style="width:11%;background:linear-gradient(90deg,var(--yellow),var(--accent2))"></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title"><span class="dot" style="background:var(--accent)"></span>账号健康度</div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+                <div>
+                    <div style="font-size:12px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:6px"><span>更新频率</span><b>每日 1.2 条</b></div>
+                    <div class="hot-bar"><div class="fill" style="width:60%"></div></div>
+                </div>
+                <div>
+                    <div style="font-size:12px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:6px"><span>发布准时度</span><b>92%</b></div>
+                    <div class="hot-bar"><div class="fill" style="width:92%;background:linear-gradient(90deg,var(--green),var(--blue))"></div></div>
+                </div>
+                <div>
+                    <div style="font-size:12px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:6px"><span>评论区回复率</span><b>85%</b></div>
+                    <div class="hot-bar"><div class="fill" style="width:85%;background:linear-gradient(90deg,var(--purple),var(--blue))"></div></div>
+                </div>
+                <div style="margin-top:auto;font-size:12px;color:var(--muted);background:var(--card2);border-radius:8px;padding:10px;line-height:1.6">
+                    建议：保持每日 18:00-20:00 黄金时段发布，互动率最高
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="prompt-card">
-      <h3><span class="num">14</span>竞品分析</h3>
-      <div class="desc">深度分析对标账号的内容策略和变现模式，找到差异化切入点。</div>
-      <textarea id="prompt-compete" readonly>你是竞品分析专家。
-
-对标账号信息：
-- 平台：[抖音 / 小红书]
-- 账号名：[填入]
-- 粉丝量：[填入]
-- 我的主赛道：[填入]
-
-请分析：
-1. 内容拆解：近30天主题分布+爆款特征
-2. 人设分析：定位/视觉/语言风格
-3. 运营策略：频率/时间/互动
-4. 变现模式：带货/广告/付费/引流
-5. 差异化机会：可切入的角度
-6. 可直接借鉴的3个做法</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-compete')">📋 复制提示词</button></div>
-    </div>
-  </div>
 </div>
 
-<!-- TAB 3: 文案/脚本 -->
-<div class="tab-content" id="tab-copywriting">
-  <div class="prompt-panel">
-    <div class="prompt-card">
-      <h3><span class="num">5</span>短视频拍摄脚本生成</h3>
-      <div class="desc">按分镜表输出完整脚本：镜头 | 时长 | 画面 | 台词 | 字幕 | BGM。</div>
-      <textarea id="prompt-script" readonly>你是专业短视频编剧。
-
-脚本需求：
-- 平台：[抖音 / 视频号 / 小红书视频]
-- 选题：[填入选题]
-- 视频时长：[15秒 / 30秒 / 60秒 / 90秒]
-- 内容形式：[口播 / 剧情 / 教程 / 测评 / vlog]
-- 风格调性：[专业干货 / 搞笑 / 治愈 / 犀利吐槽 / 知识科普]
-- 出镜人数：[1人 / 2人 / 不出镜]
-
-请按表格输出完整脚本：
-| 镜头 | 时长 | 画面描述 | 台词/旁白 | 字幕/贴纸 | BGM建议 |
-
-要求：前3秒强钩子 + 每15秒信息增量 + 结尾互动引导 + 台词口语化</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-script')">📋 复制提示词</button></div>
+<!-- ============ 实时热点 ============ -->
+<div class="section" id="hotspot">
+    <div class="card">
+        <div class="card-title"><span class="dot"></span>实时热点榜</div>
+        <div class="mini-tabs">
+            <button class="mini-tab active" data-plat="dy">抖音</button>
+            <button class="mini-tab" data-plat="xhs">小红书</button>
+            <button class="mini-tab" data-plat="wb">微博</button>
+        </div>
+        <div class="search-status" id="hotStatus"></div>
+        <div id="hotList"></div>
     </div>
-    <div class="prompt-card">
-      <h3><span class="num">6</span>小红书图文笔记文案</h3>
-      <div class="desc">完整种草笔记：5个标题选项+正文+图片文案+SEO关键词+话题标签。</div>
-      <textarea id="prompt-xhs" readonly>你是小红书爆款笔记写手。
-
-笔记需求：
-- 主题：[填入主题]
-- 笔记类型：[干货教程 / 好物推荐 / 探店打卡 / 测评对比]
-- 目标关键词：[填入2-3个SEO关键词]
-- 图片数量：[3图 / 6图 / 9图]
-- 人设调性：[知性姐姐 / 搞钱女孩 / 宝妈 / 学生党]
-
-请输出：
-【标题】5个选项（数字型/痛点型/好奇型/对比型/身份认同型）
-【正文】500-800字（开头痛点→分段干货→结尾引导互动）
-【图片文案】每张图封面文字+内容建议
-【话题标签】5-8个，大流量+精准话题组合</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-xhs')">📋 复制提示词</button></div>
-    </div>
-    <div class="prompt-card">
-      <h3><span class="num">7</span>标题生成器（通用）</h3>
-      <div class="desc">7种策略生成20个标题，标注字数+策略类型+点击吸引力+风险词检查。</div>
-      <textarea id="prompt-title" readonly>你是社交媒体标题专家。
-
-内容信息：
-- 平台：[抖音 / 小红书 / 视频号]
-- 内容主题：[填入主题]
-- 核心价值：[知识/快乐/省钱/避坑/灵感]
-- 目标情绪：[震惊/温暖/学到了/被治愈/想讨论]
-
-请生成20个标题，策略覆盖（每种2-3个）：
-反常识型 / 数字清单型 / 痛点放大型 / 身份标签型 / 悬念好奇型 / 对比反转型 / 利益驱动型
-
-每个标题标注：字数 | 策略类型 | 点击吸引力(1-5星) | 是否含违禁/限流风险词</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-title')">📋 复制提示词</button></div>
-    </div>
-    <div class="prompt-card">
-      <h3><span class="num">8</span>话题标签组合</h3>
-      <div class="desc">三套标签方案（冲量型/精准型/均衡型），标注流量级别S/A/B/C。</div>
-      <textarea id="prompt-tags" readonly>你是社交媒体流量运营专家。
-
-内容信息：
-- 平台：[抖音 / 小红书 / 视频号]
-- 内容主题：[填入主题]
-- 赛道：[填入赛道]
-- 目标：[涨粉 / 引流 / 品牌曝光 / 带货转化]
-
-请生成3套标签方案（每套8-12个）：
-方案A - 冲量型：大流量泛话题为主
-方案B - 精准型：垂直精准话题为主
-方案C - 均衡型：大:中:精准 = 3:4:3
-
-每个标签标注：预估流量级别(S/A/B/C) | 标签类型（热点/常青/品牌/活动）</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-tags')">📋 复制提示词</button></div>
-    </div>
-  </div>
 </div>
 
-<!-- TAB 4: BGM推荐 -->
-<div class="tab-content" id="tab-bgm">
-  <div class="bgm-grid">
-    <div class="bgm-card">
-      <h3>🎵 BGM推荐匹配提示词（提示词9）</h3>
-      <textarea id="prompt-bgm" style="min-height:260px;" readonly>你是短视频音乐策划师。
-
-视频信息：
-- 平台：[抖音 / 小红书 / 视频号]
-- 视频主题：[填入主题]
-- 视频情绪：[欢快 / 温暖 / 燃 / 治愈 / 紧张 / 搞笑 / 浪漫 / 励志]
-- 视频节奏：[快节奏卡点 / 慢节奏氛围 / 中速叙事]
-- 视频时长：[填入时长]
-- 目标受众年龄段：[18-25 / 25-35 / 35+]
-
-请推荐5首BGM，每首含：
-1. 歌曲名+歌手（标注平台热度和使用量级）
-2. 推荐理由
-3. 适合的剪辑方式（副歌卡点/前奏铺氛围/高潮切画面）
-4. 情绪匹配度（1-10分）
-5. 热度趋势（上升中/持续热门/经典常青）
-
-分类推荐：2首热门蹭流量 + 2首精准提质感 + 1首小众差异化</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-bgm')">📋 复制提示词</button></div>
+<!-- ============ 爆款拆解 ============ -->
+<div class="section" id="analysis">
+    <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--purple)"></span>爆款视频拆解库</div>
+        <div class="search-status" id="analysisStatus"></div>
+        <div class="grid-3" style="margin-top:4px" id="videoList"></div>
     </div>
-    <div class="bgm-card">
-      <h3>📊 今日实时BGM热度榜</h3>
-      <div id="bgmLiveList"></div>
-    </div>
-  </div>
 </div>
 
-<!-- TAB 5: 发布策略 -->
-<div class="tab-content" id="tab-publish">
-  <div class="prompt-panel">
-    <div class="prompt-card">
-      <h3><span class="num">11</span>发布时间与频率策略</h3>
-      <div class="desc">制定30天发布排期表，含最佳时间、频率、栏目规划和多平台分发策略。</div>
-      <textarea id="prompt-schedule" readonly>你是社交媒体运营策略师。
-
-账号信息：
-- 平台：[抖音 / 小红书 / 视频号 / 多平台]
-- 赛道：[填入赛道]
-- 账号阶段：[冷启动期 0-1000粉 / 成长期 / 成熟期]
-- 可投入时间：[每天几小时 / 每周能产出几条]
-- 目标受众活跃时段：[帮我分析]
-
-请输出：
-1. 最佳发布时间表（工作日vs周末，具体到时间段）
-2. 发布频率建议（每天/每周/固定栏目日）
-3. 30天内容排期模板（表格：日期/星期/内容类型/选题方向/发布时间）
-4. 多平台分发策略（同一内容不同平台的差异化）
-5. 冷启动期特殊策略（前10条怎么排）</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-schedule')">📋 复制提示词</button></div>
+<!-- ============ 账号定位 ============ -->
+<div class="section" id="account">
+    <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent)"></span>账号定位 · 对标账号分析</div>
+        <div class="mini-tabs">
+            <button class="mini-tab active" data-accplat="dy">抖音</button>
+            <button class="mini-tab" data-accplat="xhs">小红书</button>
+            <button class="mini-tab" data-accplat="sp">视频号</button>
+        </div>
+        <div class="acc-search">
+            <input type="text" class="acc-input" id="accInput" placeholder="输入对标账号名称，例如：张三糖水铺">
+            <button class="acc-btn" id="accBtn">自动生成定位</button>
+        </div>
+        <div class="acc-chips" id="accChips">
+            <span class="acc-chip">张三糖水铺</span>
+            <span class="acc-chip">凌晨糖水研究所</span>
+            <span class="acc-chip">喵喵甜品屋</span>
+            <span class="acc-chip">城市咖啡日记</span>
+        </div>
+        <div class="search-status" id="accountStatus"></div>
+        <div class="acc-loading" id="accLoading"><div class="spinner"></div>正在抓取对标账号数据，自动生成定位分析…</div>
+        <div class="acc-report" id="accReport"></div>
     </div>
-    <div class="prompt-card">
-      <h3><span class="num">12</span>评论区互动话术库</h3>
-      <div class="desc">置顶评论+万能回复+神评论预埋+私信转化+负面应对全套话术。</div>
-      <textarea id="prompt-comment" readonly>你是社群运营专家。
-
-内容信息：
-- 内容主题：[填入主题]
-- 平台：[抖音 / 小红书 / 视频号]
-- 常见评论类型：[提问 / 夸赞 / 质疑 / 引战 / 催更 / 广告]
-
-请准备：
-1. 置顶评论 1条（补充信息或引导讨论）
-2. 5种评论类型万能回复模板（各3条）
-3. 神评论预埋 3条（引导跟评）
-4. 私信转化话术 3条（评论表达购买意向时的引导）
-5. 负面评论应对 3条
-
-注意：抖音偏娱乐化，小红书偏真诚种草感</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-comment')">📋 复制提示词</button></div>
-    </div>
-    <div class="prompt-card">
-      <h3><span class="num">13</span>数据复盘分析</h3>
-      <div class="desc">归因爆款和扑街内容，输出优化清单和下周选题建议。</div>
-      <textarea id="prompt-review" readonly>你是短视频数据分析师。
-
-账号信息：
-- 平台：[抖音 / 小红书 / 视频号]
-- 账号赛道：[填入赛道]
-- 复盘周期：[近7天 / 近30天]
-- 发布数：[X]条 | 总播放：[X] | 点赞：[X] | 评论：[X] | 收藏：[X]
-- 最爆：播放[X] 主题[XXX]
-- 最差：播放[X] 主题[XXX]
-- 粉丝增长：[X]
-
-请分析：
-1. 整体健康度（互动率/完播率/粉赞比 vs 行业参考值）
-2. 最爆归因：选题/钩子/节奏/发布/BMG/运气各占多少
-3. 最差归因：选题/封面/发布/内容质量问题
-4. 选题规律：哪类选题表现好
-5. 优化清单：5个具体动作按优先级排列
-6. 下周选题建议：3个方向</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-review')">📋 复制提示词</button></div>
-    </div>
-    <div class="prompt-card">
-      <h3><span class="num">16</span>月度内容日历规划</h3>
-      <div class="desc">基于目标制定月度排期，类型轮换+固定栏目+可蹭节日日历。</div>
-      <textarea id="prompt-calendar" readonly>你是内容运营规划师。
-
-账号信息：
-- 平台：[填入]
-- 赛道：[填入]
-- 本月可产出内容数：[X]条
-- 本月重点目标：[涨粉 / 带货 / 品牌曝光 / 引流私域]
-- 本月重要节点：[节日/大促/行业事件]
-
-请输出月度内容日历（表格形式）：
-内容类型轮换：40%干货 + 25%热点 + 20%人设 + 10%互动 + 5%变现
-
-同时标注：每周固定栏目 + 需要提前准备的素材清单 + 可蹭的节日/热点</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-calendar')">📋 复制提示词</button></div>
-    </div>
-  </div>
 </div>
 
-<!-- TAB 6: 账号定位 -->
-<div class="tab-content" id="tab-position">
-  <div class="prompt-panel">
-    <div class="prompt-card">
-      <h3><span class="num">1</span>账号人设定位</h3>
-      <div class="desc">输出完整定位方案：人设三要素+一句话定位+内容支柱+视觉风格+对标账号。</div>
-      <textarea id="prompt-position" readonly>你是一位拥有5年经验的社交媒体账号策划师。
-
-我的基本信息：
-- 平台：[抖音 / 小红书 / 视频号 / B站]
-- 赛道/领域：[美食探店 / 职场成长 / 母婴育儿 / 知识科普]
-- 我的优势：[填入你的独特优势]
-- 目标受众：[填入目标人群描述]
-
-请输出：
-1. 账号人设三要素：身份标签+性格特征+差异化记忆点
-2. 一句话定位（15字以内）
-3. 内容pillars（3-5个方向，每个附2个选题示例）
-4. 视觉风格建议（色调/字体/封面排版）
-5. 参考对标账号（2-3个，说明可借鉴点）</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-position')">📋 复制提示词</button></div>
+<!-- ============ 选题灵感 ============ -->
+<div class="section" id="ideas">
+    <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--yellow)"></span>选题灵感库</div>
+        <div class="search-status" id="ideasStatus"></div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px" id="ideaList"></div>
     </div>
-    <div class="prompt-card">
-      <h3><span class="num">2</span>目标受众画像</h3>
-      <div class="desc">深度描绘受众：基础画像+内容偏好+核心痛点+情绪触发词+消费意愿。</div>
-      <textarea id="prompt-audience" readonly>你是用户研究专家。
+</div>
 
-- 我的赛道：[填入赛道]
-- 我的平台：[填入平台]
-- 初步目标人群：[填入目标人群描述]
-
-请输出受众画像：
-1. 基础画像：年龄段/性别比/城市/职业/收入区间
-2. 内容偏好：喜欢什么类型/观看时长/活跃时段
-3. 核心痛点：5个最让他们焦虑或困扰的问题
-4. 情绪触发词：10个能引发共鸣/转发的关键词
-5. 消费意愿：对什么有付费意愿+价格敏感度
-6. 平台行为：搜索vs推荐/评论习惯/收藏vs点赞比例</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-audience')">📋 复制提示词</button></div>
+<!-- ============ 发布计划 ============ -->
+<div class="section" id="plan">
+    <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--green)"></span>本周发布计划</div>
+        <div class="search-status" id="planStatus"></div>
+        <div style="overflow-x:auto">
+            <table>
+                <thead>
+                    <tr>
+                        <th>日期</th><th>时段</th><th>内容标题</th><th>平台</th><th>状态</th>
+                    </tr>
+                </thead>
+                <tbody id="planBody"></tbody>
+            </table>
+        </div>
     </div>
-    <div class="prompt-card">
-      <h3><span class="num">17</span>平台规则速查</h3>
-      <div class="desc">梳理平台最新规则红线：违禁内容+限流特征+违禁词+广告规则+申诉渠道。</div>
-      <textarea id="prompt-rules" readonly>你是社交媒体合规顾问。
+</div>
 
-我的赛道：[填入]
-平台：[抖音 / 小红书 / 视频号]
-
-请输出：
-1. 绝对禁止的内容类型（会导致封号）
-2. 容易被限流的内容特征
-3. 违禁词/敏感词清单（按赛道分类）
-4. 广告/带货相关规则（报备/挂链接合规）
-5. 申诉渠道和恢复流程
-6. 近期平台政策变化</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-rules')">📋 复制提示词</button></div>
+<!-- ============ 爆款公式 ============ -->
+<div class="section" id="formula">
+    <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--accent)"></span>爆款视频公式手册</div>
+        <div class="search-status" id="formulaStatus"></div>
+        <div class="formula-grid" style="margin-top:4px" id="formulaList"></div>
     </div>
-    <div class="prompt-card">
-      <h3><span class="num">18</span>变现路径规划</h3>
-      <div class="desc">从0到100万粉各阶段变现策略+选品建议+广告报价参考+私域引流方案。</div>
-      <textarea id="prompt-monetize" readonly>你是社交媒体商业化顾问。
+</div>
 
-账号信息：
-- 平台：[填入]
-- 赛道：[填入]
-- 当前粉丝：[X]
-- 内容类型：[填入]
-- 已有变现方式：[无 / 广告 / 带货 / 知识付费 / 其他]
-
-请输出：
-1. 变现成熟度评估
-2. 变现路径图：1000粉→1万粉→10万粉→100万粉各阶段策略
-3. 选品/选商建议（品类+佣金区间）
-4. 广告报价参考（按当前粉丝量级合理报价）
-5. 私域引流方案
-6. 变现内容占比建议（多少变现vs价值内容，避免掉粉）</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-monetize')">📋 复制提示词</button></div>
+<!-- ============ 任务清单 ============ -->
+<div class="section" id="todo">
+    <div class="card">
+        <div class="card-title"><span class="dot" style="background:var(--blue)"></span>今日任务清单</div>
+        <div class="search-status" id="todoStatus"></div>
+        <div class="todo-list" id="todoList"></div>
     </div>
-  </div>
 </div>
 
 </div>
+
+<div class="footer">爆款视频热点工作台 · 支持全局搜索实时过滤</div>
+<div id="toast">已复制到剪贴板</div>
 
 <script>
-// ========== DATA: Today's Trending Videos (2026-07-30) ==========
-const videoData = [
-  {id:1,platform:'douyin',trending:true,title:"AI公司大量收购旧书训练模型后直接销毁！网友：这是新时代焚书坑儒？",tags:['AI','社会争议','科技伦理'],views:'预期5000万+',likes:'—',comments:'—',shares:'—',creator:'@科技观察室',followers:'420万',bgm:'《Unravel》TK from 凛として時雨 — 暗黑觉醒风，配合AI与旧书焚烧对比画面',script:'0-3秒：旧书焚烧画面+大字"AI焚书"→ 3-12秒：事件还原→ 12-22秒：法院认定合理vs网友怒了→ 结尾：评论区辩一辩',hotLevel:99},
-  {id:2,platform:'douyin',trending:true,title:"曝C罗将结婚！世界杯球王终于要办婚礼了",tags:['体育','C罗','娱乐'],views:'预期8000万+',likes:'—',comments:'—',shares:'—',creator:'@体育大事件',followers:'680万',bgm:'《We Are The Champions》Queen — 荣耀BGM，配合C罗生涯高光混剪',script:'0-3秒：C罗照片+大字"他终于要结婚了"→ 3-10秒：C罗&乔治娜恋爱时间线→ 10-20秒：婚礼细节曝光+网友反应→ 结尾：CR7人生大满贯！',hotLevel:98},
-  {id:3,platform:'bilibili',trending:true,title:"【深度】为什么ChatGPT发布4年了，社会总生产力纹丝不动？",tags:['AI','经济学','深度思考'],views:'预期300万+',likes:'—',danmaku:'—',creator:'@科技袁人',followers:'310万',bgm:'《Time》Hans Zimmer — 理性思辨氛围，配合数据图表动画',script:'0-5秒：AI炫酷画面+大字疑问→ 5-15秒：数据对比AI投入vs生产力→ 15-25秒：三大假说（时滞/替代/泡沫）→ 结尾：AI是真革命还是新泡沫？',hotLevel:97},
-  {id:4,platform:'weibo',trending:true,title:"A股市值前10红了9个！政治局定调提振资本市场信心",tags:['A股','政策','财经'],views:'117万热搜',likes:'—',comments:'—',creator:'@微博热搜',bgm:'《Counting Stars》OneRepublic — 轻快向上的财经BGM',script:'0-3秒：K线红盘大字→ 3-10秒：政治局会议核心信号解读→ 10-18秒：散户策略→ 结尾：反弹还是反转？',hotLevel:95},
-  {id:5,platform:'douyin',trending:true,title:"影响上亿女性的病更名了！这个沉默杀手终于有了新名字",tags:['健康科普','女性','医疗'],views:'预期3000万+',likes:'—',comments:'—',shares:'—',creator:'@丁香医生',followers:'1200万',bgm:'温柔钢琴BGM — 理性科普风，配合医学图表弹出',script:'0-3秒：新病名大字弹出→ 3-12秒：旧名为什么不好？→ 12-22秒：症状自测清单+就诊建议→ 结尾：转发给你关心的她',hotLevel:94},
-  {id:6,platform:'xiaohongshu',trending:true,title:"1.5万机票退票只退432元！被曝光后才全额退款",tags:['消费维权','机票','避坑'],views:'预期600万+',likes:'—',collections:'—',creator:'@消费者之声',followers:'95万',bgm:'严肃新闻BGM — 配合退票对比截图',script:'封面：1.5万→432元→全额退→ 正文三步：发生了什么/为什么维权成功/你该怎么退→ 结尾：你被坑过多少退票费？',hotLevel:92},
-  {id:7,platform:'kuaishou',trending:true,title:"沙漠竟然发洪水了！新疆塔克拉玛干秒变海洋",tags:['奇观','天气','新疆'],views:'预期2500万+',likes:'—',comments:'—',creator:'@极目新闻',followers:'180万',bgm:'《Desert Rose》Sting — 神秘异域风，沙漠vs洪水强烈对比',script:'0-3秒：沙漠中水流奔涌→ 3-10秒：气象原因科普动画→ 10-18秒：居民采访+历史对比→ 结尾：地球越来越离谱了？',hotLevel:91},
-  {id:8,platform:'bilibili',trending:true,title:"【人物志】钟丽缇女儿18岁生日，继父送了本《民法典》",tags:['人物','教育','家庭'],views:'预期250万+',likes:'—',danmaku:'—',creator:'@人物',followers:'520万',bgm:'《父亲写的散文诗》许飞 — 温情叙事',script:'0-3秒：生日现场+送《民法典》特写→ 3-12秒：继父教育理念独白→ 12-20秒：钟丽缇家庭故事→ 结尾：最好的礼物是保护自己的能力',hotLevel:89},
-  {id:9,platform:'xiaohongshu',trending:false,title:"减脂餐的尽头竟是低卡麻辣烫！一周掉秤3斤的秘密",tags:['减脂','美食','麻辣烫'],views:'预期400万+',likes:'—',collections:'—',creator:'@减脂达人小野',followers:'120万',bgm:'轻快电子BGM — 配合食物摆拍和热量标注弹出',script:'封面：谁说减脂不能吃麻辣烫？→ 正文：低卡秘诀（汤底/蘸料/食材）→ 结尾：一周食谱直接抄！',hotLevel:87},
-  {id:10,platform:'weibo',trending:true,title:"回收二手熊孩子！娃见愁叔叔火了，全国宝妈排队预约",tags:['育儿','搞笑','社会'],views:'598万搜索',likes:'—',comments:'—',creator:'@微博热搜',bgm:'《Happy》Pharrell Williams — 欢快节奏，配合熊孩子前后对比',script:'0-3秒：熊孩子捣乱合集→ 3-10秒：娃见愁叔叔管教秘诀→ 10-18秒：家长采访+孩子变化→ 结尾：你家需要回收吗？',hotLevel:86},
-  {id:11,platform:'douyin',trending:false,title:"男子说不出妻子生产日期请假被拒！全网打工人怒了",tags:['打工人','职场','社会'],views:'预期3500万+',likes:'—',comments:'—',shares:'—',creator:'@打工人日报',followers:'290万',bgm:'《平凡之路》朴树 — 打工人的BGM',script:'0-3秒：请假被拒聊天截图→ 3-12秒：事件还原+网友炸锅→ 12-20秒：劳动法解读→ 结尾：你的请假被拒过吗？',hotLevel:88},
-  {id:12,platform:'xiaohongshu',trending:true,title:"第一次看到母亲的收入，我哭了一整晚",tags:['情感','亲情','成长'],views:'预期800万+',likes:'—',collections:'—',creator:'@真实故事计划',followers:'230万',bgm:'《萱草花》张小斐 — 温暖催泪',script:'封面：工资条模糊处理+标题→ 正文：第一次看到妈妈工资条的场景→ 结尾：她把最好的都给了我。你第一次知道父母收入是什么时候？',hotLevel:90},
-  {id:13,platform:'douyin',trending:false,title:"我国再次发射一箭双星！太空基建又进一步",tags:['航天','科技','国家'],views:'预期2000万+',likes:'—',comments:'—',shares:'—',creator:'@我们的太空',followers:'560万',bgm:'《星辰大海》黄霄云 — 航天主题燃向BGM',script:'0-3秒：火箭发射实况→ 3-12秒：一箭双星技术科普→ 12-20秒：2026航天成绩单→ 结尾：我们的征途是星辰大海',hotLevel:85},
-  {id:14,platform:'bilibili',trending:true,title:"【科普】打印机硒鼓也能泄密？国家安全机关紧急提醒",tags:['科普','安全','冷知识'],views:'预期220万+',likes:'—',danmaku:'—',creator:'@科学信仰',followers:'200万',bgm:'悬疑电子BGM — 配合办公设备扫描动画',script:'0-3秒：打印机特写+"它在偷看你的文件"→ 3-10秒：硒鼓泄密原理→ 10-18秒：还有哪些风险设备？→ 结尾：办公安全自检清单',hotLevel:84},
-  {id:15,platform:'kuaishou',trending:false,title:"云南到底有多凉快？40度的上海人看完哭了",tags:['天气','云南','生活'],views:'预期1800万+',likes:'—',comments:'—',creator:'@云南观察',followers:'75万',bgm:'《彩云之南》徐千雅 — 清凉治愈风',script:'0-3秒：上海40度vs云南25度实拍→ 3-10秒：云南人避暑日常→ 10-18秒：避暑目的地推荐→ 结尾：这个夏天去云南吧',hotLevel:83},
-  {id:16,platform:'xiaohongshu',trending:false,title:"5元水饺4元面馆爆火！低价餐饮真能赚到钱吗？",tags:['商业','餐饮','消费'],views:'预期500万+',likes:'—',collections:'—',creator:'@商业就是这样',followers:'160万',bgm:'轻松商业BGM — 配合价目表和成本分析',script:'封面：5元水饺价目表→ 正文：三家低价餐饮商业模式拆解→ 结尾：你身边有这种店吗？真的好吃吗？',hotLevel:81},
-  {id:17,platform:'weibo',trending:true,title:"九门首播4集49个广告！网友：我在广告里看剧",tags:['电视剧','广告','吐槽'],views:'98万热搜',likes:'—',comments:'—',creator:'@微博热议',bgm:'快节奏吐槽BGM — 配合广告计数弹幕',script:'0-3秒：49个广告数字大字→ 3-10秒：广告植入名场面盘点→ 10-18秒：平台广告策略分析→ 结尾：你能接受一集几个广告？',hotLevel:80},
-  {id:18,platform:'douyin',trending:true,title:"苹果市值首破5万亿美元！超越英伟达重回全球第一",tags:['科技','苹果','财经'],views:'预期2500万+',likes:'—',comments:'—',shares:'—',creator:'@财经第一线',followers:'380万',bgm:'《Digital Horizon》电子纯音乐 — 科技金融感',script:'0-3秒：苹果logo+5万亿大字→ 3-12秒：凭什么反超英伟达→ 12-20秒：AI投资逻辑变化→ 结尾：你买了苹果股票吗？',hotLevel:93}
+/* ===== 数据 ===== */
+var HOT_DATA = {
+    dy: [
+        { t: "三亚消暑糖水冲上同城热榜", m: "热度飙升 · 同城榜第1", heat: 98,
+          time: "15-20秒", cam: "手机竖屏实拍",
+          bgm: "轻快治愈系BGM · 《Sugar》元气版",
+          shot: ["开场2秒：店内全景，镜头扫过冒着冷气的冰柜，配字“同城热搜第一”",
+                 "4秒：特写舀糖水、加小料的动作，收音用勺子碰撞碗边的清脆声",
+                 "3秒：顾客大口喝糖水的真实反应，拍出爽感",
+                 "结尾3秒：露出定位+同城话题标签，字幕“来一碗糖水，清凉一夏”"] },
+        { t: "奶茶店隐藏喝法合集", m: "娱乐榜 · 上升12位", heat: 92,
+          time: "20-25秒", cam: "三连拍+卡点剪辑",
+          bgm: "快节奏卡点BGM · 律动感强的洗脑音乐",
+          shot: ["开场2秒：对着镜头问“这些隐藏喝法你都知道吗？”制造悬念",
+                 "每款喝法5秒×3款：点单→特写加料→喝一口，节奏踩点切换",
+                 "结尾3秒：征集互动“你的隐藏喝法是什么？评论区见”"] },
+        { t: "甜品店老板的一天vlog", m: "美食榜 · 播放破百万", heat: 87,
+          time: "25-35秒", cam: "手持跟拍+延时摄影",
+          bgm: "温暖叙事感BGM · 治愈系钢琴",
+          shot: ["3秒：凌晨到店，门开灯亮的延时镜头",
+                 "6秒：备料环节——洗芒果、煮西米露的慢镜头，突出细节",
+                 "8秒：营业高峰出餐+顾客反馈，真实忙碌感",
+                 "4秒：打烊收拾+老板对着镜头说一句心里话，升华情绪"] },
+        { t: "教你复刻网红杨枝甘露", m: "美食榜 · 上升8位", heat: 79,
+          time: "20-25秒", cam: "俯拍+近景特写",
+          bgm: "轻快教程风BGM · 节奏感电子乐",
+          shot: ["3秒：成品杨枝甘露特写+字幕“网红款，在家5分钟搞定”",
+                 "3秒：材料展示摆一排，字幕标注用量",
+                 "12秒：分步骤制作，每步字幕+步骤序号，镜头从正上方俯拍",
+                 "结尾4秒：成品展示+弹幕“建议收藏，做给家人喝”"] },
+        { t: "广州糖水店排队实录", m: "同城榜 · 热度上升中", heat: 74,
+          time: "20秒", cam: "跟拍+街头采访",
+          bgm: "纪实感BGM · 轻快粤语风",
+          shot: ["3秒：远景拍排队队伍，字幕“周末下午3点”",
+                 "6秒：移步进店，拍出餐速度、店员手速",
+                 "8秒：随机采访排队顾客“为什么愿意排队”，真实出镜",
+                 "结尾3秒：“你最想尝哪一碗？评论区投票”"] },
+        { t: "夏季消暑甜品TOP10", m: "种草榜 · 上升5位", heat: 68,
+          time: "45-60秒", cam: "产品轮播+数字特效",
+          bgm: "清爽夏日风BGM · 明快节奏",
+          shot: ["2秒：开场大字幕“夏日消暑甜品TOP10榜单来了”",
+                 "每款4秒×10款：产品特写+舀一勺，字幕标名字和价格",
+                 "结尾4秒：“第1名猜到了吗？评论区告诉我你心中的TOP1”"] }
+    ],
+    xhs: [
+        { t: "三亚必打卡甜品店合集", m: "旅游笔记 · 收藏1.2万", heat: 90,
+          time: "20秒", cam: "封面大字+实拍",
+          bgm: "清新治愈系BGM · 海岛度假风",
+          shot: ["3秒：封面大字“三亚必打卡甜品店”，配店铺门头画面",
+                 "每款4秒：招牌甜品特写+价格标注，镜头放低拍出食欲感",
+                 "5秒：店内环境+打卡拍照点，适合转发收藏",
+                 "结尾3秒：地址+营业时间，字幕“收藏这份攻略”"] },
+        { t: "学生党也能做的减脂糖水", m: "美食笔记 · 收藏9千", heat: 84,
+          time: "20秒", cam: "俯拍教程",
+          bgm: "轻快小清新BGM",
+          shot: ["2秒：开场“宿舍里也能做的减脂糖水”",
+                 "4秒：食材展示+热量标注（多少大卡）",
+                 "10秒：制作过程分步，突出“免煮”“低卡”卖点",
+                 "结尾4秒：成品+总结“这碗才150大卡，放心吃”"] },
+        { t: "糖水店的摆盘美学", m: "颜值笔记 · 上升15位", heat: 77,
+          time: "15秒", cam: "慢镜头特写",
+          bgm: "高级感钢琴BGM",
+          shot: ["4秒：慢镜头拍甜品上桌那一刻，氛围光打在碗上",
+                 "5秒：勺子轻舀、拉丝、果肉晃动的特写镜头",
+                 "3秒：店内环境+灯光氛围",
+                 "结尾3秒：“拍照打卡首选，随手一拍都是大片”"] },
+        { t: "本地人私藏糖水地图", m: "城市笔记 · 热度上升", heat: 71,
+          time: "25秒", cam: "地图动线+探店",
+          bgm: "旅行记录风BGM",
+          shot: ["3秒：手绘地图/地图APP视角开场，标出3个打卡点",
+                 "每店6秒×3家：门口→招牌→尝一口，动线清晰",
+                 "结尾3秒：“完整地图放评论区，记得保存”"] },
+        { t: "一家店靠一碗糖水爆火", m: "探店笔记 · 点赞2.4万", heat: 65,
+          time: "25秒", cam: "故事化剪辑",
+          bgm: "故事感叙事BGM",
+          shot: ["3秒：爆火前后对比画面（老照片/排队实况）",
+                 "8秒：招牌糖水制作全过程特写，突出匠心",
+                 "6秒：店主采访片段“一开始只是不想辜负客人”",
+                 "结尾4秒：故事总结+“这样的店，值得你跑一趟”"] }
+    ],
+    wb: [
+        { t: "今年最火的夏日饮品", m: "热搜榜 · 第8位", heat: 82,
+          time: "18秒", cam: "热榜截图+实拍",
+          bgm: "时事热点风BGM",
+          shot: ["3秒：微博热搜截图开场，红框标出关键词",
+                 "8秒：饮品制作+试喝测评，客观点评",
+                 "4秒：网友评论截图轮播，增加讨论度",
+                 "结尾3秒：“你觉得实至名归吗？评论区聊”"] },
+        { t: "网友偶遇明星排队买糖水", m: "娱乐榜 · 上升20位", heat: 78,
+          time: "20秒", cam: "现场运镜+素材拼接",
+          bgm: "吃瓜八卦风BGM · 悬疑感节奏",
+          shot: ["4秒：开场“有网友在三亚偶遇明星排队买糖水”",
+                 "5秒：店内外环境，拍出“就在这家店”的实感",
+                 "6秒：网友拍摄画面拼接，打码+配乐",
+                 "结尾3秒：“本地人去打卡过的举手！”"] },
+        { t: "广东人的糖水血脉觉醒", m: "话题榜 · 阅读3亿", heat: 73,
+          time: "20秒", cam: "生活场景混剪",
+          bgm: "粤语怀旧风BGM",
+          shot: ["2秒：开场“广东人的糖水DNA动了”",
+                 "6秒：糖水日常场景——家里的、路边的、老字号的",
+                 "8秒：不同糖水品类轮播（绿豆沙、双皮奶、龟苓膏…）",
+                 "结尾4秒：“你心里那碗糖水是？评论区认亲”"] },
+        { t: "开甜品店的年轻人", m: "财经榜 · 热议中", heat: 61,
+          time: "25秒", cam: "人物访谈+跟拍",
+          bgm: "励志向BGM",
+          shot: ["4秒：店主出镜自我介绍“95后，去年开了这家店”",
+                 "8秒：创业过程回顾（照片+视频素材）",
+                 "6秒：店内日常经营+与顾客互动",
+                 "结尾5秒：“给想开店的人一句话”，升华主题"] }
+    ]
+};
+
+var VIDEOS = [
+    { t: "奶茶店被问爆的隐藏喝法", badge: "hot", badgeTxt: "爆款", play: "86.2万", like: "5.2万", comment: "4,871", tags: ["黄金3秒", "悬念钩子", "互动提问"] },
+    { t: "甜品店老板一天的真实记录", badge: "trend", badgeTxt: "上升", play: "52.4万", like: "3.1万", comment: "2,350", tags: ["三幕反转", "真实感", "vlog"] },
+    { t: "成本5块卖20的招牌糖水", badge: "new", badgeTxt: "新发布", play: "41.8万", like: "2.6万", comment: "3,102", tags: ["利益点", "教程向", "反差"] },
+    { t: "顾客喝第一口的反应合集", badge: "hot", badgeTxt: "爆款", play: "35.6万", like: "1.9万", comment: "1,866", tags: ["对镜感", "真实反应", "爽感"] },
+    { t: "教你复刻网红杨枝甘露", badge: "trend", badgeTxt: "上升", play: "28.3万", like: "1.5万", comment: "1,204", tags: ["教程向", "本地标签", "低成本"] },
+    { t: "晚上十点的糖水店还在排队", badge: "new", badgeTxt: "新发布", play: "19.7万", like: "9,800", comment: "742", tags: ["场景感", "同城", "凌晨档"] }
 ];
 
-const bgmData = [
-  {name:'Unravel',artist:'TK from 凛として時雨',use:'社会争议/觉醒/暗黑',count:320,trend:'↑↑'},
-  {name:'We Are The Champions',artist:'Queen',use:'体育/荣耀/胜利',count:295,trend:'↑↑'},
-  {name:'Time',artist:'Hans Zimmer',use:'深度思辨/叙事',count:270,trend:'↑'},
-  {name:'星辰大海',artist:'黄霄云',use:'航天/燃向/国家',count:255,trend:'↑'},
-  {name:'萱草花',artist:'张小斐',use:'温情/催泪/亲情',count:230,trend:'↑↑'},
-  {name:'Digital Horizon',artist:'电子纯音乐',use:'科技/金融/未来',count:210,trend:'↑'},
-  {name:'平凡之路',artist:'朴树',use:'打工人/生活/共鸣',count:195,trend:'→'},
-  {name:'彩云之南',artist:'徐千雅',use:'旅行/治愈/夏天',count:180,trend:'↑'}
+var IDEAS = [
+    { n: 1, title: "挑战：用10元做出100元的高级糖水", desc: "对比食材成本与成品颜值，突出性价比反差，适合剧情+教程混剪。", tags: "反差对比 · 教程向",
+      time: "30秒", cam: "俯拍+对比分屏",
+      bgm: "轻快国风BGM · 治愈节奏",
+      shot: ["2秒：钩子开场“10块钱能做出100块的糖水？”",
+             "4秒：超市采购镜头，展示10元预算清单",
+             "14秒：制作全程——处理食材、熬煮、精致摆盘，每步带字幕",
+             "6秒：成品对比分屏：10元自制 vs 100元餐厅款",
+             "结尾4秒：“你猜这碗值不值100？”引导评论"] },
+    { n: 2, title: "顾客点单最多的3款，到底有啥魔力？", desc: "用销售数据说话，拆解爆款点单率，增强信任感。", tags: "数据向 · 信任感",
+      time: "30秒", cam: "数据截图+产品实拍",
+      bgm: "探店卡点BGM",
+      shot: ["3秒：后台点单数据截图开场，红框标出前三名",
+             "每款6秒×3款：产品特写+老板/店员尝一口的真实反应",
+             "8秒：随机采访顾客“你为什么点这个？”",
+             "结尾3秒：“下次进店，试试这三款中的No.1”"] },
+    { n: 3, title: "凌晨还在排队的糖水店长啥样", desc: "夜间实拍+街景氛围感，蹭同城流量，展示真实热度。", tags: "同城向 · 氛围感",
+      time: "25秒", cam: "夜景手持+氛围光",
+      bgm: "深夜氛围感BGM",
+      shot: ["5秒：凌晨街景空镜，远处店铺灯光亮着，配字幕“凌晨12点”",
+             "8秒：排队人群+现场嘈杂声，真实感拉满",
+             "6秒：出餐瞬间+顾客接过糖水的满足表情",
+             "结尾4秒：“你愿意为它排半小时队吗？”"] },
+    { n: 4, title: "路人盲测：你能喝出5块和20块的区别吗？", desc: "街头采访+盲测互动，天然带话题性，评论区会吵起来。", tags: "互动向 · 街头采访",
+      time: "30秒", cam: "街头手持+多人反应",
+      bgm: "综艺感俏皮BGM",
+      shot: ["3秒：街头摆摊布景，两个纸杯“A和B”",
+             "15秒：多位路人品尝，真实表情反应剪辑（尴尬/惊喜/猜错）",
+             "6秒：揭晓价格，拍下路人的惊讶反应",
+             "结尾3秒：“评论区说说，你能猜中吗？”"] },
+    { n: 5, title: "一碗糖水的诞生全过程（治愈系）", desc: "慢镜头制作过程+ASMR音效，适合收藏+转发，涨粉利器。", tags: "治愈系 · 慢镜头",
+      time: "25秒", cam: "慢镜头+微距",
+      bgm: "纯音乐治愈系 · 钢琴/吉他",
+      shot: ["5秒：材料特写慢镜头——芒果切面、西米下锅、冰沙堆叠",
+             "10秒：熬煮过程：气泡翻滚、蒸汽升腾，保留自然声音",
+             "6秒：盛碗+装饰的动作，勺子碰碗的ASMR",
+             "结尾4秒：成品特写定帧+字幕“治愈系糖水，看着就很舒服”"] },
+    { n: 6, title: "和本地人学点单：三亚糖水店隐藏菜单", desc: "本地人视角推荐，增强同城信任，引导到店消费。", tags: "本地向 · 到店引导",
+      time: "25秒", cam: "本地人出镜跟拍",
+      bgm: "海岛度假风BGM",
+      shot: ["3秒：本地人（老板/熟客）出镜自我介绍",
+             "10秒：点单教学——读名字、教搭配、说隐藏吃法",
+             "8秒：实景点单+试吃，展示隐藏菜单实物",
+             "结尾4秒：“这套隐藏点单法，截图保存”"] }
 ];
 
-const trendData = [
-  {name:'AI收购旧书销毁争议',count:'4平台共振',pct:99},
-  {name:'C罗结婚',count:'3平台',pct:98},
-  {name:'A股/资本市场',count:'4平台',pct:96},
-  {name:'女性健康/病名更名',count:'2平台',pct:94},
-  {name:'苹果5万亿市值',count:'3平台',pct:93},
-  {name:'机票退票维权',count:'2平台',pct:91},
-  {name:'打工人请假难',count:'2平台',pct:89},
-  {name:'沙漠洪水奇观',count:'2平台',pct:87},
-  {name:'云南避暑',count:'2平台',pct:85},
-  {name:'九门广告吐槽',count:'2平台',pct:82}
+var PLANS = [
+    { d: "周一", time: "12:00", t: "黄金3秒钩子：10元做出100元", p: "抖音", s: "published", st: "已发布" },
+    { d: "周二", time: "18:30", t: "顾客第一口反应合集 #2", p: "抖音+小红书", s: "published", st: "已发布" },
+    { d: "周三", time: "12:00", t: "挑战复刻网红杨枝甘露", p: "抖音", s: "published", st: "已发布" },
+    { d: "周四", time: "19:00", t: "凌晨糖水店排队实录", p: "抖音", s: "pending", st: "待发布" },
+    { d: "周五", time: "12:00", t: "路人盲测：5块vs20块", p: "抖音+小红书", s: "draft", st: "草稿" },
+    { d: "周六", time: "11:00", t: "一碗糖水的诞生（治愈系）", p: "小红书", s: "draft", st: "草稿" },
+    { d: "周日", time: "18:00", t: "本周爆款复盘 + 下周预告", p: "双平台", s: "pending", st: "待发布" }
 ];
 
-// ========== SEARCH ==========
-let currentFilter = 'all';
-let currentKeyword = '';
-
-function getFilteredData(){
-  let f = currentFilter==='all' ? videoData.slice() : currentFilter==='trending' ? videoData.filter(v=>v.trending) : videoData.filter(v=>v.platform===currentFilter);
-  if(currentKeyword){
-    f = f.filter(v=>(v.title+' '+v.tags.join(' ')+' '+v.creator+' '+v.platform).toLowerCase().includes(currentKeyword));
-  }
-  return f;
-}
-
-function onSearch(val){
-  currentKeyword = val.trim().toLowerCase();
-  renderCards();
-}
-
-// ========== REAL-TIME SIMULATION ==========
-const breakingPool = [
-  {platform:'douyin',trending:true,title:"游客吐槽景区30元一瓶矿泉水，官方回应：明码标价",tags:['旅游','消费','社会'],views:'预期1800万+',likes:'—',comments:'—',shares:'—',creator:'@社会热点',followers:'150万',bgm:'《少年》梦然 — 轻快吐槽风',script:'0-3秒：30元矿泉水特写→ 3-10秒：游客视角还原→ 10-18秒：官方回应→ 结尾：你觉得贵吗？',hotLevel:88},
-  {platform:'xiaohongshu',trending:true,title:"人均30吃到撑！杭州社区食堂让打工人破防了",tags:['美食','杭州','打工人'],views:'预期900万+',likes:'—',collections:'—',creator:'@美食侦察机',followers:'88万',bgm:'治愈美食BGM — 配菜品特写',script:'封面：社区食堂价格表→ 正文：三菜一汤实测→ 结尾：你们城市有社区食堂吗？',hotLevel:86},
-  {platform:'bilibili',trending:true,title:"【硬核】国产大模型开源12小时后，全球开发者都做了什么",tags:['AI','开源','技术'],views:'预期180万+',likes:'—',danmaku:'—',creator:'@开源前线',followers:'65万',bgm:'《ELECTRONIC》电子BGM — 快节奏',script:'0-3秒：开源仓库截图→ 3-12秒：24小时数据盘点→ 12-20秒：代表性二次开发→ 结尾：国产AI要起飞了？',hotLevel:87},
-  {platform:'kuaishou',trending:false,title:"90岁爷爷第一次学会点外卖，全家笑翻了",tags:['暖心','家庭','科技'],views:'预期1200万+',likes:'—',comments:'—',creator:'@暖心记录',followers:'200万',bgm:'《稻香》周杰伦 — 温馨治愈',script:'0-3秒：爷爷迷茫表情→ 3-10秒：教学过程爆笑→ 10-18秒：成功点单全家欢呼→ 结尾：教家里老人用手机了吗？',hotLevel:84}
+var FORMULAS = [
+    { cls: "f1", name: "黄金 3 秒钩子", desc: "前 3 秒必须抛出冲突、悬念或利益点，否则用户直接划走。这是决定推荐流量的第一道门槛。", ex: "你敢信，一碗糖水成本只要 5 块钱？ → 今天就教你复刻这碗卖 20 的招牌" },
+    { cls: "f2", name: "三幕反转结构", desc: "日常场景 → 意外冲突 → 反转解决。让用户忍不住看完最后，拉升完播率与转发率。", ex: "客人觉得 20 太贵 → 直到他尝了一口 → 当场办了 5 张会员卡" },
+    { cls: "f3", name: "对镜感强互动", desc: "用第二人称、提问、留白引导评论。评论区告诉我 + 选项 是最有效的互动钩子。", ex: "芒果西米露，你觉得加西柚还是不加？评论区投票，点赞多的明天做" },
+    { cls: "f4", name: "蹭热点 + 本地标签", desc: "结合平台热点话题与本地同城标签，双倍流量入口。热点词 24 小时内追最有效。", ex: "#三亚美食 #三亚探店 + 平台当日热点 消暑神器 组合发布" }
 ];
-let simulatedId = 100;
 
-function bumpViews(v){
-  const m = v.views.match(/^(预期)?(\d+)万(.*)$/);
-  if(m){
-    const inc = Math.max(1, Math.round(parseInt(m[2])*(0.002+Math.random()*0.02)));
-    v.views = (m[1]||'') + (parseInt(m[2])+inc) + '万' + (m[3]||'');
-  }
+var TODOS = [
+    "更新本周爆款拆解记录",
+    "拍摄 3 个黄金 3 秒钩子素材",
+    "回复昨日视频置顶评论",
+    "检查抖音本地热榜找新选题",
+    "撰写周五盲测视频脚本",
+    "整理评论区高频问题做成FAQ"
+];
+
+/* ===== 搜索状态 ===== */
+var currentPlat = "dy";
+var currentTab = "dashboard";
+
+/* ===== 工具函数 ===== */
+function esc(s) {
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function getQuery() {
+    return document.getElementById("searchInput").value.trim();
+}
+function isFiltered() {
+    return getQuery() !== "";
+}
+/* 高亮匹配关键词，返回安全 HTML */
+function hl(text) {
+    var s = esc(text);
+    var q = getQuery();
+    if (!q) return s;
+    var lower = s.toLowerCase();
+    var ql = q.toLowerCase();
+    var idx = lower.indexOf(ql);
+    if (idx === -1) return s;
+    var before = s.slice(0, idx);
+    var match = s.slice(idx, idx + q.length);
+    var after = s.slice(idx + q.length);
+    return before + '<mark>' + match + '</mark>' + after;
+}
+/* 判断是否匹配（大小写不敏感，多字段） */
+function matchAny(q, fields) {
+    var ql = q.toLowerCase();
+    return fields.some(function(f){ return String(f).toLowerCase().indexOf(ql) !== -1; });
+}
+function showStatus(id, count) {
+    var el = document.getElementById(id);
+    if (isFiltered()) {
+        el.className = "search-status show";
+        el.innerHTML = count > 0 ? '找到 <b>' + count + '</b> 条匹配结果' : '未找到与 <b>' + esc(getQuery()) + '</b> 匹配的内容';
+    } else {
+        el.className = "search-status";
+        el.innerHTML = "";
+    }
+}
+function emptyHtml() {
+    return '<div class="empty-state"><div class="icon">◌</div>未找到匹配内容，换个关键词试试</div>';
 }
 
-function updateRefreshTime(){
-  document.getElementById('refreshTime').textContent = '实时监控 · '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+/* ===== 渲染函数 ===== */
+function renderTop3() {
+    var q = getQuery();
+    var list = VIDEOS.filter(function(v){ return matchAny(q, [v.t, v.tags.join(" ")]); }).slice(0, 3);
+    var html = "";
+    list.forEach(function(v, i){
+        var rankCls = i === 0 ? "r1" : i === 1 ? "r2" : "r3";
+        html += '<div class="hot-item">' +
+            '<div class="hot-rank ' + rankCls + '">' + (i+1) + '</div>' +
+            '<div class="hot-content"><div class="title">' + hl(v.t) + '</div><div class="meta">播放 ' + v.play + ' · 点赞 ' + v.like + '</div></div>' +
+        '</div>';
+    });
+    document.getElementById("top3List").innerHTML = html || emptyHtml();
+    showStatus("top3Status", list.length);
 }
 
-function showToast(msg){
-  const t=document.createElement('div');t.className='copied-toast';t.style.background='var(--accent)';t.style.color='#fff';t.textContent=msg;
-  document.body.appendChild(t);setTimeout(()=>t.remove(),3000);
+function renderHot() {
+    var q = getQuery();
+    var list = HOT_DATA[currentPlat].filter(function(item){ return matchAny(q, [item.t, item.m, item.bgm, item.cam, item.shot.join(" ")]); });
+    var html = "";
+    list.forEach(function(item, i){
+        var rankCls = i === 0 ? "r1" : i === 1 ? "r2" : i === 2 ? "r3" : "";
+        var shotHtml = item.shot.map(function(s, si){
+            return '<div class="shot-step"><span class="step-num">' + (si+1) + '</span><span>' + hl(s) + '</span></div>';
+        }).join("");
+        html += '<div class="hot-item">' +
+            '<div class="hot-rank ' + rankCls + '">' + (i+1) + '</div>' +
+            '<div class="hot-content">' +
+                '<div class="title">' + hl(item.t) + '</div>' +
+                '<div class="meta">' + hl(item.m) + '</div>' +
+                '<div class="hot-bar"><div class="fill" style="width:' + item.heat + '%"></div></div>' +
+                '<button class="shot-btn" onclick="toggleShot(this)">拍摄方案</button>' +
+                '<div class="shot-panel">' +
+                    '<div class="shot-title">拍摄脚本</div>' + shotHtml +
+                    '<div class="shot-meta">' +
+                        '<span class="shot-tag">BGM：' + hl(item.bgm) + '</span>' +
+                        '<span class="shot-tag time">时长：' + item.time + '</span>' +
+                        '<span class="shot-tag cam">拍摄：' + hl(item.cam) + '</span>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="hot-heat">' + item.heat + '</div>' +
+        '</div>';
+    });
+    document.getElementById("hotList").innerHTML = html || emptyHtml();
+    showStatus("hotStatus", list.length);
 }
 
-function simulateRealtime(){
-  videoData.forEach(v=>{
-    if(Math.random()<0.35){ v.hotLevel = Math.min(99, Math.max(60, v.hotLevel + Math.round(Math.random()*4-2))); }
-    if(Math.random()<0.4){ bumpViews(v); }
-  });
-  if(Math.random()<0.4 && breakingPool.length){
-    const item = breakingPool.shift();
-    item.id = ++simulatedId;
-    item.isNew = true;
-    item.createdAt = Date.now();
-    videoData.unshift(item);
-    showToast('🔥 监测到新热点：「'+item.title.slice(0,18)+'…」');
-  }
-  videoData.forEach(v=>{ if(v.createdAt && Date.now()-v.createdAt > 45000) v.isNew = false; });
-  videoData.sort((a,b)=>b.hotLevel-a.hotLevel);
-  bgmData.forEach(b=>{ if(Math.random()<0.4) b.count += Math.round(Math.random()*5+1); });
-  trendData.forEach(t=>{ t.pct = Math.min(99, Math.max(60, t.pct + Math.round(Math.random()*2-1))); });
-  renderCards(); renderBgmPanel(); renderTrendPanel();
-  updateRefreshTime();
+function renderVideos() {
+    var q = getQuery();
+    var list = VIDEOS.filter(function(v){ return matchAny(q, [v.t, v.tags.join(" "), v.play, v.like, v.comment]); });
+    var html = "";
+    list.forEach(function(v){
+        var tags = v.tags.map(function(t){ return '<span class="formula-tag">' + hl(t) + '</span>'; }).join("");
+        html += '<div class="video-card">' +
+            '<div class="video-top">' +
+                '<div class="video-title">' + hl(v.t) + '</div>' +
+                '<span class="badge ' + v.badge + '">' + v.badgeTxt + '</span>' +
+            '</div>' +
+            '<div class="video-stats">' +
+                '<span>播放 <b>' + v.play + '</b></span>' +
+                '<span>点赞 <b>' + v.like + '</b></span>' +
+                '<span>评论 <b>' + v.comment + '</b></span>' +
+            '</div>' +
+            '<div class="formula-tags">' + tags + '</div>' +
+        '</div>';
+    });
+    document.getElementById("videoList").innerHTML = html || emptyHtml();
+    showStatus("analysisStatus", list.length);
 }
 
-// ========== RENDER FUNCTIONS ==========
-function renderCards(){
-  const f = getFilteredData();
-  document.getElementById('cardsGrid').innerHTML = f.length ? f.map(v=>`
-    <div class="card">
-      <div class="card-header">
-        <span class="p-badge ${v.platform==='xiaohongshu'?'xiaohongshu':v.platform}">${v.platform==='douyin'?'📱 抖音':v.platform==='bilibili'?'📺 B站':v.platform==='xiaohongshu'?'📕 小红书':v.platform==='kuaishou'?'⚡ 快手':'🌐 微博'}</span>
-        <span>${v.isNew?'<span class="new-badge">🆕 刚刚监测到</span>':''}${v.trending?'<span class="hot-tag">🚀 趋势上升</span>':''}</span>
-      </div>
-      <div class="card-body">
-        <div class="card-title">${v.title}</div>
-        <div class="card-tags">${v.tags.map(t=>`<span class="tag">#${t}</span>`).join('')}</div>
-        <div class="card-stats"><span>👁 ${v.views}</span>${v.likes!=='—'?`<span>❤ ${v.likes}</span>`:''}${v.comments?`<span>💬 ${v.comments}</span>`:''}${v.shares?`<span>🔄 ${v.shares}</span>`:''}${v.collections?`<span>⭐ ${v.collections}</span>`:''}${v.danmaku?`<span>📝 ${v.danmaku}弹幕</span>`:''}</div>
-        <div class="bgm-row"><strong>🎵 BGM推荐：</strong>${v.bgm}</div>
-        <div class="copy-row"><strong>✍️ 脚本框架：</strong>${v.script}</div>
-      </div>
-      <div class="card-footer"><span>${v.creator} · ${v.followers}</span><span style="color:var(--accent);font-weight:600;">🔥 热度 ${v.hotLevel}</span></div>
-    </div>
-  `).join('') : `<div class="empty-tip">😕 未找到与「${currentKeyword}」相关的内容，换个关键词试试～</div>`;
-  document.getElementById('c-douyin').textContent=videoData.filter(v=>v.platform==='douyin').length;
-  document.getElementById('c-bilibili').textContent=videoData.filter(v=>v.platform==='bilibili').length;
-  document.getElementById('c-xhs').textContent=videoData.filter(v=>v.platform==='xiaohongshu').length;
-  document.getElementById('c-kuaishou').textContent=videoData.filter(v=>v.platform==='kuaishou').length;
-  document.getElementById('c-total').textContent=videoData.length;
+function renderIdeas() {
+    var q = getQuery();
+    var list = IDEAS.filter(function(it){ return matchAny(q, [it.title, it.desc, it.tags, it.bgm, it.cam, it.shot.join(" ")]); });
+    var html = "";
+    list.forEach(function(it){
+        var shotHtml = it.shot.map(function(s, si){
+            return '<div class="shot-step"><span class="step-num">' + (si+1) + '</span><span>' + hl(s) + '</span></div>';
+        }).join("");
+        html += '<div class="idea-card">' +
+            '<div class="idea-num">' + it.n + '</div>' +
+            '<div class="idea-body">' +
+                '<div class="idea-title">' + hl(it.title) + '</div>' +
+                '<div class="idea-desc">' + hl(it.desc) + '</div>' +
+                '<div class="idea-meta"><span class="idea-status plan">' + hl(it.tags) + '</span></div>' +
+                '<button class="shot-btn" style="margin-top:10px" onclick="toggleShot(this)">查看拍摄脚本 + BGM</button>' +
+                '<div class="shot-panel">' +
+                    '<div class="shot-title">拍摄脚本</div>' + shotHtml +
+                    '<div class="shot-meta">' +
+                        '<span class="shot-tag">BGM：' + hl(it.bgm) + '</span>' +
+                        '<span class="shot-tag time">时长：' + it.time + '</span>' +
+                        '<span class="shot-tag cam">拍摄：' + hl(it.cam) + '</span>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
+    });
+    document.getElementById("ideaList").innerHTML = html || emptyHtml();
+    showStatus("ideasStatus", list.length);
 }
 
-function filterPlatform(p,el){
-  document.querySelectorAll('.pf-tag').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  currentFilter = p;
-  renderCards();
+function renderPlans() {
+    var q = getQuery();
+    var list = PLANS.filter(function(p){ return matchAny(q, [p.d, p.time, p.t, p.p, p.st]); });
+    var html = "";
+    list.forEach(function(p){
+        html += '<tr>' +
+            '<td>' + p.d + '</td>' +
+            '<td>' + p.time + '</td>' +
+            '<td class="td-title">' + hl(p.t) + '</td>' +
+            '<td>' + hl(p.p) + '</td>' +
+            '<td><span class="status-pill ' + p.s + '">' + p.st + '</span></td>' +
+        '</tr>';
+    });
+    document.getElementById("planBody").innerHTML = html;
+    document.getElementById("planBody").parentNode.querySelector(".empty-state") &&
+        document.getElementById("planBody").parentNode.querySelector(".empty-state").remove();
+    if (!list.length) {
+        var tr = document.createElement("tr");
+        tr.innerHTML = '<td colspan="5">' + emptyHtml() + '</td>';
+        document.getElementById("planBody").appendChild(tr);
+    }
+    showStatus("planStatus", list.length);
 }
 
-function renderBgmPanel(){
-  document.getElementById('bgmList').innerHTML = bgmData.map((b,i)=>`
-    <div class="trend-item"><div><span style="color:var(--gold);font-weight:700;margin-right:8px;">#${i+1}</span><span>${b.name}</span><span style="color:var(--text-dim);font-size:10px;"> — ${b.artist}</span></div><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:10px;color:var(--text-dim);">${b.use}</span><span style="font-size:10px;color:var(--green);">${b.trend}</span><span style="color:var(--accent);font-weight:600;font-size:11px;">${b.count}万次</span></div></div>
-  `).join('');
-  document.getElementById('bgmLiveList').innerHTML = bgmData.map((b,i)=>`
-    <div class="trend-item"><div><span style="color:var(--gold);font-weight:700;margin-right:8px;">#${i+1}</span><span>${b.name}</span><span style="color:var(--text-dim);font-size:10px;"> — ${b.artist}</span></div><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:10px;color:var(--text-dim);">${b.use}</span><span style="color:var(--accent);font-weight:600;font-size:11px;">${b.count}万次</span></div></div>
-  `).join('');
+function renderFormulas() {
+    var q = getQuery();
+    var list = FORMULAS.filter(function(f){ return matchAny(q, [f.name, f.desc, f.ex]); });
+    var html = "";
+    list.forEach(function(f){
+        html += '<div class="formula-card ' + f.cls + '">' +
+            '<div class="formula-name">' + hl(f.name) + '</div>' +
+            '<div class="formula-desc">' + hl(f.desc) + '</div>' +
+            '<div class="formula-example">' + hl(f.ex) + '</div>' +
+        '</div>';
+    });
+    document.getElementById("formulaList").innerHTML = html || emptyHtml();
+    showStatus("formulaStatus", list.length);
 }
 
-function renderTrendPanel(){
-  document.getElementById('trendList').innerHTML = trendData.map(t=>`
-    <div class="trend-item"><span>${t.name}</span><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:10px;color:var(--text-dim);">${t.count}</span><div style="width:50px;height:5px;background:#e5e7eb;border-radius:3px;"><div style="width:${t.pct}%;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:3px;"></div></div><span style="color:var(--accent);font-weight:600;font-size:11px;">${t.pct}</span></div></div>
-  `).join('');
+function renderTodos() {
+    var q = getQuery();
+    var list = TODOS.filter(function(t){ return matchAny(q, [t]); });
+    var html = "";
+    list.forEach(function(t){
+        html += '<div class="todo-item" onclick="toggleTodo(this)">' +
+            '<div class="todo-check">✓</div>' +
+            '<div class="todo-text">' + hl(t) + '</div>' +
+        '</div>';
+    });
+    document.getElementById("todoList").innerHTML = html || emptyHtml();
+    showStatus("todoStatus", list.length);
 }
 
-function switchTab(tab){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('tab-'+tab).classList.add('active');
+/* ===== 统一渲染当前 tab ===== */
+function renderCurrent() {
+    if (currentTab === "dashboard") { renderTop3(); }
+    else if (currentTab === "hotspot") { renderHot(); }
+    else if (currentTab === "analysis") { renderVideos(); }
+    else if (currentTab === "account") { renderAccount(); }
+    else if (currentTab === "ideas") { renderIdeas(); }
+    else if (currentTab === "plan") { renderPlans(); }
+    else if (currentTab === "formula") { renderFormulas(); }
+    else if (currentTab === "todo") { renderTodos(); }
 }
 
-function copyPrompt(id){
-  document.getElementById(id).select();
-  document.execCommand('copy');
-  const t=document.createElement('div');t.className='copied-toast';t.textContent='✅ 提示词已复制！粘贴到任意AI对话中即可使用';
-  document.body.appendChild(t);setTimeout(()=>t.remove(),2200);
+/* ===== Tab 切换 ===== */
+document.querySelectorAll(".tab").forEach(function(btn){
+    btn.addEventListener("click", function(){
+        document.querySelectorAll(".tab").forEach(function(b){ b.classList.remove("active"); });
+        document.querySelectorAll(".section").forEach(function(s){ s.classList.remove("active"); });
+        btn.classList.add("active");
+        currentTab = btn.dataset.tab;
+        document.getElementById(currentTab).classList.add("active");
+        renderCurrent();
+    });
+});
+
+/* ===== 实时搜索 ===== */
+var searchInput = document.getElementById("searchInput");
+var searchClear = document.getElementById("searchClear");
+
+searchInput.addEventListener("input", function(){
+    searchClear.classList.toggle("show", this.value.length > 0);
+    renderCurrent();
+});
+
+searchClear.addEventListener("click", function(){
+    searchInput.value = "";
+    searchClear.classList.remove("show");
+    renderCurrent();
+    searchInput.focus();
+});
+
+/* ===== 平台切换（实时热点） ===== */
+document.querySelectorAll(".mini-tab[data-plat]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+        document.querySelectorAll(".mini-tab[data-plat]").forEach(function(b){ b.classList.remove("active"); });
+        btn.classList.add("active");
+        currentPlat = btn.dataset.plat;
+        renderHot();
+    });
+});
+
+/* ===== 待办勾选 ===== */
+function toggleTodo(el){
+    el.classList.toggle("done");
 }
 
-// ========== INIT ==========
-renderCards();
-renderBgmPanel();
-renderTrendPanel();
-updateRefreshTime();
-setInterval(updateRefreshTime, 1000);      // 实时时钟（每秒）
-setInterval(simulateRealtime, 15000);      // 每15秒自动刷新一次热点数据
+/* ===== 拍摄方案展开/收起 ===== */
+function toggleShot(btn){
+    var panel = btn.nextElementSibling;
+    var isOpen = panel.classList.contains("open");
+    panel.classList.toggle("open");
+    btn.classList.toggle("open", !isOpen);
+    if (isOpen) {
+        btn.textContent = btn.getAttribute("data-orig");
+    } else {
+        if (!btn.getAttribute("data-orig")) btn.setAttribute("data-orig", btn.textContent);
+        btn.textContent = "收起方案";
+    }
+}
+
+/* ===== 图表 ===== */
+(function(){
+    var data = [82, 95, 88, 110, 121, 115, 128];
+    var data2 = [12, 15, 14, 18, 20, 19, 22];
+    var W = 560, H = 150, PAD = 24;
+    var max = 140;
+    var svg = '<svg viewBox="0 0 560 150">';
+    for (var g = 0; g <= 4; g++) {
+        var y = PAD + (H - PAD*2) * g / 4;
+        svg += '<line class="grid-line" x1="0" y1="' + y + '" x2="560" y2="' + y + '"/>';
+        svg += '<text class="axis-label" x="0" y="' + (y-3) + '">' + Math.round(max*(1-g/4)) + '</text>';
+    }
+    function makeLine(arr, color){
+        var pts = arr.map(function(v, i){
+            var x = PAD + (W - PAD*2) * i / (arr.length - 1);
+            var y = PAD + (H - PAD*2) * (1 - v / max);
+            return x.toFixed(1) + ',' + y.toFixed(1);
+        }).join(" ");
+        return '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+               arr.map(function(v, i){
+                   var x = PAD + (W - PAD*2) * i / (arr.length - 1);
+                   var y = PAD + (H - PAD*2) * (1 - v / max);
+                   return '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="3.5" fill="#fff" stroke="' + color + '" stroke-width="2"/>';
+               }).join("");
+    }
+    svg += makeLine(data, "#4d8dff");
+    svg += makeLine(data2, "#22c98f");
+    var days = ["周一","周二","周三","周四","周五","周六","周日"];
+    days.forEach(function(d, i){
+        var x = PAD + (W - PAD*2) * i / (days.length - 1);
+        svg += '<text class="axis-label" x="' + x.toFixed(1) + '" y="148" text-anchor="middle">' + d + '</text>';
+    });
+    svg += '</svg>';
+    document.getElementById("lineChart").innerHTML = svg;
+
+    var bars = [
+        { label: "推荐", val: 62, color: "#ff5e62" },
+        { label: "关注", val: 24, color: "#4d8dff" },
+        { label: "搜索", val: 14, color: "#f2b705" }
+    ];
+    var bh = "";
+    bars.forEach(function(b){
+        bh += '<div class="bar-col">' +
+            '<div class="bar" style="height:' + b.val + '%;background:linear-gradient(180deg,' + b.color + ',rgba(0,0,0,.05))">' +
+                '<span class="val">' + b.val + '%</span>' +
+            '</div>' +
+            '<div class="bar-label">' + b.label + '</div>' +
+        '</div>';
+    });
+    document.getElementById("barChart").innerHTML = bh;
+})();
+
+/* ===== 日期 ===== */
+(function(){
+    var now = new Date();
+    var week = ["日","一","二","三","四","五","六"];
+    document.getElementById("todayDate").textContent =
+        now.getFullYear() + "年" + (now.getMonth()+1) + "月" + now.getDate() + "日 · 周" + week[now.getDay()];
+})();
+
+/* ===== 账号定位 ===== */
+var accPlat = "dy";
+var lastAccName = "";
+
+var ACC_DOMAINS = [
+    { keys: ["糖水","甜品","甜","奶茶","咖啡","饮品","餐饮","美食","吃","糖"], name: "美食甜品", pos: "同城甜品探店官", dirs: ["治愈系探店实录", "低成本高颜值教程", "门店日常vlog", "同城美食地图"] },
+    { keys: ["萌","宠","猫","狗","喵","汪"], name: "萌宠生活", pos: "治愈系萌宠博主", dirs: ["宠物养成记录", "人宠互动剧情", "宠物冷知识", "萌宠治愈日常"] },
+    { keys: ["穿搭","服装","潮","美妆","护肤","变美","时尚"], name: "时尚美妆", pos: "变美干货种草官", dirs: ["每日穿搭公式", "变美干货教程", "开箱测评", "氛围感出片"] },
+    { keys: ["健身","运动","减脂","瘦","瑜伽"], name: "健身塑形", pos: "自律健身教练", dirs: ["跟练打卡系列", "减脂餐教程", "体态矫正干货", "健身前后对比"] },
+    { keys: ["旅行","旅游","户外","露营","探店"], name: "旅行探店", pos: "城市探索向导", dirs: ["城市宝藏地图", "穷游攻略", "酒店民宿测评", "旅行Vlog"] },
+    { keys: ["母婴","宝宝","育儿","亲子","宝妈"], name: "母婴育儿", pos: "科学育儿妈妈", dirs: ["育儿知识干货", "母婴好物测评", "亲子互动日常", "辅食教程"] },
+    { keys: ["数码","手机","电脑","科技","测评"], name: "数码科技", pos: "硬核数码玩家", dirs: ["新品开箱测评", "数码干货教程", "真实使用体验", "科技冷知识"] },
+    { keys: ["家居","装修","收纳","改造","生活"], name: "家居生活", pos: "小户型改造家", dirs: ["小户型改造", "收纳整理干货", "家居好物分享", "生活仪式感"] }
+];
+var ACC_DEFAULT = { name: "美食甜品", pos: "同城甜品探店官", dirs: ["治愈系探店实录", "低成本高颜值教程", "门店日常vlog", "同城美食地图"] };
+
+var ACC_POS_POOL = [
+    "{name} · {domain} | 只做{dir}，不做大杂烩",
+    "{domain}垂类 {name} | 真实感 + 强人设 = 高完播",
+    "{name}：{domain}界最会讲故事的人",
+    "{domain} {name} | 素人视角，主打真实与同频"
+];
+var ACC_DIFF = [
+    "聚焦「{domain}」单一垂类赛道，人设词锁定「{pos}」，不与大V拼价格、拼数量，改拼真实感与同城信任，形成「小而美」的差异化心智。",
+    "避开同质化的「打卡式」内容，主打「{dir}」细分切口，用确定性选题+稳定更新频率，在垂直赛道建立搜索与推荐双入口的占位优势。",
+    "对标账号的优势在规模与话题度，你的机会在「{dir}」的垂直深度与人格化表达，每一条都带明确人设口吻，让粉丝记住的是「人」而不是「视频」。"
+];
+var ACC_IDEAS = [
+    "{dir}：{name} 的一天（真实感拉满）",
+    "挑战用10元做出百元效果的{domain}",
+    "顾客第1口的真实反应合集（对镜感）",
+    "本地人私藏的{domain}地图（同城向）",
+    "从0到1：{name} 起号第7天复盘",
+    "路人盲测：能喝出贵和便宜的差别吗？"
+];
+var ACC_PLAN = [
+    "第1-2天 账号装修：头像/昵称/简介统一人设，主页封面用「结果前置」",
+    "第3-4天 连发 3 条「{dir}」测试素材，观察完播率与推荐占比",
+    "第5-6天 复刻对标账号 1 条高赞选题，加上自己的差异化开场钩子",
+    "第7天 复盘数据：留存率 >35% 的选题方向加码，低于 25% 的果断放弃"
+];
+var ACC_WARN = [
+    "新手期不要日更超过 1 条，保证每条「黄金3秒」的质量优先；",
+    "避免直接搬运对标账号的脚本与画面，平台会判定低质限流；",
+    "前 10 条以「测方向」为主，不做大额投流，等自然流量验证后再放大。"
+];
+var ACC_PLAT = {
+    dy: { name: "抖音", fans: "推荐流 + 同城双入口，粉丝画像偏 18-35 岁，爆款率参考约 1/10" },
+    xhs: { name: "小红书", fans: "搜索笔记 + 收藏驱动，女性用户占比高，适合教程/清单/合集类内容" },
+    sp: { name: "视频号", fans: "社交推荐 + 微信生态转发，中青年用户占比高，适合同城到店类内容" }
+};
+
+function hashCode(s) {
+    var h = 7;
+    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return h;
+}
+
+function generateAccountReport(name, plat) {
+    var seed = hashCode(name + plat);
+    function rnd(n) { seed = (seed * 1103515245 + 12345) >>> 0; return seed % n; }
+    var lower = name.toLowerCase();
+    var domain = null;
+    for (var i = 0; i < ACC_DOMAINS.length; i++) {
+        var d = ACC_DOMAINS[i];
+        var hit = false;
+        for (var j = 0; j < d.keys.length; j++) {
+            if (lower.indexOf(d.keys[j]) !== -1) { hit = true; break; }
+        }
+        if (hit) { domain = d; break; }
+    }
+    domain = domain || ACC_DEFAULT;
+    var dir = domain.dirs[rnd(domain.dirs.length)];
+    var pos = ACC_POS_POOL[rnd(ACC_POS_POOL.length)]
+        .replace("{name}", name).replace("{domain}", domain.name).replace("{dir}", dir);
+    var fans = (4 + rnd(28)) + "." + rnd(10) + "万";
+    var plays = (10 + rnd(50)) + "." + rnd(10) + "万";
+    var rate = (6 + rnd(8)) + "." + rnd(10) + "%";
+    var hits = 1 + rnd(3);
+    var diff = ACC_DIFF[rnd(ACC_DIFF.length)]
+        .replace("{domain}", domain.name).replace("{pos}", pos.split("：")[0]).replace("{dir}", dir);
+    var ideas = ACC_IDEAS.map(function(t){
+        return t.replace("{dir}", dir).replace("{name}", name).replace("{domain}", domain.name);
+    }).slice(0, 5);
+    var pct = [40, 35, 25];
+    var p = ACC_PLAT[plat];
+    var plan = ACC_PLAN.map(function(t){ return t.replace("{dir}", dir); });
+    var html = "";
+    html += '<div class="acc-hero">' +
+        '<div class="acc-avatar">' + esc(name.charAt(0)) + '</div>' +
+        '<div class="acc-hero-info">' +
+            '<div class="acc-name">' + esc(name) + ' · 账号定位诊断</div>' +
+            '<div class="acc-tags"><span class="acc-tag">' + esc(domain.name) + '</span><span class="acc-tag">' + esc(p.name) + '</span><span class="acc-tag">垂类深挖</span></div>' +
+            '<div class="acc-stats">' +
+                '<div class="acc-stat"><b>' + fans + '</b><span>估算粉丝</span></div>' +
+                '<div class="acc-stat"><b>' + plays + '</b><span>近30天播放</span></div>' +
+                '<div class="acc-stat"><b>' + rate + '</b><span>平均互动率</span></div>' +
+                '<div class="acc-stat"><b>' + hits + '</b><span>近30天爆款数</span></div>' +
+            '</div>' +
+        '</div>' +
+    '</div>';
+    html += '<div class="acc-grid">';
+    html += '<div class="acc-block"><h4>人设定位</h4><div class="acc-diff">' + esc(pos) + '</div>' +
+        '<div class="acc-diff" style="margin-top:8px;color:var(--muted);font-size:12px">' + esc(p.fans) + '</div></div>';
+    html += '<div class="acc-block"><h4>内容赛道占比</h4><ul class="acc-list">';
+    domain.dirs.slice(0, 3).forEach(function(x, i){
+        html += '<li><span>' + esc(x) + '</span><b>' + pct[i] + '%</b></li>';
+    });
+    html += '</ul></div>';
+    html += '<div class="acc-block"><h4>差异化定位</h4><div class="acc-diff">' + esc(diff) + '</div></div>';
+    html += '<div class="acc-block"><h4>自动生成 · 5个爆款选题</h4><ul class="acc-list">';
+    ideas.forEach(function(t){ html += '<li>' + esc(t) + '</li>'; });
+    html += '</ul></div>';
+    html += '</div>';
+    html += '<div class="acc-block" style="margin-top:14px"><h4>起号执行建议（7天）</h4><ul class="acc-list">';
+    plan.forEach(function(t){ html += '<li>' + esc(t) + '</li>'; });
+    html += '</ul></div>';
+    html += '<div class="acc-warn">⚠ ' + esc(ACC_WARN.join("")) + '</div>';
+    return html;
+}
+
+function runAccountGen() {
+    var input = document.getElementById("accInput");
+    var name = input.value.trim();
+    if (!name) { input.focus(); return; }
+    lastAccName = name;
+    document.getElementById("accLoading").classList.add("show");
+    var report = document.getElementById("accReport");
+    report.classList.remove("show");
+    report.innerHTML = "";
+    setTimeout(function(){
+        report.innerHTML = generateAccountReport(lastAccName, accPlat);
+        report.classList.add("show");
+        document.getElementById("accLoading").classList.remove("show");
+        renderCurrent();
+    }, 1300);
+}
+
+function renderAccount() {
+    if (!lastAccName) return;
+    var el = document.getElementById("accReport");
+    var q = getQuery();
+    var match = !q || lastAccName.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+    el.classList.toggle("show", match);
+    showStatus("accountStatus", match ? 1 : 0);
+}
+
+document.getElementById("accBtn").addEventListener("click", runAccountGen);
+document.getElementById("accInput").addEventListener("keydown", function(e){
+    if (e.key === "Enter") runAccountGen();
+});
+document.querySelectorAll(".acc-chip").forEach(function(chip){
+    chip.addEventListener("click", function(){
+        document.getElementById("accInput").value = chip.textContent;
+        runAccountGen();
+    });
+});
+document.querySelectorAll(".mini-tab[data-accplat]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+        document.querySelectorAll(".mini-tab[data-accplat]").forEach(function(b){ b.classList.remove("active"); });
+        btn.classList.add("active");
+        accPlat = btn.dataset.accplat;
+        if (lastAccName) runAccountGen();
+    });
+});
+
+/* ===== 初始化 ===== */
+renderCurrent();
 </script>
 </body>
 </html>
