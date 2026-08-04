@@ -221,6 +221,52 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 <!-- TAB 2: 选题创作 -->
 <div class="tab-content" id="tab-topic">
+  <div class="benchmark-panel">
+    <div class="benchmark-header">
+      <h3>🎯 AI 爆款选题生成</h3>
+      <span class="bf-tip">输入平台/赛道/账号定位，AI 自动生成爆款选题（DeepSeek）</span>
+    </div>
+    <div class="bf-row">
+      <div class="bf-item">
+        <label>平台</label>
+        <select id="topic-platform">
+          <option value="抖音">抖音</option>
+          <option value="小红书">小红书</option>
+          <option value="视频号">视频号</option>
+          <option value="B站">B站</option>
+        </select>
+      </div>
+      <div class="bf-item">
+        <label>赛道 / 领域</label>
+        <input id="topic-niche" placeholder="如：美食探店 / 职场成长 / 母婴育儿">
+      </div>
+      <div class="bf-item">
+        <label>账号定位（一句话）</label>
+        <input id="topic-position" placeholder="如：专注职场干货的治愈系口播号">
+      </div>
+      <div class="bf-item">
+        <label>近期热点（可选，逗号分隔）</label>
+        <input id="topic-hot" placeholder="如：AI写作, 副业搞钱, 打工人">
+      </div>
+      <div class="bf-item">
+        <label>选题数量</label>
+        <select id="topic-count">
+          <option value="10">10 个</option>
+          <option value="15" selected>15 个</option>
+          <option value="20">20 个</option>
+        </select>
+      </div>
+      <div class="bf-item">
+        <label>目标受众</label>
+        <input id="topic-audience" placeholder="如：25-35岁 职场女性">
+      </div>
+    </div>
+    <div class="bf-actions">
+      <button class="btn btn-primary" id="topic-btn" onclick="genTopics()">🎯 生成爆款选题</button>
+      <span class="bf-status" id="topic-status"></span>
+    </div>
+    <div class="benchmark-result" id="topic-result" style="display:none;"></div>
+  </div>
   <div class="workflow">
     <span class="wf-step done">① 账号定位</span><span class="wf-arrow">→</span>
     <span class="wf-step done">② 受众画像</span><span class="wf-arrow">→</span>
@@ -315,6 +361,61 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 <!-- TAB 3: 文案/脚本 -->
 <div class="tab-content" id="tab-copywriting">
+  <div class="benchmark-panel">
+    <div class="benchmark-header">
+      <h3>✍️ AI 文案脚本自动生成</h3>
+      <span class="bf-tip">输入选题/时长/风格，AI 自动生成完整文案脚本（DeepSeek）</span>
+    </div>
+    <div class="bf-row">
+      <div class="bf-item">
+        <label>平台</label>
+        <select id="cw-platform">
+          <option value="抖音">抖音</option>
+          <option value="小红书">小红书</option>
+          <option value="视频号">视频号</option>
+          <option value="B站">B站</option>
+        </select>
+      </div>
+      <div class="bf-item">
+        <label>内容形式</label>
+        <select id="cw-type">
+          <option value="短视频脚本">短视频脚本（分镜）</option>
+          <option value="口播文案">口播文案</option>
+          <option value="小红书图文笔记">小红书图文笔记</option>
+          <option value="种草文案">种草文案</option>
+          <option value="剧情脚本">剧情脚本</option>
+        </select>
+      </div>
+      <div class="bf-item">
+        <label>选题 / 主题</label>
+        <input id="cw-topic" placeholder="如：新手如何用AI做副业赚钱">
+      </div>
+      <div class="bf-item">
+        <label>时长（秒，脚本类）</label>
+        <input id="cw-duration" placeholder="如：60 / 30 / 90">
+      </div>
+      <div class="bf-item">
+        <label>风格调性</label>
+        <select id="cw-style">
+          <option value="专业干货">专业干货</option>
+          <option value="搞笑">搞笑</option>
+          <option value="治愈">治愈</option>
+          <option value="犀利吐槽">犀利吐槽</option>
+          <option value="知识科普">知识科普</option>
+          <option value="励志">励志</option>
+        </select>
+      </div>
+      <div class="bf-item">
+        <label>核心卖点/关键词（可选）</label>
+        <input id="cw-keywords" placeholder="如：低门槛, 月入过万, 实操步骤">
+      </div>
+    </div>
+    <div class="bf-actions">
+      <button class="btn btn-primary" id="cw-btn" onclick="genCopywriting()">✍️ 生成文案脚本</button>
+      <span class="bf-status" id="cw-status"></span>
+    </div>
+    <div class="benchmark-result" id="cw-result" style="display:none;"></div>
+  </div>
   <div class="prompt-panel">
     <div class="prompt-card">
       <h3><span class="num">5</span>短视频拍摄脚本生成</h3>
@@ -442,6 +543,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <div class="bf-item">
         <label>目标受众</label>
         <input id="bgm-audience" placeholder="如：18-25岁 / 25-35岁">
+      </div>
+      <div class="bf-item">
+        <label>推荐数量</label>
+        <select id="bgm-count">
+          <option value="20">20 首</option>
+          <option value="30" selected>30 首</option>
+          <option value="50">50 首</option>
+        </select>
       </div>
     </div>
     <div class="bf-actions">
@@ -676,7 +785,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
     <div class="prompt-card">
       <h3><span class="num">18</span>变现路径规划</h3>
-      <div class="desc">从0到100万粉各阶段变现策略+选品建议+广告报价参考+私信引流方案。</div>
+      <div class="desc">从0到100万粉各阶段变现策略+选品建议+广告报价参考+私域引流方案。</div>
       <textarea id="prompt-monetize" readonly>你是社交媒体商业化顾问。
 
 账号信息：
@@ -691,7 +800,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 2. 变现路径图：1000粉→1万粉→10万粉→100万粉各阶段策略
 3. 选品/选商建议（品类+佣金区间）
 4. 广告报价参考（按当前粉丝量级合理报价）
-5. 私信引流方案
+5. 私域引流方案
 6. 变现内容占比建议（多少变现vs价值内容，避免掉粉）</textarea>
       <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-monetize')">📋 复制提示词</button></div>
     </div>
@@ -940,6 +1049,155 @@ function bfShowToast(msg){
   document.body.appendChild(t);setTimeout(()=>t.remove(),2200);
 }
 
+// ========== AI 爆款选题生成 (DeepSeek) ==========
+async function genTopics(){
+  const btn = document.getElementById('topic-btn');
+  const status = document.getElementById('topic-status');
+  const result = document.getElementById('topic-result');
+
+  const platform = document.getElementById('topic-platform').value;
+  const niche = document.getElementById('topic-niche').value.trim();
+  const position = document.getElementById('topic-position').value.trim();
+  const hot = document.getElementById('topic-hot').value.trim();
+  const count = document.getElementById('topic-count').value || '15';
+  const audience = document.getElementById('topic-audience').value.trim() || '不限';
+  let apiKey = localStorage.getItem('bf_deepseek_key') || '';
+
+  if(!niche){ alert('请填写赛道/领域，例如：职场成长'); return; }
+  if(!apiKey){
+    apiKey = prompt('请粘贴你的 DeepSeek API Key（sk- 开头，将保存在本浏览器）：');
+    if(!apiKey) return;
+    localStorage.setItem('bf_deepseek_key', apiKey);
+  }
+
+  btn.disabled = true;
+  status.textContent = '⏳ AI 生成中，约需 15-35 秒...';
+  result.style.display = 'block';
+  result.innerHTML = '<div class="bf-loading"><span class="spinner"></span>正在分析赛道与热点、挖掘爆款选题...</div>';
+
+  const prompt = `你是短视频爆款选题策划专家，非常熟悉${platform}的流量逻辑。
+
+请为以下账号生成 ${count} 个爆款选题：
+- 平台：${platform}
+- 赛道/领域：${niche}
+- 账号定位：${position || '不限'}
+- 目标受众：${audience}
+- 近期热点（可选参考）：${hot || '无'}
+
+请按以下格式输出，每个选题用【选题N】标出：
+【选题1】标题（吸睛但不过度标题党）
+- 爆款逻辑（情绪共鸣 / 实用价值 / 猎奇心理 / 争议性 / 蹭热点）
+- 内容形式建议（口播 / 剧情 / 教程 / 测评 / vlog / 图文）
+- 预估爆款指数（1-10分）
+- 切入点与钩子（前3秒怎么开场）
+
+选题配比要求：约30%蹭热点 + 40%常青选题 + 30%争议/互动选题。选题要具体、有反差感、贴近真实用户痛点。`;
+
+  try{
+    const resp = await fetch(DEEPSEEK_API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+      body: JSON.stringify({
+        model: DEEPSEEK_MODEL,
+        messages: [{role:'user', content: prompt}],
+        temperature: 0.8,
+        max_tokens: 5000
+      })
+    });
+    if(!resp.ok){
+      let detail='';
+      try{ const e=await resp.json(); detail=e.error?.message||e.message||''; }catch(_){}
+      throw new Error('HTTP '+resp.status+' '+(detail||'接口调用失败'));
+    }
+    const data = await resp.json();
+    const content = data.choices?.[0]?.message?.content || '（无返回内容）';
+    result.innerHTML = '<div class="bf-head"><strong>🎯 爆款选题结果</strong><button class="btn" onclick="bfCopyResult(\'topic-result\')">📋 复制结果</button></div><div class="bf-body">'+bfRenderMarkdown(content)+'</div>';
+    result._last = content;
+    status.textContent = '✅ 生成完成，共 '+count+' 个选题';
+  }catch(err){
+    console.error(err);
+    result.innerHTML = '<div class="bf-error">❌ 生成失败：'+bfEscapeHtml(err.message)+'<br><span style="font-size:11px;color:var(--text-dim);">请检查 API Key 是否正确、网络是否可用。</span></div>';
+    status.textContent = '';
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+// ========== AI 文案脚本自动生成 (DeepSeek) ==========
+async function genCopywriting(){
+  const btn = document.getElementById('cw-btn');
+  const status = document.getElementById('cw-status');
+  const result = document.getElementById('cw-result');
+
+  const platform = document.getElementById('cw-platform').value;
+  const type = document.getElementById('cw-type').value;
+  const topic = document.getElementById('cw-topic').value.trim();
+  const duration = document.getElementById('cw-duration').value.trim() || '60';
+  const style = document.getElementById('cw-style').value;
+  const keywords = document.getElementById('cw-keywords').value.trim();
+  let apiKey = localStorage.getItem('bf_deepseek_key') || '';
+
+  if(!topic){ alert('请填写选题/主题，例如：新手如何用AI做副业赚钱'); return; }
+  if(!apiKey){
+    apiKey = prompt('请粘贴你的 DeepSeek API Key（sk- 开头，将保存在本浏览器）：');
+    if(!apiKey) return;
+    localStorage.setItem('bf_deepseek_key', apiKey);
+  }
+
+  btn.disabled = true;
+  status.textContent = '⏳ AI 生成中，约需 15-35 秒...';
+  result.style.display = 'block';
+  result.innerHTML = '<div class="bf-loading"><span class="spinner"></span>正在撰写文案脚本...</div>';
+
+  const prompt = `你是一位资深短视频编剧和文案专家，非常熟悉${platform}的爆款内容结构。
+
+请根据以下需求创作一份完整的${type}：
+- 平台：${platform}
+- 内容形式：${type}
+- 选题/主题：${topic}
+- 视频时长：${duration} 秒
+- 风格调性：${style}
+- 核心卖点/关键词：${keywords || '无'}
+
+要求：
+1. 短视频脚本：请输出完整分镜表（镜头|时长|画面描述|台词/旁白|字幕|BGM建议），前3秒强钩子、每15秒信息增量、结尾互动引导、台词口语化
+2. 口播文案：输出完整口播稿（含开场钩子3个备选、正文分段、结尾CTA引导关注/评论）+ 关键词自然融入
+3. 小红书图文笔记：输出5个标题选项 + 500-800字正文（开头痛点→分段干货→结尾引导）+ 图片文案 + 5-8个话题标签
+4. 种草文案：突出卖点、痛点场景带入、效果承诺、行动号召
+5. 剧情脚本：完整分镜 + 台词 + 反转设计 + 结尾升华
+
+请直接输出成品内容，开头给出【内容定位】一句话说明这条内容的目标人群与情绪点。`;
+
+  try{
+    const resp = await fetch(DEEPSEEK_API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+      body: JSON.stringify({
+        model: DEEPSEEK_MODEL,
+        messages: [{role:'user', content: prompt}],
+        temperature: 0.8,
+        max_tokens: 5000
+      })
+    });
+    if(!resp.ok){
+      let detail='';
+      try{ const e=await resp.json(); detail=e.error?.message||e.message||''; }catch(_){}
+      throw new Error('HTTP '+resp.status+' '+(detail||'接口调用失败'));
+    }
+    const data = await resp.json();
+    const content = data.choices?.[0]?.message?.content || '（无返回内容）';
+    result.innerHTML = '<div class="bf-head"><strong>✍️ 文案脚本结果</strong><button class="btn" onclick="bfCopyResult(\'cw-result\')">📋 复制结果</button></div><div class="bf-body">'+bfRenderMarkdown(content)+'</div>';
+    result._last = content;
+    status.textContent = '✅ 生成完成';
+  }catch(err){
+    console.error(err);
+    result.innerHTML = '<div class="bf-error">❌ 生成失败：'+bfEscapeHtml(err.message)+'<br><span style="font-size:11px;color:var(--text-dim);">请检查 API Key 是否正确、网络是否可用。</span></div>';
+    status.textContent = '';
+  }finally{
+    btn.disabled = false;
+  }
+}
+
 // ========== AI 实时热点抓取 (DeepSeek) ==========
 async function fetchAIHotspots(){
   const btn = document.getElementById('hot-btn');
@@ -1057,6 +1315,7 @@ async function matchBGM(){
   const rhythm = document.getElementById('bgm-rhythm').value;
   const duration = document.getElementById('bgm-duration').value.trim() || '30';
   const audience = document.getElementById('bgm-audience').value.trim() || '不限';
+  const count = document.getElementById('bgm-count').value || '30';
   let apiKey = localStorage.getItem('bf_deepseek_key') || '';
 
   if(!topic){ alert('请填写视频主题，例如：深夜治愈独居生活Vlog'); return; }
@@ -1073,7 +1332,7 @@ async function matchBGM(){
 
   const prompt = `你是短视频平台音乐策划专家，非常熟悉${platform}上当前爆火的 BGM 和适配场景。
 
-请为以下视频推荐 5 首 BGM（2首当前爆火蹭流量 + 2首精准提质感 + 1首小众差异化）：
+请为以下视频推荐 ${count} 首 BGM（覆盖：当前爆火蹭流量 / 精准提质感 / 小众差异化 三个梯队）：
 - 平台：${platform}
 - 视频主题：${topic}
 - 视频情绪：${mood}
@@ -1089,7 +1348,7 @@ async function matchBGM(){
 - 热度趋势（上升中/持续热门/经典常青）
 - 在${platform}的使用量级（如有）
 
-最后单独给出一段【剪辑建议】：结合视频主题${topic}和${rhythm}节奏，给出这首歌最适合切入的秒数点（如副歌前2秒切入等）。请基于你的知识尽量推荐真实存在且适配的歌曲。`;
+最后单独给出一段【剪辑建议】：结合视频主题${topic}和${rhythm}节奏，给出最适合切入的秒数点（如副歌前2秒切入等）。请基于你的知识尽量推荐真实存在且适配的歌曲，${count} 首要保证数量充足、类型丰富。`;
 
   try{
     const resp = await fetch(DEEPSEEK_API, {
@@ -1099,7 +1358,7 @@ async function matchBGM(){
         model: DEEPSEEK_MODEL,
         messages: [{role:'user', content: prompt}],
         temperature: 0.7,
-        max_tokens: 2000
+        max_tokens: 6000
       })
     });
     if(!resp.ok){
