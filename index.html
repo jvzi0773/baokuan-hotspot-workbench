@@ -58,7 +58,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .card-body{padding:12px 16px;}
 .card-title{font-size:14px;font-weight:600;line-height:1.4;margin-bottom:6px;}
 .card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
-.tag{padding:2px 7px;border-radius:5px;font-size:10px;background:#f3f4f6;color:var(--text-dim);}.tag{padding:2px 7px;border-radius:5px;font-size:10px;background:#f3f4f6;color:var(--text-dim);}
+.tag{padding:2px 7px;border-radius:5px;font-size:10px;background:#f3f4f6;color:var(--text-dim);}
 .card-stats{display:flex;gap:14px;margin-bottom:10px;font-size:11px;color:var(--text-dim);flex-wrap:wrap;}
 .bgm-row{background:linear-gradient(90deg,rgba(139,92,246,0.06),transparent);border-left:3px solid var(--purple);padding:8px 12px;margin:8px 0;border-radius:0 8px 8px 0;font-size:11px;}
 .bgm-row strong{color:var(--purple);}
@@ -156,6 +156,46 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 <!-- TAB 1: 热点监控 -->
 <div class="tab-content active" id="tab-hot">
+  <div class="benchmark-panel">
+    <div class="benchmark-header">
+      <h3>📡 AI 实时热点抓取</h3>
+      <span class="bf-tip">调用 DeepSeek 生成各平台今日最新热点（基于其知识库的最新洞察，可指定平台/赛道定制）</span>
+    </div>
+    <div class="bf-row">
+      <div class="bf-item">
+        <label>平台范围</label>
+        <select id="hot-platform">
+          <option value="全平台（抖音/小红书/视频号/B站/快手/微博）">全平台</option>
+          <option value="抖音">抖音</option>
+          <option value="小红书">小红书</option>
+          <option value="视频号">视频号</option>
+          <option value="B站">B站</option>
+          <option value="快手">快手</option>
+          <option value="微博">微博</option>
+        </select>
+      </div>
+      <div class="bf-item">
+        <label>赛道偏好（可选）</label>
+        <input id="hot-niche" placeholder="如：职场 / 美食 / AI科技 / 母婴">
+      </div>
+      <div class="bf-item">
+        <label>抓取数量</label>
+        <select id="hot-count">
+          <option value="8">8 条</option>
+          <option value="12" selected>12 条</option>
+          <option value="18">18 条</option>
+        </select>
+      </div>
+      <div class="bf-item">
+        <label>DeepSeek API Key（仅存本浏览器）</label>
+        <input type="password" id="hot-apikey" placeholder="sk- 开头，与账号定位共用">
+      </div>
+    </div>
+    <div class="bf-actions">
+      <button class="btn btn-primary" id="hot-btn" onclick="fetchAIHotspots()">🚀 抓取今日实时热点</button>
+      <span class="bf-status" id="hot-status"></span>
+    </div>
+  </div>
   <div class="stats-row">
     <div class="stat-card"><div class="stat-icon" style="background:rgba(254,44,85,0.15)">📱</div><div class="stat-info"><h3 id="c-douyin">5</h3><p>抖音爆款</p></div></div>
     <div class="stat-card"><div class="stat-icon" style="background:rgba(251,114,153,0.15)">📺</div><div class="stat-info"><h3 id="c-bilibili">3</h3><p>B站热门</p></div></div>
@@ -355,6 +395,61 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 <!-- TAB 4: BGM推荐 -->
 <div class="tab-content" id="tab-bgm">
+  <div class="benchmark-panel">
+    <div class="benchmark-header">
+      <h3>🎵 AI 智能 BGM 匹配</h3>
+      <span class="bf-tip">输入视频需求，AI 匹配当前爆火或适配的 BGM（DeepSeek）</span>
+    </div>
+    <div class="bf-row">
+      <div class="bf-item">
+        <label>平台</label>
+        <select id="bgm-platform">
+          <option value="抖音">抖音</option>
+          <option value="小红书">小红书</option>
+          <option value="视频号">视频号</option>
+          <option value="B站">B站</option>
+        </select>
+      </div>
+      <div class="bf-item">
+        <label>视频主题</label>
+        <input id="bgm-topic" placeholder="如：深夜治愈独居生活Vlog">
+      </div>
+      <div class="bf-item">
+        <label>视频情绪</label>
+        <select id="bgm-mood">
+          <option value="欢快">欢快</option>
+          <option value="温暖">温暖</option>
+          <option value="燃">燃</option>
+          <option value="治愈">治愈</option>
+          <option value="紧张">紧张</option>
+          <option value="搞笑">搞笑</option>
+          <option value="浪漫">浪漫</option>
+          <option value="励志">励志</option>
+        </select>
+      </div>
+      <div class="bf-item">
+        <label>视频节奏</label>
+        <select id="bgm-rhythm">
+          <option value="快节奏卡点">快节奏卡点</option>
+          <option value="慢节奏氛围">慢节奏氛围</option>
+          <option value="中速叙事">中速叙事</option>
+        </select>
+      </div>
+      <div class="bf-item">
+        <label>视频时长（秒）</label>
+        <input id="bgm-duration" placeholder="如：30 / 60">
+      </div>
+      <div class="bf-item">
+        <label>目标受众</label>
+        <input id="bgm-audience" placeholder="如：18-25岁 / 25-35岁">
+      </div>
+    </div>
+    <div class="bf-actions">
+      <button class="btn btn-primary" id="bgm-btn" onclick="matchBGM()">🎵 智能匹配 BGM</button>
+      <span class="bf-status" id="bgm-status"></span>
+    </div>
+    <div class="benchmark-result" id="bgm-result" style="display:none;"></div>
+  </div>
   <div class="bgm-grid">
     <div class="bgm-card">
       <h3>🎵 BGM推荐匹配提示词（提示词9）</h3>
@@ -581,7 +676,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
     <div class="prompt-card">
       <h3><span class="num">18</span>变现路径规划</h3>
-      <div class="desc">从0到100万粉各阶段变现策略+选品建议+广告报价参考+私域引流方案。</div>
+      <div class="desc">从0到100万粉各阶段变现策略+选品建议+广告报价参考+私信引流方案。</div>
       <textarea id="prompt-monetize" readonly>你是社交媒体商业化顾问。
 
 账号信息：
@@ -596,7 +691,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 2. 变现路径图：1000粉→1万粉→10万粉→100万粉各阶段策略
 3. 选品/选商建议（品类+佣金区间）
 4. 广告报价参考（按当前粉丝量级合理报价）
-5. 私域引流方案
+5. 私信引流方案
 6. 变现内容占比建议（多少变现vs价值内容，避免掉粉）</textarea>
       <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-monetize')">📋 复制提示词</button></div>
     </div>
@@ -607,7 +702,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 <script>
 // ========== DATA: Today's Trending Videos (2026-07-30) ==========
-const videoData = [
+let videoData = [
   {id:1,platform:'douyin',trending:true,title:"AI公司大量收购旧书训练模型后直接销毁！网友：这是新时代焚书坑儒？",tags:['AI','社会争议','科技伦理'],views:'预期5000万+',likes:'—',comments:'—',shares:'—',creator:'@科技观察室',followers:'420万',bgm:'《Unravel》TK from 凛として時雨 — 暗黑觉醒风，配合AI与旧书焚烧对比画面',script:'0-3秒：旧书焚烧画面+大字"AI焚书"→ 3-12秒：事件还原→ 12-22秒：法院认定合理vs网友怒了→ 结尾：评论区辩一辩',hotLevel:99},
   {id:2,platform:'douyin',trending:true,title:"曝C罗将结婚！世界杯球王终于要办婚礼了",tags:['体育','C罗','娱乐'],views:'预期8000万+',likes:'—',comments:'—',shares:'—',creator:'@体育大事件',followers:'680万',bgm:'《We Are The Champions》Queen — 荣耀BGM，配合C罗生涯高光混剪',script:'0-3秒：C罗照片+大字"他终于要结婚了"→ 3-10秒：C罗&乔治娜恋爱时间线→ 10-20秒：婚礼细节曝光+网友反应→ 结尾：CR7人生大满贯！',hotLevel:98},
   {id:3,platform:'bilibili',trending:true,title:"【深度】为什么ChatGPT发布4年了，社会总生产力纹丝不动？",tags:['AI','经济学','深度思考'],views:'预期300万+',likes:'—',danmaku:'—',creator:'@科技袁人',followers:'310万',bgm:'《Time》Hans Zimmer — 理性思辨氛围，配合数据图表动画',script:'0-5秒：AI炫酷画面+大字疑问→ 5-15秒：数据对比AI投入vs生产力→ 15-25秒：三大假说（时滞/替代/泡沫）→ 结尾：AI是真革命还是新泡沫？',hotLevel:97},
@@ -628,7 +723,7 @@ const videoData = [
   {id:18,platform:'douyin',trending:true,title:"苹果市值首破5万亿美元！超越英伟达重回全球第一",tags:['科技','苹果','财经'],views:'预期2500万+',likes:'—',comments:'—',shares:'—',creator:'@财经第一线',followers:'380万',bgm:'《Digital Horizon》电子纯音乐 — 科技金融感',script:'0-3秒：苹果logo+5万亿大字→ 3-12秒：凭什么反超英伟达→ 12-20秒：AI投资逻辑变化→ 结尾：你买了苹果股票吗？',hotLevel:93}
 ];
 
-const bgmData = [
+let bgmData = [
   {name:'Unravel',artist:'TK from 凛として時雨',use:'社会争议/觉醒/暗黑',count:320,trend:'↑↑'},
   {name:'We Are The Champions',artist:'Queen',use:'体育/荣耀/胜利',count:295,trend:'↑↑'},
   {name:'Time',artist:'Hans Zimmer',use:'深度思辨/叙事',count:270,trend:'↑'},
@@ -639,7 +734,7 @@ const bgmData = [
   {name:'彩云之南',artist:'徐千雅',use:'旅行/治愈/夏天',count:180,trend:'↑'}
 ];
 
-const trendData = [
+let trendData = [
   {name:'AI收购旧书销毁争议',count:'4平台共振',pct:99},
   {name:'C罗结婚',count:'3平台',pct:98},
   {name:'A股/资本市场',count:'4平台',pct:96},
@@ -826,9 +921,9 @@ async function searchBenchmark(){
   }
 }
 
-function bfCopyResult(){
-  const result = document.getElementById('bf-result');
-  const text = result._last || '';
+function bfCopyResult(id){
+  const result = document.getElementById(id || 'bf-result');
+  const text = (result && result._last) || '';
   if(!text) return;
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(()=>bfShowToast('✅ 结果已复制'));
@@ -843,6 +938,187 @@ function bfCopyResult(){
 function bfShowToast(msg){
   const t=document.createElement('div');t.className='copied-toast';t.textContent=msg;
   document.body.appendChild(t);setTimeout(()=>t.remove(),2200);
+}
+
+// ========== AI 实时热点抓取 (DeepSeek) ==========
+async function fetchAIHotspots(){
+  const btn = document.getElementById('hot-btn');
+  const status = document.getElementById('hot-status');
+  const platform = document.getElementById('hot-platform').value;
+  const niche = document.getElementById('hot-niche').value.trim();
+  const count = document.getElementById('hot-count').value;
+  let apiKey = document.getElementById('hot-apikey').value.trim();
+  if(!apiKey){ apiKey = localStorage.getItem('bf_deepseek_key') || ''; }
+  if(!apiKey){
+    alert('请先填写 DeepSeek API Key（sk- 开头），可在「账号定位」页或此处填写');
+    return;
+  }
+  localStorage.setItem('bf_deepseek_key', apiKey);
+  document.getElementById('hot-apikey').value = apiKey;
+
+  btn.disabled = true;
+  status.textContent = '⏳ AI 抓取中，约需 20-40 秒...';
+
+  const prompt = `你是一位资深社交媒体热点监控分析师。请根据你的知识库，生成${platform}当前${niche?('“'+niche+'”赛道相关'):''}最新、最值得关注的 ${count} 条热点内容（尽量贴近你知识范围内最近的爆款趋势，宁可真实现象级话题，不编造低质内容）。
+
+严格按以下 JSON 数组格式输出，不要输出任何其他文字、不要用 markdown 代码块包裹：
+[
+  {"platform":"douyin","title":"热点标题","tags":["标签1","标签2"],"views":"预期播放量","creator":"@创作者","followers":"粉丝量","bgm":"《歌名》歌手 — 适配理由","script":"0-3秒：钩子→ 中段：内容→ 结尾：互动引导","hotLevel":98,"trending":true}
+]
+
+要求：
+1. platform 只能是 douyin / bilibili / xiaohongshu / kuaishou / weibo 之一
+2. 各平台分布均匀（除非你指定了单一平台）
+3. title 要吸睛但不标题党，贴近真实热点
+4. tags 2-3个，bgm 给当前爆火或适配的歌，script 给分镜框架
+5. hotLevel 为 1-100 的热度分，trending 为是否趋势上升
+6. 只输出 JSON 数组本身`;
+
+  try{
+    const resp = await fetch(DEEPSEEK_API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+      body: JSON.stringify({
+        model: DEEPSEEK_MODEL,
+        messages: [{role:'user', content: prompt}],
+        temperature: 0.8,
+        max_tokens: 4000
+      })
+    });
+    if(!resp.ok){
+      let detail='';
+      try{ const e=await resp.json(); detail=e.error?.message||e.message||''; }catch(_){}
+      throw new Error('HTTP '+resp.status+' '+(detail||'接口调用失败'));
+    }
+    const data = await resp.json();
+    const content = (data.choices?.[0]?.message?.content || '').trim();
+    const start = content.indexOf('[');
+    const end = content.lastIndexOf(']');
+    if(start===-1||end===-1||end<=start) throw new Error('AI 未返回有效数据');
+    const arr = JSON.parse(content.slice(start, end+1));
+    if(!Array.isArray(arr) || arr.length===0) throw new Error('AI 返回数据为空');
+
+    // 校验并规范化字段
+    videoData = arr.map((v,i)=>({
+      id:i+1,
+      platform:['douyin','bilibili','xiaohongshu','kuaishou','weibo'].includes(v.platform)?v.platform:'douyin',
+      trending: v.trending!==false,
+      title: v.title||'未命名热点',
+      tags: Array.isArray(v.tags)?v.tags.slice(0,4):['热点'],
+      views: v.views||'—',
+      likes: v.likes||'—',
+      comments: v.comments||'—',
+      shares: v.shares||'—',
+      creator: v.creator||'@未知创作者',
+      followers: v.followers||'—',
+      bgm: v.bgm||'（AI未给出）',
+      script: v.script||'（AI未给出）',
+      hotLevel: Number(v.hotLevel)||80
+    }));
+
+    // 同步更新 BGM 排行（从热点 BGM 提取歌曲名）
+    bgmData = videoData.filter(v=>v.bgm&&v.bgm!=='（AI未给出）').slice(0,8).map((v,i)=>({
+      name: (v.bgm.match(/《([^》]+)》/)||[,'未知曲目'])[1],
+      artist: (v.bgm.match(/》\s*([^—\-]+)/)||[,''])[1]?.trim()||'',
+      use: (v.tags||[])[0]||'综合',
+      count: v.hotLevel*3,
+      trend: v.trending?'↑':'→'
+    }));
+
+    // 同步更新趋势图谱
+    trendData = videoData.slice().sort((a,b)=>b.hotLevel-a.hotLevel).slice(0,10).map(v=>({
+      name: v.title.length>14?v.title.slice(0,14)+'…':v.title,
+      count: ({douyin:'抖音',bilibili:'B站',xiaohongshu:'小红书',kuaishou:'快手',weibo:'微博'})[v.platform]||'全网',
+      pct: Math.min(99, Math.max(20, v.hotLevel))
+    }));
+
+    renderCards();
+    renderBgmPanel();
+    renderTrendPanel();
+    document.getElementById('refreshTime').textContent = 'AI 实时 · '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+    status.textContent = '✅ 已更新 '+videoData.length+' 条实时热点';
+  }catch(err){
+    console.error(err);
+    status.textContent = '❌ 抓取失败：'+err.message;
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+// ========== AI 智能 BGM 匹配 (DeepSeek) ==========
+async function matchBGM(){
+  const btn = document.getElementById('bgm-btn');
+  const status = document.getElementById('bgm-status');
+  const result = document.getElementById('bgm-result');
+
+  const platform = document.getElementById('bgm-platform').value;
+  const topic = document.getElementById('bgm-topic').value.trim();
+  const mood = document.getElementById('bgm-mood').value;
+  const rhythm = document.getElementById('bgm-rhythm').value;
+  const duration = document.getElementById('bgm-duration').value.trim() || '30';
+  const audience = document.getElementById('bgm-audience').value.trim() || '不限';
+  let apiKey = localStorage.getItem('bf_deepseek_key') || '';
+
+  if(!topic){ alert('请填写视频主题，例如：深夜治愈独居生活Vlog'); return; }
+  if(!apiKey){
+    apiKey = prompt('请粘贴你的 DeepSeek API Key（sk- 开头，将保存在本浏览器）：');
+    if(!apiKey) return;
+    localStorage.setItem('bf_deepseek_key', apiKey);
+  }
+
+  btn.disabled = true;
+  status.textContent = '⏳ AI 匹配中，约需 10-25 秒...';
+  result.style.display = 'block';
+  result.innerHTML = '<div class="bf-loading"><span class="spinner"></span>正在分析视频需求、匹配 BGM...</div>';
+
+  const prompt = `你是短视频平台音乐策划专家，非常熟悉${platform}上当前爆火的 BGM 和适配场景。
+
+请为以下视频推荐 5 首 BGM（2首当前爆火蹭流量 + 2首精准提质感 + 1首小众差异化）：
+- 平台：${platform}
+- 视频主题：${topic}
+- 视频情绪：${mood}
+- 视频节奏：${rhythm}
+- 视频时长：${duration} 秒
+- 目标受众：${audience}
+
+按以下格式输出，每首歌一个条目，歌名用【】标出：
+【歌名 - 歌手】
+- 推荐理由
+- 适合的剪辑方式（副歌卡点/前奏铺氛围/高潮切画面）
+- 情绪匹配度（X/10）
+- 热度趋势（上升中/持续热门/经典常青）
+- 在${platform}的使用量级（如有）
+
+最后单独给出一段【剪辑建议】：结合视频主题${topic}和${rhythm}节奏，给出这首歌最适合切入的秒数点（如副歌前2秒切入等）。请基于你的知识尽量推荐真实存在且适配的歌曲。`;
+
+  try{
+    const resp = await fetch(DEEPSEEK_API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+      body: JSON.stringify({
+        model: DEEPSEEK_MODEL,
+        messages: [{role:'user', content: prompt}],
+        temperature: 0.7,
+        max_tokens: 2000
+      })
+    });
+    if(!resp.ok){
+      let detail='';
+      try{ const e=await resp.json(); detail=e.error?.message||e.message||''; }catch(_){}
+      throw new Error('HTTP '+resp.status+' '+(detail||'接口调用失败'));
+    }
+    const data = await resp.json();
+    const content = data.choices?.[0]?.message?.content || '（无返回内容）';
+    result.innerHTML = '<div class="bf-head"><strong>🎵 BGM 匹配结果</strong><button class="btn" onclick="bfCopyResult(\'bgm-result\')">📋 复制结果</button></div><div class="bf-body">'+bfRenderMarkdown(content)+'</div>';
+    result._last = content;
+    status.textContent = '✅ 匹配完成';
+  }catch(err){
+    console.error(err);
+    result.innerHTML = '<div class="bf-error">❌ 匹配失败：'+bfEscapeHtml(err.message)+'<br><span style="font-size:11px;color:var(--text-dim);">请检查 API Key 是否正确、网络是否可用。</span></div>';
+    status.textContent = '';
+  }finally{
+    btn.disabled = false;
+  }
 }
 
 // ========== INIT ==========
