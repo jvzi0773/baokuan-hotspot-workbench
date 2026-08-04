@@ -58,7 +58,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .card-body{padding:12px 16px;}
 .card-title{font-size:14px;font-weight:600;line-height:1.4;margin-bottom:6px;}
 .card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
-.tag{padding:2px 7px;border-radius:5px;font-size:10px;background:#f3f4f6;color:var(--text-dim);}
+.tag{padding:2px 7px;border-radius:5px;font-size:10px;background:#f3f4f6;color:var(--text-dim);}.tag{padding:2px 7px;border-radius:5px;font-size:10px;background:#f3f4f6;color:var(--text-dim);}
 .card-stats{display:flex;gap:14px;margin-bottom:10px;font-size:11px;color:var(--text-dim);flex-wrap:wrap;}
 .bgm-row{background:linear-gradient(90deg,rgba(139,92,246,0.06),transparent);border-left:3px solid var(--purple);padding:8px 12px;margin:8px 0;border-radius:0 8px 8px 0;font-size:11px;}
 .bgm-row strong{color:var(--purple);}
@@ -90,11 +90,38 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wf-step.current{border-color:var(--accent);color:var(--accent);border-style:solid;}
 .wf-arrow{color:var(--text-dim);font-size:14px;}
 
+.benchmark-panel{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px;}
+.benchmark-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.benchmark-header h3{font-size:15px;color:var(--text);}
+.benchmark-header .bf-tip{font-size:11px;color:var(--text-dim);}
+.bf-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.bf-item label{display:block;font-size:11px;color:var(--text-dim);margin-bottom:5px;font-weight:600;}
+.bf-item input,.bf-item select{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:#f9fafb;font-size:12px;color:var(--text);}
+.bf-item input:focus,.bf-item select:focus{outline:none;border-color:var(--accent);background:#fff;}
+.bf-item input::placeholder{color:#b0b6c4;}
+.bf-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+.btn-primary:hover{background:var(--accent2);border-color:var(--accent2);}
+.btn-primary:disabled{opacity:0.6;cursor:not-allowed;}
+.bf-status{font-size:12px;color:var(--text-dim);}
+.benchmark-result{margin-top:14px;border:1px solid var(--border);border-radius:10px;background:#fafbff;padding:14px;font-size:12px;line-height:1.75;}
+.bf-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eef0f5;}
+.bf-head strong{color:var(--accent);font-size:13px;}
+.bf-body h4{font-size:13px;margin:12px 0 6px;color:var(--accent);}
+.bf-li{padding:1px 0;}
+.bf-line{padding:1px 0;}
+.bf-space{height:6px;}
+.bf-loading{color:var(--text-dim);}
+.bf-error{color:#dc2626;padding:10px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:8px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
 @media(max-width:768px){
   .stats-row{grid-template-columns:repeat(2,1fr);}
   .grid{grid-template-columns:1fr;}
   .prompt-panel{grid-template-columns:1fr;}
   .bgm-grid{grid-template-columns:1fr;}
+  .bf-row{grid-template-columns:1fr;}
   .tab-btn{padding:8px 12px;font-size:11px;}
 }
 </style>
@@ -447,6 +474,56 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 <!-- TAB 6: 账号定位 -->
 <div class="tab-content" id="tab-position">
+  <div class="benchmark-panel">
+    <div class="benchmark-header">
+      <h3>🔍 对标账号智能搜索</h3>
+      <span class="bf-tip">输入你的账号要求，AI 自动生成对标账号推荐（DeepSeek）</span>
+    </div>
+    <div class="bf-row">
+      <div class="bf-item">
+        <label>平台</label>
+        <select id="bf-platform">
+          <option value="抖音">抖音</option>
+          <option value="小红书">小红书</option>
+          <option value="视频号">视频号</option>
+          <option value="B站">B站</option>
+          <option value="快手">快手</option>
+        </select>
+      </div>
+      <div class="bf-item">
+        <label>赛道 / 领域</label>
+        <input id="bf-niche" placeholder="如：美食探店 / 职场成长 / 母婴育儿 / 知识科普">
+      </div>
+      <div class="bf-item">
+        <label>目标受众</label>
+        <input id="bf-audience" placeholder="如：25-35岁 一线城市 职场女性">
+      </div>
+      <div class="bf-item">
+        <label>期望粉丝量级</label>
+        <select id="bf-level">
+          <option value="任意量级">任意量级</option>
+          <option value="0-1万（冷启动参考）">0-1万（冷启动参考）</option>
+          <option value="1-10万">1-10万</option>
+          <option value="10-50万">10-50万</option>
+          <option value="50-100万">50-100万</option>
+          <option value="100万以上">100万以上</option>
+        </select>
+      </div>
+      <div class="bf-item">
+        <label>我的账号定位（一句话）</label>
+        <input id="bf-position" placeholder="如：专注职场干货的治愈系口播号">
+      </div>
+      <div class="bf-item">
+        <label>DeepSeek API Key（仅存本浏览器）</label>
+        <input type="password" id="bf-apikey" placeholder="sk- 开头，粘贴后自动保存">
+      </div>
+    </div>
+    <div class="bf-actions">
+      <button class="btn btn-primary" id="bf-btn" onclick="searchBenchmark()">🚀 生成对标账号</button>
+      <span class="bf-status" id="bf-status"></span>
+    </div>
+    <div class="benchmark-result" id="bf-result" style="display:none;"></div>
+  </div>
   <div class="prompt-panel">
     <div class="prompt-card">
       <h3><span class="num">1</span>账号人设定位</h3>
@@ -633,6 +710,138 @@ function copyPrompt(id){
   document.getElementById(id).select();
   document.execCommand('copy');
   const t=document.createElement('div');t.className='copied-toast';t.textContent='✅ 提示词已复制！粘贴到任意AI对话中即可使用';
+  document.body.appendChild(t);setTimeout(()=>t.remove(),2200);
+}
+
+// ========== 对标账号智能搜索 (DeepSeek) ==========
+const DEEPSEEK_API = 'https://api.deepseek.com/chat/completions';
+const DEEPSEEK_MODEL = 'deepseek-chat';
+
+function bfEscapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function bfRenderMarkdown(md){
+  const lines = bfEscapeHtml(md).split('\n');
+  let html = '';
+  let listOpen = false;
+  lines.forEach(l=>{
+    l = l.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/`(.+?)`/g,'<code>$1</code>');
+    const h = l.match(/^(#{1,4})\s+(.*)/);
+    if(h){
+      if(listOpen){html+='</div>';listOpen=false;}
+      html += '<h4>'+h[2]+'</h4>';
+      return;
+    }
+    if(/^\s*[-*]\s+/.test(l)){
+      if(!listOpen){html+='<div style="margin:4px 0;">';listOpen=true;}
+      html += '<div class="bf-li">• '+l.replace(/^\s*[-*]\s+/,'')+'</div>';
+      return;
+    }
+    if(listOpen){html+='</div>';listOpen=false;}
+    if(l.trim()===''){html+='<div class="bf-space"></div>';return;}
+    html += '<div class="bf-line">'+l+'</div>';
+  });
+  if(listOpen) html+='</div>';
+  return html;
+}
+
+async function searchBenchmark(){
+  const btn = document.getElementById('bf-btn');
+  const status = document.getElementById('bf-status');
+  const result = document.getElementById('bf-result');
+
+  const platform = document.getElementById('bf-platform').value;
+  const niche = document.getElementById('bf-niche').value.trim();
+  const audience = document.getElementById('bf-audience').value.trim();
+  const level = document.getElementById('bf-level').value;
+  const position = document.getElementById('bf-position').value.trim();
+  let apiKey = document.getElementById('bf-apikey').value.trim();
+
+  if(!apiKey){ apiKey = localStorage.getItem('bf_deepseek_key') || ''; }
+  if(!apiKey){
+    alert('请先填写 DeepSeek API Key（sk- 开头），可在 api.deepseek.com 获取');
+    return;
+  }
+  localStorage.setItem('bf_deepseek_key', apiKey);
+  document.getElementById('bf-apikey').value = apiKey;
+
+  if(!niche){ alert('请填写赛道/领域，例如：美食探店'); return; }
+
+  const prompt = `你是一位深耕国内短视频/图文平台的账号分析专家，非常熟悉抖音、小红书、视频号、B站、快手上各个赛道的头部与腰部账号。
+
+请根据以下要求，为我推荐 5-8 个值得对标的账号：
+
+- 平台：${platform}
+- 赛道/领域：${niche}
+- 目标受众：${audience || '不限'}
+- 期望粉丝量级：${level}
+- 我的账号定位：${position || '不限'}
+
+请按以下格式输出（每个账号一个条目，账号名用【】标出）：
+【账号名】
+- 平台与粉丝量级
+- 账号定位一句话
+- 内容形式与更新频率
+- 爆款特点（可借鉴的3个点）
+- 变现方式
+- 与我定位的契合度及差异化机会
+
+最后单独给出一段【整体对标建议】：列出这些账号共性的成功要素，以及我切入该赛道时最值得优先模仿的一个账号。请务必基于你的知识尽量给出真实存在的账号，如果某条不确定，请标注“（示例/近似）”。`;
+
+  btn.disabled = true;
+  status.textContent = '⏳ AI 生成中，约需 10-30 秒...';
+  result.style.display = 'block';
+  result.innerHTML = '<div class="bf-loading"><span class="spinner"></span>正在分析赛道、搜索对标账号...</div>';
+
+  try{
+    const resp = await fetch(DEEPSEEK_API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+      body: JSON.stringify({
+        model: DEEPSEEK_MODEL,
+        messages: [{role:'user', content: prompt}],
+        temperature: 0.7,
+        max_tokens: 2500
+      })
+    });
+
+    if(!resp.ok){
+      let detail = '';
+      try{ const e = await resp.json(); detail = e.error?.message || e.message || ''; }catch(_){}
+      throw new Error('HTTP '+resp.status+' '+(detail||'接口调用失败'));
+    }
+
+    const data = await resp.json();
+    const content = data.choices?.[0]?.message?.content || '（无返回内容）';
+    result.innerHTML = '<div class="bf-head"><strong>✅ 对标账号推荐结果</strong><button class="btn" onclick="bfCopyResult()">📋 复制结果</button></div><div class="bf-body">'+bfRenderMarkdown(content)+'</div>';
+    result._last = content;
+    status.textContent = '✅ 生成完成';
+  }catch(err){
+    console.error(err);
+    result.innerHTML = '<div class="bf-error">❌ 生成失败：'+bfEscapeHtml(err.message)+'<br><span style="font-size:11px;color:var(--text-dim);">请检查 API Key 是否正确、网络是否可用、是否超出额度。</span></div>';
+    status.textContent = '';
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+function bfCopyResult(){
+  const result = document.getElementById('bf-result');
+  const text = result._last || '';
+  if(!text) return;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>bfShowToast('✅ 结果已复制'));
+  }else{
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); ta.remove();
+    bfShowToast('✅ 结果已复制');
+  }
+}
+
+function bfShowToast(msg){
+  const t=document.createElement('div');t.className='copied-toast';t.textContent=msg;
   document.body.appendChild(t);setTimeout(()=>t.remove(),2200);
 }
 
