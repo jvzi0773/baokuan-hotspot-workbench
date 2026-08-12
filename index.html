@@ -161,10 +161,11 @@ body{background:linear-gradient(160deg,#fdfbf6 0%,#faf5ec 30%,#f5efe2 62%,#fdfcf
 .forbid-hit{background:#fee2e2;border-radius:4px;padding:1px 3px;font-weight:600;color:#b91c1c;}
 
 @media(max-width:768px){
-  .app-shell{flex-direction:column;}
+  .app-shell{flex-direction:column;align-items:stretch;}
+  .content{width:100%;max-width:100%;}
   .sidebar{flex-direction:row;width:auto;position:fixed;left:0;right:0;bottom:0;top:auto;margin:0;max-height:none;padding:6px 4px calc(6px + env(safe-area-inset-bottom));border-radius:0;justify-content:flex-start;gap:2px;overflow-x:auto;background:rgba(255,255,255,0.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(233,223,207,0.7);border-top:1px solid rgba(233,223,207,0.8);z-index:300;box-shadow:0 -6px 24px rgba(196,162,132,0.12);}
   .sidebar-head,.nav-group,.sidebar-foot{display:none;}
-  .nav-item{flex-direction:column;gap:3px;flex:1 0 auto;min-width:58px;padding:6px 2px;border-radius:12px;justify-content:center;}
+  .nav-item{flex-direction:column;gap:3px;flex:0 0 auto;width:auto;min-width:60px;max-width:72px;padding:6px 2px;border-radius:12px;justify-content:center;}
   .nav-item:hover{transform:none;}
   .nav-item.active::before{display:none;}
   .nav-item.active{box-shadow:0 4px 12px rgba(236,72,153,0.3);}
@@ -259,22 +260,22 @@ details.template-chip .prompt-panel{margin-top:10px;border:1px solid var(--borde
 .chat-quick{display:flex;gap:8px;flex-wrap:wrap;}
 
 /* ===== 内容创作：功能标签切换 ===== */
-.cw-subtabs{display:flex;gap:4px;margin-bottom:14px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:4px;overflow-x:auto;}
-.cw-tab-btn{padding:8px 16px;border-radius:9px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;transition:all .2s;}
+.cw-subtabs{display:flex;gap:4px;margin-bottom:14px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:4px;overflow-x:auto;min-width:0;max-width:100%;}
+.cw-tab-btn{padding:8px 16px;border-radius:9px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;transition:all .2s;flex-shrink:0;}
 .cw-tab-btn.active{background:linear-gradient(135deg,#ffb3c6,#c9b8ff);color:#fff;box-shadow:0 3px 10px rgba(236,72,153,0.25);}
 .cw-tab-btn:hover:not(.active){color:var(--text);background:#faf5ec;}
 .cw-pane{display:none;}
 .cw-pane.active{display:block;}
-@media(max-width:768px){.cw-tab-btn{flex:1;text-align:center;font-size:12px;padding:8px 4px;min-width:0;}}
+@media(max-width:768px){.cw-tab-btn{flex:0 0 auto;text-align:center;font-size:12px;padding:8px 10px;min-width:0;}}
 
 /* ===== 爆款内容：子功能标签 ===== */
-.opt-subtabs{display:flex;gap:4px;margin-bottom:12px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:4px;overflow-x:auto;}
-.opt-tab-btn{padding:7px 14px;border-radius:9px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;font-size:12.5px;font-weight:600;white-space:nowrap;transition:all .2s;}
+.opt-subtabs{display:flex;gap:4px;margin-bottom:12px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:4px;overflow-x:auto;min-width:0;max-width:100%;}
+.opt-tab-btn{padding:7px 14px;border-radius:9px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;font-size:12.5px;font-weight:600;white-space:nowrap;transition:all .2s;flex-shrink:0;}
 .opt-tab-btn.active{background:linear-gradient(135deg,#ffb3c6,#c9b8ff);color:#fff;box-shadow:0 3px 10px rgba(236,72,153,0.25);}
 .opt-tab-btn:hover:not(.active){color:var(--text);background:#faf5ec;}
 .opt-sub{display:none;}
 .opt-sub.active{display:block;}
-@media(max-width:768px){.opt-tab-btn{flex:1;text-align:center;font-size:11px;padding:8px 4px;min-width:0;}}
+@media(max-width:768px){.opt-tab-btn{flex:0 0 auto;text-align:center;font-size:11px;padding:8px 10px;min-width:0;}}
 .chat-box{height:420px;overflow-y:auto;background:#fdfbf6;border:1px solid #f0e9db;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;}
 .chat-box-sm{height:240px;}
 .fab{position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,#ff9ecb,#c9b8ff);color:#fff;font-size:24px;box-shadow:0 6px 20px rgba(236,72,153,0.35);z-index:400;display:flex;align-items:center;justify-content:center;transition:transform .2s;}
@@ -331,28 +332,28 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
 .matrix-row b{color:#a58560;}
 
 /* ===== 新增：选题创作步骤流 ===== */
-.topic-steps{display:flex;gap:4px;margin-bottom:4px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:4px;width:max-content;max-width:100%;overflow-x:auto;}
-.ts-btn{padding:8px 14px;border-radius:9px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;}
+.topic-steps{display:flex;gap:4px;margin-bottom:4px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:4px;width:max-content;max-width:100%;overflow-x:auto;min-width:0;}
+.ts-btn{padding:8px 14px;border-radius:9px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;flex-shrink:0;}
 .ts-btn.active{background:linear-gradient(135deg,#ffb3c6,#c9b8ff);color:#fff;box-shadow:0 3px 10px rgba(236,72,153,0.25);}
 .topic-step{display:none;}
 .topic-step.active{display:block;}
 @media(max-width:768px){
   .topic-steps{width:100%;}
-  .ts-btn{flex:1;text-align:center;font-size:11px;padding:8px 6px;}
+  .ts-btn{flex:0 0 auto;text-align:center;font-size:11px;padding:8px 10px;}
 }
 
 /* ===== 新增：日历模块 ===== */
 .cal-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
 .cal-toolbar .cal-title{font-size:17px;font-weight:700;margin:0 8px;min-width:130px;text-align:center;color:var(--text);}
-.cal-subtabs{display:flex;gap:4px;margin-bottom:14px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:4px;width:max-content;}
-.cal-tab-btn{padding:8px 18px;border-radius:9px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;}
+.cal-subtabs{display:flex;gap:4px;margin-bottom:14px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:4px;width:max-content;max-width:100%;overflow-x:auto;min-width:0;}
+.cal-tab-btn{padding:8px 18px;border-radius:9px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;flex-shrink:0;}
 .cal-tab-btn.active{background:linear-gradient(135deg,#ffb3c6,#c9b8ff);color:#fff;box-shadow:0 3px 10px rgba(236,72,153,0.25);}
 .cal-sub{display:none;}
 .cal-sub.active{display:block;}
-.cal-grid{background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:14px;}
-.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px;color:var(--text-dim);font-weight:600;padding:2px 0 8px;}
-.cal-body{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
-.cal-cell{min-height:80px;background:#fdfbf6;border:1px solid #f0e9db;border-radius:9px;padding:4px 5px;transition:all .15s;overflow:hidden;}
+.cal-grid{background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:14px;overflow:hidden;}
+.cal-dow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));text-align:center;font-size:11px;color:var(--text-dim);font-weight:600;padding:2px 0 8px;}
+.cal-body{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;}
+.cal-cell{min-height:80px;background:#fdfbf6;border:1px solid #f0e9db;border-radius:9px;padding:4px 5px;transition:all .15s;overflow:hidden;min-width:0;}
 .cal-cell:hover{border-color:var(--accent2);}
 .cal-cell.blank{background:transparent;border-color:transparent;}
 .cal-cell.today{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
@@ -388,7 +389,16 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
   .cal-cell{min-height:52px;}
   .cal-chip:nth-child(n+2){display:none;}
   .cal-subtabs{width:100%;}
-  .cal-tab-btn{flex:1;text-align:center;}
+  .cal-tab-btn{flex:0 0 auto;text-align:center;}
+}
+/* ===== 移动端通用防溢出 ===== */
+@media(max-width:768px){
+  input,select,textarea{max-width:100%;box-sizing:border-box;}
+  .bf-item{min-width:0;}
+  .benchmark-panel,.prompt-panel,.benchmark-result,.prompt-card,.ops-steps,.ops-card{min-width:0;max-width:100%;}
+  .ops-flow{width:100%;}
+  .sr-plat-list{max-width:100%;}
+  .cal-grid{overflow-x:auto;}
 }
 </style>
 </head>
