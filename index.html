@@ -52,12 +52,6 @@ body{background:linear-gradient(160deg,#fdfbf6 0%,#faf5ec 30%,#f5efe2 62%,#fdfcf
 .tab-content{display:none;}
 .tab-content.active{display:block;}
 
-.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px;}
-.stat-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px;}
-.stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
-.stat-info h3{font-size:20px;font-weight:700;}
-.stat-info p{font-size:10px;color:var(--text-dim);margin-top:2px;}
-
 .platform-filter{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
 .pf-tag{padding:6px 14px;border-radius:16px;border:1px solid var(--border);background:var(--card-bg);color:var(--text-dim);cursor:pointer;font-size:12px;transition:all 0.2s;}
 .pf-tag.active{background:var(--accent);border-color:var(--accent);color:#fff;}
@@ -172,7 +166,6 @@ body{background:linear-gradient(160deg,#fdfbf6 0%,#faf5ec 30%,#f5efe2 62%,#fdfcf
   .nav-item .nav-ico{width:30px;height:30px;border-radius:9px;}
   .nav-item span{font-size:9px;}
   .content{padding:14px 12px 88px;}
-  .stats-row{grid-template-columns:repeat(2,1fr);}
   .grid{grid-template-columns:1fr;}
   .prompt-panel{grid-template-columns:1fr;}
   .bgm-grid{grid-template-columns:1fr;}
@@ -576,13 +569,6 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
   </div>
 
   <div class="insp-banner">💡 <b>灵感库</b>：实时热点里的爆款，看中哪条 → 一键 <b>转选题</b>（写什么）或 <b>转素材</b>（怎么写），自动存进「选题创作」。</div>
-  <div class="stats-row">
-    <div class="stat-card"><div class="stat-icon" style="background:rgba(254,44,85,0.15)">📱</div><div class="stat-info"><h3 id="c-douyin">5</h3><p>抖音爆款</p></div></div>
-    <div class="stat-card"><div class="stat-icon" style="background:rgba(251,114,153,0.15)">📺</div><div class="stat-info"><h3 id="c-bilibili">3</h3><p>B站热门</p></div></div>
-    <div class="stat-card"><div class="stat-icon" style="background:rgba(255,36,66,0.15)">📕</div><div class="stat-info"><h3 id="c-xhs">4</h3><p>小红书爆款</p></div></div>
-    <div class="stat-card"><div class="stat-icon" style="background:rgba(255,73,6,0.15)">⚡</div><div class="stat-info"><h3 id="c-kuaishou">2</h3><p>快手热门</p></div></div>
-    <div class="stat-card"><div class="stat-icon" style="background:rgba(230,22,45,0.15)">🌐</div><div class="stat-info"><h3 id="c-total">18</h3><p>今日热点</p></div></div>
-  </div>
   <div class="platform-filter">
     <span class="pf-tag active" onclick="filterPlatform('all',this)">🔥 全部</span>
     <span class="pf-tag" onclick="filterPlatform('douyin',this)">📱 抖音</span>
@@ -1725,11 +1711,6 @@ function renderCards(filter='all'){
       <div class="card-footer"><span>${v.creator} · ${v.followers}</span><span style="color:var(--accent);font-weight:600;">热度 ${v.hotLevel}</span></div>
     </div>
   `).join('');
-  document.getElementById('c-douyin').textContent=videoData.filter(v=>v.platform==='douyin').length;
-  document.getElementById('c-bilibili').textContent=videoData.filter(v=>v.platform==='bilibili').length;
-  document.getElementById('c-xhs').textContent=videoData.filter(v=>v.platform==='xiaohongshu').length;
-  document.getElementById('c-kuaishou').textContent=videoData.filter(v=>v.platform==='kuaishou').length;
-  document.getElementById('c-total').textContent=videoData.length;
 }
 
 function filterPlatform(p,el){
