@@ -184,6 +184,10 @@ body{background:linear-gradient(160deg,#fdfbf6 0%,#faf5ec 30%,#f5efe2 62%,#fdfcf
 .block-title{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--text);margin:24px 0 10px;}
 .block-title .bt-ico{width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#ff9ecb,#c9b8ff);display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 3px 8px rgba(236,72,153,0.2);}
 .block-sub{font-size:12px;color:var(--text-dim);margin:-4px 0 12px;line-height:1.6;}
+.fold-mini{margin-left:6px;width:22px;height:22px;border-radius:6px;border:1px solid var(--border);background:#f9fafb;color:var(--text-dim);font-size:11px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;padding:0;}
+.fold-mini:hover{border-color:var(--accent);color:var(--accent);background:#f0f0ff;}
+.fold-mini.collapsed{transform:rotate(-90deg);}
+#sr-fold-body.collapsed{display:none;}
 
 .topic-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .mini-list{display:flex;flex-direction:column;gap:8px;}
@@ -463,9 +467,13 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
 
 <!-- TAB 1: 实时热点 -->
 <div class="tab-content active" id="tab-hot">
-  <div class="block-title"><span class="bt-ico">🌐</span>全网搜索</div>
+  <div class="block-title">
+    <span class="bt-ico">🌐</span>全网搜索
+    <button class="fold-mini" id="sr-fold-btn" onclick="toggleSrFold()" title="折叠/展开" aria-expanded="true">▾</button>
+  </div>
   <p class="block-sub">跨 14 个平台搜热点，看到值得跟的线索，直接去「选题创作」一键转选题。</p>
 
+  <div id="sr-fold-body">
   <div class="benchmark-panel">
     <div class="benchmark-header">
       <h3>🌐 全网实时搜索（agent-reach）</h3>
@@ -523,6 +531,7 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
       <div class="sr-plat-list" id="sr-plat-list"></div>
     </div>
   </div>
+  </div><!-- /sr-fold-body -->
       <div class="benchmark-panel">
     <div class="benchmark-header">
       <h3>📡 AI 实时热点抓取</h3>
@@ -1784,8 +1793,16 @@ function srPick(id){
   if(kw) goSearch();
 }
 
-function goSearch(){
-  const kw = document.getElementById('sr-keyword').value.trim();
+function toggleSrFold(){
+  const body = document.getElementById('sr-fold-body');
+  const btn = document.getElementById('sr-fold-btn');
+  const collapsed = body.classList.toggle('collapsed');
+  btn.classList.toggle('collapsed', collapsed);
+  btn.textContent = collapsed ? '▸' : '▾';
+  btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+}
+
+function goSearch(){const kw = document.getElementById('sr-keyword').value.trim();
   if(!kw){ alert('请输入搜索关键词'); return; }
   const plat = document.getElementById('sr-platform').value;
   const p = SR_PLATS.find(x=>x.id===plat);
