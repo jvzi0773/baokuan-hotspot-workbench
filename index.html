@@ -264,6 +264,9 @@ details.template-chip .prompt-panel{margin-top:10px;border:1px solid var(--borde
 .fab-pop{position:fixed;right:18px;bottom:84px;width:360px;max-width:calc(100vw - 28px);height:480px;max-height:calc(100vh - 140px);background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 40px rgba(180,150,110,0.25);display:none;flex-direction:column;z-index:400;overflow:hidden;}
 .fab-pop.open{display:flex;}
 .fab-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:linear-gradient(135deg,#ffd1e3,#e6d5ff);font-weight:700;font-size:14px;color:var(--text);flex-shrink:0;}
+.fab-api-status{padding:6px 14px;background:#f6f6ff;border-bottom:1px solid #eee6ff;font-size:11px;color:var(--accent);display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap;}
+.fab-api-status .status-ok{color:#16a34a;}
+.fab-api-status .status-custom{color:#d97706;}
 .fab-pop .chat-quick{padding:10px 12px 0;flex-shrink:0;}
 .fab-pop .chat-box{margin:10px 12px;height:auto;flex:1;min-height:0;}
 .fab-pop .chat-input-row{padding:0 12px 12px;flex-shrink:0;}
@@ -1550,6 +1553,7 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
 <button class="fab" onclick="toggleFab()" title="AI 助手">💬</button>
 <div class="fab-pop" id="fabPop">
   <div class="fab-head"><span>💬 AI 助手</span><button class="mc-del" onclick="toggleFab()" style="font-size:18px;color:var(--text);" title="关闭">✕</button></div>
+  <div class="fab-api-status" id="fabApiStatus"></div>
   <div class="chat-quick">
     <button class="btn" onclick="chatQuick('global','帮我生成5个爆款选题，赛道是')">🎯 选题</button>
     <button class="btn" onclick="chatQuick('global','帮我写一条小红书种草文案，主题是')">✍️ 文案</button>
@@ -2967,6 +2971,16 @@ document.getElementById('set-apikey').value = localStorage.getItem('bf_deepseek_
 document.getElementById('pub-date').value = todayStr();
 renderCalAll();
 document.getElementById('refreshTime').textContent = '实时监控 · '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+// AI 助手接入状态：显示模型与 Key 来源（内置 / 自定义）
+(function(){
+  const st = document.getElementById('fabApiStatus');
+  if(!st) return;
+  const custom = localStorage.getItem('bf_deepseek_key');
+  const label = custom && custom !== DEFAULT_DS_KEY
+    ? '<span class="status-custom">🛠 已接入 DeepSeek API（使用你自己的 Key）</span>'
+    : '<span class="status-ok">⚡ 已接入 DeepSeek API（内置 Key）</span>';
+  st.innerHTML = '<span>'+DEEPSEEK_MODEL+'</span> '+label+'<button class="mc-del" onclick="toggleFab()" style="font-size:12px;" title="去设置换 Key">⚙</button>';
+})();
 </script>
 </body>
 </html>
