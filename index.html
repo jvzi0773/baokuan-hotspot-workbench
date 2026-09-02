@@ -138,6 +138,38 @@ body{background:linear-gradient(160deg,#fdfbf6 0%,#faf5ec 30%,#f5efe2 62%,#fdfcf
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
+/* ===== agent-reach 实时抓取（本地桥接） ===== */
+.ar-panel{border-top:2px solid var(--accent);}
+.ar-beta{font-size:10px;font-weight:600;color:#fff;background:linear-gradient(135deg,#8b5cf6,#ec4899);border-radius:6px;padding:2px 6px;vertical-align:middle;margin-left:4px;}
+.ar-channels{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.ar-ch-tag{font-size:10px;padding:3px 8px;border-radius:10px;border:1px solid var(--border);}
+.ar-ch-tag.ready{color:#16a34a;border-color:#bbe5c4;background:#f0fdf4;}
+.ar-ch-tag.wait{color:#d97706;border-color:#fde0b3;background:#fffaf0;}
+.ar-ch-tag.lock{color:#999;border-color:#eee;background:#fafafa;}
+.ar-result{margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+.ar-item{display:flex;gap:10px;align-items:flex-start;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;}
+.ar-item .ar-pic{width:74px;height:46px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#f0f0f0;border:1px solid var(--border);}
+.ar-item .ar-body{flex:1;min-width:0;}
+.ar-item .ar-title{font-size:13px;font-weight:600;line-height:1.4;}
+.ar-item .ar-meta{font-size:11px;color:var(--text-dim);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;}
+.ar-item .ar-acts{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;}
+.ar-item .ar-acts .btn{font-size:11px;padding:3px 10px;}
+.ar-empty{color:var(--text-dim);font-size:12px;text-align:center;padding:18px 8px;border:1px dashed var(--border);border-radius:10px;}
+.ar-hint{font-size:11px;color:#d97706;background:#fffaf0;border:1px solid #fde0b3;border-radius:8px;padding:8px 10px;margin-top:8px;white-space:pre-line;}
+
+/* ===== 灵感获取（AI 批量选题） ===== */
+.insp-out{margin-top:12px;display:flex;flex-direction:column;gap:10px;}
+.insp-item{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;}
+.insp-item .insp-num{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.insp-item .insp-body{flex:1;min-width:0;}
+.insp-item .insp-title{font-size:13.5px;font-weight:600;line-height:1.45;color:var(--text);}
+.insp-item .insp-angle{font-size:12px;color:var(--text-dim);margin-top:5px;line-height:1.6;}
+.insp-item .insp-angle b{color:#d97706;font-weight:600;}
+.insp-item .insp-why{font-size:12px;color:#8a5a75;background:#fdf6f0;border-radius:8px;padding:6px 10px;margin-top:7px;line-height:1.6;}
+.insp-item .insp-acts{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;}
+.insp-item .insp-acts .btn{font-size:11px;padding:3px 10px;}
+.insp-item .insp-acts .btn:first-child{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;border:none;}
+
 /* ===== 新媒体运营 (newmedia-operations) ===== */
 .ops-flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:14px;background:rgba(255,255,255,0.65);border:1px solid var(--border);border-radius:12px;padding:10px 12px;}
 .forbid-hit{background:#fee2e2;border-radius:4px;padding:1px 3px;font-weight:600;color:#b91c1c;}
@@ -379,9 +411,11 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
 @media(max-width:768px){
   input,select,textarea{max-width:100%;box-sizing:border-box;}
   .bf-item{min-width:0;}
-  .benchmark-panel,.prompt-panel,.benchmark-result,.prompt-card,.ops-steps,.ops-card{min-width:0;max-width:100%;}
+  .benchmark-panel,.prompt-panel,.benchmark-result,.prompt-card,.ops-steps,.ops-card,.ar-panel{min-width:0;max-width:100%;}
   .ops-flow{width:100%;}
   .cal-grid{overflow-x:auto;}
+  .ar-item{flex-wrap:wrap;}
+  .ar-item .ar-pic{width:100%;height:auto;max-height:150px;object-fit:cover;}
 }
 </style>
 </head>
@@ -408,10 +442,14 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
     <svg class="sb-logo" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="sbl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb3c6"/><stop offset="1" stop-color="#c9b8ff"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#sbl)"/><path d="M26 8 L14 27 h8 l-2 13 L34 20 h-9 z" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>
     <div><div class="sb-t">自媒体工作台</div><div class="sb-s">内容 · 运营 · 复盘</div></div>
   </div>
-  <div class="nav-group">灵感获取</div>
+  <div class="nav-group">热点 · 灵感</div>
 <button class="nav-item active" onclick="switchTab('hot',this)">
     <svg class="nav-ico" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd1e3"/><stop offset="1" stop-color="#ffb3c6"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#g1)"/><path d="M24 9 c-1 4 -5 5 -5 11 a6 6 0 0 0 12 0 c0 -3 -2 -5 -3 -7 c-2 3 -3 3 -4 1 z" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <span>实时热点</span>
+  </button>
+<button class="nav-item" onclick="switchTab('inspire',this)">
+    <svg class="nav-ico" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g12" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1bf"/><stop offset="1" stop-color="#ffca7f"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#g12)"/><path d="M24 11 a9 8 0 0 0 -9 8 c0 3.2 1.6 5.4 3.5 7.2 c1 0.9 1.5 1.8 1.5 3 v1.8 h8 v-1.8 c0 -1.2 0.5 -2.1 1.5 -3 c1.9 -1.8 3.5 -4 3.5 -7.2 a9 8 0 0 0 -9 -8 Z" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 34.5 h8 M21.5 39 h5 M23.5 43 h1" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+    <span>灵感获取</span>
   </button>
   <div class="nav-group">选题与创作</div>
 <button class="nav-item" onclick="switchTab('topic',this)">
@@ -489,7 +527,7 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
     </div>
   </div>
 
-  <div class="insp-banner">💡 <b>灵感库</b>：实时热点里的爆款，看中哪条 → 一键 <b>转选题</b>（写什么）或 <b>转素材</b>（怎么写），自动存进「选题创作」。</div>
+  <div class="insp-banner">💡 <b>灵感库</b>：实时热点里的爆款，看中哪条 → 一键 <b>转选题</b>（写什么）或 <b>转素材</b>（怎么写），自动存进「选题创作」。✨ 真实平台实时抓取 / AI 批量选题 → 移步左侧「💡 灵感获取」模块。</div>
   <div class="platform-filter">
     <span class="pf-tag active" onclick="filterPlatform('all',this)">🔥 全部</span>
     <span class="pf-tag" onclick="filterPlatform('douyin',this)">📱 抖音</span>
@@ -510,6 +548,103 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
 
     
   
+</div>
+
+<!-- TAB 2.5: 灵感获取（独立模块） -->
+<div class="tab-content" id="tab-inspire">
+  <div class="block-title" style="margin-top:0;"><span class="bt-ico">💡</span> 灵感获取 · 一站式灵感流水线</div>
+  <p class="block-sub">① agent-reach 抓真实平台爆款 → ② AI 结合全网热点批量产选题 → ③ 一键转选题/素材自动汇入「选题创作」。所有数据仅存本浏览器。</p>
+
+  <div class="benchmark-panel ar-panel">
+    <div class="benchmark-header">
+      <h3>🔎 ① agent-reach 实时抓取 <span class="ar-beta">本地桥接</span></h3>
+      <span class="bf-tip">连接本机 agent-reach 桥接服务，真实抓取平台实时内容（当前已接通 B站，更多平台按提示解锁）。手机访问时桥接地址填电脑局域网 IP。</span>
+    </div>
+    <div class="bf-row">
+      <div class="bf-item" style="flex:2;">
+        <label>桥接地址</label>
+        <input id="ar-url" value="http://127.0.0.1:8799" placeholder="http://127.0.0.1:8799">
+      </div>
+      <div class="bf-item">
+        <label>平台</label>
+        <select id="ar-platform" onchange="arLoginLink()">
+          <option value="bilibili">📺 B站（可用）</option>
+          <option value="shipinhao">🎬 视频号（待解锁）</option>
+          <option value="xiaohongshu">📕 小红书（扫码登录）</option>
+          <option value="douyin">📱 抖音（扫码登录）</option>
+          <option value="weibo">🌐 微博（扫码登录）</option>
+        </select>
+      </div>
+      <div class="bf-item">
+        <label>数量</label>
+        <select id="ar-count">
+          <option value="5">5 条</option>
+          <option value="10" selected>10 条</option>
+          <option value="20">20 条</option>
+        </select>
+      </div>
+    </div>
+    <div class="bf-row">
+      <div class="bf-item" style="flex:3;">
+        <label>关键词（留空=抓热门榜）</label>
+        <input id="ar-keyword" placeholder="关键词搜索；留空 = 抓热门榜 / 小红书发现流">
+      </div>
+    </div>
+    <div id="ar-login-row" style="display:none;margin-bottom:10px;align-items:center;flex-wrap:wrap;gap:8px;"></div>
+    <div class="bf-actions">
+      <button class="btn btn-primary" onclick="arFetch()">🚀 实时抓取</button>
+      <button class="btn" onclick="arTest()">🔌 测试连接</button>
+      <span class="bf-status" id="ar-status"></span>
+    </div>
+    <div class="ar-channels" id="ar-channels"></div>
+    <div class="ar-result" id="ar-result"></div>
+  </div>
+
+  <div class="benchmark-panel">
+    <div class="benchmark-header">
+      <h3>✨ ② AI 批量选题 <span class="ar-beta" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">灵感生成</span></h3>
+      <span class="bf-tip">输入赛道/主题，AI 结合全网热点批量产出可拍选题灵感（标题+角度+切入方向），一键存入选题库</span>
+    </div>
+    <div class="bf-row">
+      <div class="bf-item" style="flex:3;">
+        <label>主题 / 赛道</label>
+        <input id="ig-niche" placeholder="如：甜品 / 减脂餐 / AI工具测评 / 职场成长">
+      </div>
+      <div class="bf-item">
+        <label>数量</label>
+        <select id="ig-count">
+          <option value="5" selected>5 个</option>
+          <option value="8">8 个</option>
+          <option value="10">10 个</option>
+        </select>
+      </div>
+      <div class="bf-item" style="flex:2;">
+        <label>灵感侧重</label>
+        <select id="ig-focus">
+          <option value="hook" selected>钩子角度</option>
+          <option value="controversy">争议话题</option>
+          <option value="season">节气节点</option>
+          <option value="viral">爆款翻拍</option>
+        </select>
+      </div>
+    </div>
+    <div class="bf-actions">
+      <button class="btn btn-primary" id="ig-btn" onclick="genInspiration()">✨ 获取灵感</button>
+      <span class="bf-status" id="ig-status"></span>
+    </div>
+    <div class="insp-out" id="ig-result"></div>
+  </div>
+
+  <div class="benchmark-panel">
+    <div class="benchmark-header">
+      <h3>🗂 ③ 灵感速览 <span class="ar-beta" style="background:linear-gradient(135deg,#0ea5e9,#8b5cf6);">最近存入</span></h3>
+      <span class="bf-tip">上方两步产出的灵感会自动同步进「选题创作」；此处预览最近存入的 6 条。</span>
+    </div>
+    <div class="ar-result" id="insp-recent"></div>
+    <div class="bf-actions">
+      <button class="btn" onclick="goToTab('topic')">🗂 去「选题创作」管理全部</button>
+    </div>
+  </div>
 </div>
 
 <!-- TAB 2: 选题创作 -->
@@ -1532,7 +1667,7 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
   </div>
 
   <div class="block-title" style="margin-top:24px;"><span class="bt-ico">💾</span>数据备份</div>
-  <p class="block-sub">所有业务数据（选题/素材/排期/复盘/日历）都只存在本浏览器。建议定期导出备份，换设备时导入即可无缝迁移。</p>
+  <p class="block-sub">业务数据（选题/素材/排期/复盘/日历）默认仅保存在当前浏览器本机；建议定期导出备份防误删，换设备可用「导出 / 导入」迁移。</p>
   <div class="benchmark-panel">
     <div class="bf-actions">
       <button class="btn" onclick="exportBackup()">📤 导出 JSON 备份</button>
@@ -1661,6 +1796,7 @@ function switchTab(tab, el){
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   if(el) el.classList.add('active');
   document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='inspire') renderInspRecent();
 }
 
 function copyPrompt(id){
@@ -1854,7 +1990,7 @@ function opsMatrix(){
 const DEEPSEEK_API = 'https://api.deepseek.com/chat/completions';
 const DEEPSEEK_MODEL = 'deepseek-chat';
 // 内置 DeepSeek API Key（已直接配置，无需手动填写；如想更换可修改此行）
-const DEFAULT_DS_KEY = 'sk-16a3b3473a13467e959c384d95f630ee';
+const DEFAULT_DS_KEY = '';
 
 // 统一获取 API Key：优先取输入框 → localStorage → 内置 Key，并自动保存回 localStorage
 function getDsKey(inputId){
@@ -2313,8 +2449,8 @@ function inspToTopic(id){ const v=videoData.find(function(x){return x.id===id;})
 function inspToMaterial(id){ const v=videoData.find(function(x){return x.id===id;}); if(!v) return; myMaterials.unshift({id:Date.now(),title:v.title,platform:v.platform,bgm:v.bgm||'',script:v.script||'',tags:(v.tags||[]).join(', ')}); saveJSON('wb_topic_materials',myMaterials); renderMaterials(); showSyncToast('📚 已转素材，同步到「选题创作」', 'topic'); }
 function goToTab(tab){ const el=Array.from(document.querySelectorAll('.nav-item')).find(function(b){var o=b.getAttribute('onclick')||''; return o.indexOf("'"+tab+"'")>=0;}); switchTab(tab, el); }
 function showSyncToast(msg, tab){ const t=document.createElement('div'); t.className='copied-toast sync-toast'; t.innerHTML=msg+(tab?' <span class="toast-link" onclick="goToTab(\''+tab+'\')">👉 去查看</span>':''); document.body.appendChild(t); setTimeout(function(){t.remove();},3200); }
-function renderTopics(){ const w=document.getElementById('topicList'); if(!myTopics.length){ w.innerHTML='<div class="empty-tip">还没有选题。去「实时热点」挑一条爆款，点「➕ 转选题」。</div>'; refreshBgmPick(); return; } w.innerHTML=myTopics.map(function(t){return '<div class="mini-card"><div class="mc-body"><div class="mc-title">'+bfEscapeHtml(t.title)+'</div><div class="mc-meta">角度：'+(bfEscapeHtml(t.angle)||'—')+' ｜ 来源：'+bfEscapeHtml(t.source)+'</div></div><button class="mc-del" onclick="delTopic('+t.id+')" title="删除">✕</button></div>';}).join(''); refreshBgmPick(); }
-function renderMaterials(){ const w=document.getElementById('materialList'); if(!myMaterials.length){ w.innerHTML='<div class="empty-tip">素材库空空。去「实时热点」挑一条爆款，点「📚 转素材」存下参考。</div>'; return; } w.innerHTML=myMaterials.map(function(m){return '<div class="mini-card"><div class="mc-body"><div class="mc-title">'+bfEscapeHtml(m.title)+'</div><div class="mc-meta">平台：'+(PLAT_LABEL[m.platform]||m.platform)+' ｜ 标签：'+bfEscapeHtml(m.tags)+'<br>参考脚本：'+(m.script?bfEscapeHtml(m.script).slice(0,60):'—')+(m.script&&m.script.length>60?'…':'')+'</div></div><button class="mc-del" onclick="delMaterial('+m.id+')" title="删除">✕</button></div>';}).join(''); }
+function renderTopics(){ const w=document.getElementById('topicList'); if(!myTopics.length){ w.innerHTML='<div class="empty-tip">还没有选题。去「灵感获取」模块抓真实爆款或 AI 批量选题，点「➕ 转选题」。</div>'; refreshBgmPick(); return; } w.innerHTML=myTopics.map(function(t){return '<div class="mini-card"><div class="mc-body"><div class="mc-title">'+bfEscapeHtml(t.title)+'</div><div class="mc-meta">角度：'+(bfEscapeHtml(t.angle)||'—')+' ｜ 来源：'+bfEscapeHtml(t.source)+'</div></div><button class="mc-del" onclick="delTopic('+t.id+')" title="删除">✕</button></div>';}).join(''); refreshBgmPick(); }
+function renderMaterials(){ const w=document.getElementById('materialList'); if(!myMaterials.length){ w.innerHTML='<div class="empty-tip">素材库空空。去「灵感获取」模块抓真实爆款或 AI 选题，点「📚 转素材」存下参考。</div>'; return; } w.innerHTML=myMaterials.map(function(m){return '<div class="mini-card"><div class="mc-body"><div class="mc-title">'+bfEscapeHtml(m.title)+'</div><div class="mc-meta">平台：'+(PLAT_LABEL[m.platform]||m.platform)+' ｜ 标签：'+bfEscapeHtml(m.tags)+'<br>参考脚本：'+(m.script?bfEscapeHtml(m.script).slice(0,60):'—')+(m.script&&m.script.length>60?'…':'')+'</div></div><button class="mc-del" onclick="delMaterial('+m.id+')" title="删除">✕</button></div>';}).join(''); }
 function delTopic(id){ myTopics=myTopics.filter(function(x){return x.id!==id;}); saveJSON('wb_topic_topics',myTopics); renderTopics(); }
 function delMaterial(id){ myMaterials=myMaterials.filter(function(x){return x.id!==id;}); saveJSON('wb_topic_materials',myMaterials); renderMaterials(); }
 
@@ -2832,7 +2968,7 @@ function chatClear(key){
 // ========== 通用工具 ==========
 function loadJSON(k,def){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):def; }catch(e){ return def; } }
 function saveJSON(k,v){ localStorage.setItem(k, JSON.stringify(v)); }
-function showToast(msg){ const t=document.createElement('div'); t.className='copied-toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(function(){t.remove();},2200); }
+
 
 // ========== 新增：日历模块（内容日历 / 待办日历） ==========
 let calState = (function(){ const n=new Date(); return {y:n.getFullYear(), m:n.getMonth()}; })();
@@ -2960,6 +3096,334 @@ function renderTodoList(){
   }).join('');
 }
 
+// ========== agent-reach 实时抓取（本地桥接） ==========
+function arBase(){ return (document.getElementById('ar-url').value||'http://127.0.0.1:8799').replace(/\/+$/,''); }
+function arStatus(msg){ const el=document.getElementById('ar-status'); if(el) el.innerHTML=msg; }
+function arEsc(s){ return bfEscapeHtml(String(s==null?'':s)); }
+const AR_PLAT_LABEL = {bilibili:'B站',shipinhao:'视频号',xiaohongshu:'小红书',douyin:'抖音',weibo:'微博',youtube:'YouTube'};
+const AR_LOGIN = {
+  xiaohongshu:{url:'https://www.xiaohongshu.com', tip:'已支持扫码/短信登录：登录后即可抓取搜索与发现流'},
+  weibo:{url:'https://passport.weibo.com/sso/signin', tip:'电脑已内置登录窗口：直接点「🔐 扫码 / 短信登录」，在弹出窗口登录后自动保存 Cookie，即可实时抓取热搜'},
+  douyin:{url:'https://www.douyin.com', tip:'支持扫码/短信登录：登录后即可抓取热榜与关键词搜索（风控较重，偶尔需手动过验证码）'},
+  shipinhao:{url:'https://channels.weixin.qq.com', tip:'视频号助手需用微信扫码登录；浏览端内容请在微信 App 内打开分享链接'},
+  youtube:{url:'https://www.youtube.com', tip:'登录后便于使用 YouTube 通道'}
+};
+function arLgP(){ return (document.getElementById('ar-platform')||{}).value || 'weibo'; }
+const AR_LOGIN_ASST = {weibo:1, xiaohongshu:1, douyin:1};
+function arLoginLink(){
+  const w=document.getElementById('ar-login-row'); if(!w) return;
+  const p=document.getElementById('ar-platform').value;
+  if(AR_LOGIN_ASST[p]){
+    const nm=AR_PLAT_LABEL[p]||p;
+    const m=AR_LOGIN[p];
+    w.style.display='flex';
+    w.innerHTML='<a class="btn" style="padding:6px 12px;" href="'+(m?m.url:'#')+'" target="_blank" rel="noopener">🔗 去'+nm+'登录页</a>'
+      + '<button class="btn" style="padding:6px 12px;" onclick="arLoginStart()">🔐 扫码 / 短信登录</button>'
+      + '<span id="ar-lg" style="font-size:12px;color:var(--text-dim);"></span>';
+    arPollLogin();
+    return;
+  }
+  const m=AR_LOGIN[p];
+  if(!m){ w.style.display='none'; w.innerHTML=''; return; }
+  w.style.display='flex';
+  w.innerHTML='<a class="btn" style="padding:6px 12px;" href="'+m.url+'" target="_blank" rel="noopener">🔗 快捷登录：去 '+(AR_PLAT_LABEL[p]||p)+' 登录</a>'
+    + '<span style="font-size:11px;color:var(--text-dim);">'+m.tip+'</span>';
+}
+function arLgMsg(msg,status){
+  const el=document.getElementById('ar-lg'); if(!el) return;
+  let color='var(--text-dim)';
+  let html=arEsc(msg||'');
+  if(status==='ready'){ color='#10b981'; html+=' <a href="javascript:arLoginOut()" style="color:#e11d48;font-size:12px;">退出登录</a>'; }
+  else if(status==='error'||status==='timeout'){ color='#e11d48'; }
+  else if(status==='running'){ color='#d97706'; }
+  el.style.color=color; el.innerHTML=html;
+}
+async function arLoginStart(){
+  const p=arLgP();
+  arLgMsg('⏳ 正在启动本机登录窗口…','running');
+  try{
+    const r=await fetch(arBase()+'/api/login/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({platform:p})});
+    const d=await r.json();
+    if(!d.ok) throw new Error(d.error||'未知错误');
+    arLgMsg(d.msg||'已启动',d.status);
+    if(d.status==='running') setTimeout(arPollLogin,3000);
+  }catch(e){ arLgMsg('❌ '+e.message,'error'); }
+}
+async function arPollLogin(){
+  const p=arLgP();
+  try{
+    const r=await fetch(arBase()+'/api/login/status?platform='+encodeURIComponent(p));
+    const d=await r.json();
+    if(!d.ok) throw new Error(d.error||'未知错误');
+    arLgMsg(d.msg||('状态：'+(d.status||'idle')),d.status);
+    if(d.status==='running') setTimeout(arPollLogin,3000);
+  }catch(e){ arLgMsg('❌ 查询登录状态失败：'+e.message,'error'); }
+}
+async function arLoginOut(){
+  const p=arLgP();
+  arLgMsg('⏳ 清除登录态…','running');
+  try{
+    const r=await fetch(arBase()+'/api/login/logout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({platform:p})});
+    const d=await r.json();
+    if(!d.ok) throw new Error(d.error||'未知错误');
+    arLgMsg(d.msg||'已退出登录','idle');
+  }catch(e){ arLgMsg('❌ '+e.message,'error'); }
+}
+async function arTest(){
+  const st=document.getElementById('ar-status');
+  st.innerHTML='<span class="spinner"></span>连接测试中…';
+  try{
+    const r=await fetch(arBase()+'/api/status',{method:'GET'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    if(!d.ok) throw new Error(d.error||'未知错误');
+    st.innerHTML='✅ 桥接连接正常（'+d.time+'）';
+    arRenderChannels(d.channels||[]);
+    return d;
+  }catch(e){
+    st.innerHTML='❌ 无法连接桥接服务：'+arEsc(e.message)+'<br><span style="font-size:11px;color:var(--text-dim);">请先在电脑上运行：python agent_reach_bridge.py</span>';
+    return null;
+  }
+}
+function arRenderChannels(chs){
+  const w=document.getElementById('ar-channels');
+  if(!chs.length){ w.innerHTML=''; return; }
+  w.innerHTML=chs.map(function(c){
+    const cls = c.status==='ready'?'ready':(c.status==='limited'||c.status==='needs-tool')?'wait':'lock';
+    const ico = c.status==='ready'?'✅':(c.status==='limited'||c.status==='needs-tool')?'⚠️':'🔒';
+    return '<span class="ar-ch-tag '+cls+'" title="'+arEsc(c.note)+'">'+ico+' '+arEsc(c.name)+'</span>';
+  }).join('');
+}
+function arHint(platform){
+  const notes={
+    shipinhao:'🎬 视频号内容在微信 App 内，暂无可直接访问的公开热门/搜索接口。解锁方向：使用能打开视频号分享链接的已登录微信环境，或接入微信生态第三方数据源（如友望/新榜等提供视频号榜单的服务）后接入 agent-reach 通道',
+    xiaohongshu:'📕 小红书需登录态。解锁步骤：\n1. 电脑浏览器登录 xiaohongshu.com\n2. 用 Cookie-Editor 插件导出 Header String 发给电脑\n3. 运行 agent-reach configure xhs-cookies\n4. 重启桥接服务即可用',
+    douyin:'📱 抖音关键词全站搜索暂未开放；粘贴分享链接到 AI 助手即可解析视频信息',
+    weibo:'🌐 微博需登录：选中微博后点「🔐 扫码 / 短信登录」，在本机弹出窗口登录即可实时抓取热搜',
+    bilibili:''
+  };
+  return notes[platform]||'';
+}
+async function arFetch(){
+  const platform=document.getElementById('ar-platform').value;
+  const kw=document.getElementById('ar-keyword').value.trim();
+  const n=document.getElementById('ar-count').value;
+  const box=document.getElementById('ar-result');
+  arStatus('<span class="spinner"></span>抓取中…');
+  const AR_FETCH_OK = {bilibili:1, weibo:1, xiaohongshu:1};
+  if(!AR_FETCH_OK[platform]){ box.innerHTML='<div class="ar-hint">'+arHint(platform)+'</div>'; arStatus('⚠️ 该平台当前不可用，请先解锁'); return; }
+  try{
+    let url = arBase()+'/api/' + (kw?'search':'hot') + '?platform='+encodeURIComponent(platform) + (kw?('&q='+encodeURIComponent(kw)):'') + '&n='+n;
+    const r=await fetch(url,{method:'GET'});
+    const d=await r.json();
+    if(!d.ok){ box.innerHTML='<div class="bf-error">❌ '+arEsc(d.error)+'<br><span style="font-size:11px;">'+(d.hint?arEsc(d.hint):'')+'</span></div>'; arStatus(''); return; }
+    arStatus('✅ 抓取 '+d.items.length+' 条 · '+(d.q?('搜索「'+arEsc(d.q)+'」'):((AR_PLAT_LABEL[platform]||platform)+'热门')));
+    arRenderItems(d.items, kw);
+  }catch(e){
+    box.innerHTML='<div class="ar-empty">❌ 请求失败：'+arEsc(e.message)+'<br><span style="font-size:11px;">请确认已运行 python agent_reach_bridge.py</span></div>';
+    arStatus('');
+  }
+}
+function arRenderItems(items, kw){
+  const box=document.getElementById('ar-result');
+  if(!items.length){ box.innerHTML='<div class="ar-empty">没有抓到结果，试试换关键词</div>'; return; }
+  box.innerHTML=items.map(function(v,i){
+    const pic=v.pic&&/^https?:/.test(v.pic)?v.pic:(v.pic?v.pic.replace(/^\/\//,'https://'):'');
+    const meta=[];
+    if(v.views) meta.push('👀 '+arEsc(v.views));
+    if(v.likes) meta.push('👍 '+arEsc(v.likes));
+    if(v.danmaku) meta.push('💬 '+arEsc(v.danmaku));
+    if(v.author) meta.push('👤 '+arEsc(v.author));
+    const extra = v.desc ? '<div class="ar-meta" style="color:#999;">'+arEsc(v.desc)+'</div>' : '';
+    return '<div class="ar-item">'
+      + (pic?'<img class="ar-pic" src="'+pic+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">':'')
+      + '<div class="ar-body"><div class="ar-title">'+(i+1)+'. '+arEsc(v.title)+'</div>'
+      + (meta.length?'<div class="ar-meta">'+meta.join('')+'</div>':'')
+      + extra
+      + '<div class="ar-acts">'
+      + '<a class="btn" href="'+arEsc(v.url)+'" target="_blank" rel="noopener">🔗 打开</a>'
+      + '<button class="btn" onclick="arToTopic(\''+i+'\')">➕ 转选题</button>'
+      + '<button class="btn" onclick="arToMaterial(\''+i+'\')">📚 转素材</button>'
+      + '</div></div></div>';
+  }).join('');
+  box._items = items.map(function(v){ return {platform:v.platform||'bilibili', title:v.title, url:v.url, author:v.author, views:v.views}; });
+}
+function arCur(i){
+  const box=document.getElementById('ar-result');
+  const arr=(box&&box._items)||[];
+  return arr[i];
+}
+function arToTopic(i){
+  const v=arCur(i); if(!v) return;
+  const nm=AR_PLAT_LABEL[v.platform]||v.platform;
+  myTopics.unshift({id:Date.now(), title:v.title, angle:nm+'实时热点跟进', source:'agent-reach '+nm});
+  saveJSON('wb_topic_topics',myTopics); renderTopics(); renderInspRecent(); showSyncToast('✅ 已转选题，同步到「选题创作」','topic');
+}
+function arToMaterial(i){
+  const v=arCur(i); if(!v) return;
+  const nm=AR_PLAT_LABEL[v.platform]||v.platform;
+  myMaterials.unshift({id:Date.now(), title:v.title, platform:v.platform||'bilibili', bgm:'—', script:'来源：'+v.url+'（agent-reach '+nm+' 实时抓取）', tags:nm+'实时'});
+  saveJSON('wb_topic_materials',myMaterials); renderMaterials(); renderInspRecent(); showSyncToast('📚 已转素材，同步到「选题创作」','topic');
+}
+
+// ========== 灵感获取（AI 批量选题池，独立模块） ==========
+function igStatus(msg){ const el=document.getElementById('ig-status'); if(el) el.innerHTML=msg; }
+function igParse(text){
+  // 解析 AI 返回的分隔条目：### 或数字 + 顿号/点
+  const lines = String(text||'').split('\n').map(function(l){ return l.trim(); }).filter(function(l){ return l.length>0; });
+  const out=[];
+  let cur=null;
+  lines.forEach(function(l){
+    const head=l.match(/^(?:#{1,4}\s*|\*\*?)?\s*(?:(\d+)[\.、)．]\s*|\*\*\s*)?(.*)$/);
+    if(l.indexOf('标题')>=0 || l.indexOf('选题')>=0 || (head&&head[1])){
+      if(cur && (cur.title||cur.angle)) out.push(cur);
+      cur={title:'',angle:'',why:''};
+      const body=l.replace(/^.{0,40}?[:：]\s*/,'');
+      if(/标题|选题/.test(l.split('：')[0]||l.split(':')[0])){ cur.title=body; }
+      else if(cur.title){ cur.angle=body; }
+      else { cur.title=body; }
+      return;
+    }
+    if(!cur){ cur={title:l,angle:'',why:''}; return; }
+    const m=l.match(/^(角度|选题|切入|方向|怎么拍|一句话|理由|为什么|钩子)\s*[:：]\s*(.*)$/);
+    if(m){ if(cur.title&&!cur.angle){cur.angle=m[1]+'：'+m[2];} else {cur.why=(cur.why?cur.why+' ':'')+m[1]+'：'+m[2];} return; }
+    if(l && !cur.title){ cur.title=l; }
+    else if(l && !cur.angle && l.length<60){ cur.angle=(cur.angle?cur.angle+' ':'')+l; }
+    else if(l){ cur.why=(cur.why?cur.why+' ':'')+l; }
+  });
+  if(cur && (cur.title||cur.angle)) out.push(cur);
+  // 兜底：一行一个灵感
+  if(!out.length){ lines.forEach(function(l){ if(/^(?:#|\d+[\.、)．]|\*\*)/.test(l)||l.length>6){ out.push({title:l.replace(/^(?:#|\d+[\.、)．]|\*\*)\s*/,''),angle:'',why:''}); } }); }
+  return out;
+}
+async function genInspiration(){
+  const niche=document.getElementById('ig-niche').value.trim();
+  const count=document.getElementById('ig-count').value;
+  const focus=document.getElementById('ig-focus').value;
+  const box=document.getElementById('ig-result');
+  const btn=document.getElementById('ig-btn');
+  const apiKey=getDsKey('hot-apikey');
+  if(!niche){ alert('请先输入主题 / 赛道'); return; }
+  const focusTxt={hook:'强钩子角度（3秒抓人/封面冲击/反常识开头）',controversy:'有争议、能引发评论区讨论的话题',season:'借势节气/节日/热点节点',viral:'可翻拍改编的现成爆款模式'}[focus]||'';
+  btn.disabled=true; igStatus('<span class="spinner"></span>AI 正在批量产灵感…');
+  box.innerHTML='<div class="bf-loading"><span class="spinner"></span>结合全网热点生成中，约需 10-30 秒…</div>';
+  const prompt='你是短视频赛道爆款策划师。我的赛道是「'+niche+'」，请为它策划 '+count+' 个可直接开拍的视频选题灵感，侧重：'+focusTxt+'。\n\n对每个灵感，严格按以下格式输出（用 "###" 分隔每个选题）：\n### 灵感1\n标题：<有钩子的完整标题，20字内>\n角度：<这条为什么能火的一句话切入点>\n切入点：<具体怎么拍：开头钩子/画面/结构，2-3句>\n为什么火：<对标平台当下什么情绪或需求，1句>\n\n要求：标题口语化有网感；角度互相不重复；结合当下年轻人情绪；不要空话。';
+  try{
+    const resp=await fetch(DEEPSEEK_API,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},body:JSON.stringify({model:DEEPSEEK_MODEL,messages:[{role:'user',content:prompt}],stream:false})});
+    if(!resp.ok){ let d=''; try{ const e=await resp.json(); d=e.error&&e.error.message||''; }catch(_){} throw new Error('HTTP '+resp.status+' '+(d||'')); }
+    const d=await resp.json();
+    const md=d.choices&&d.choices[0]&&d.choices[0].message?d.choices[0].message.content:'';
+    if(!md) throw new Error('返回为空');
+    igRender(md, niche);
+    igStatus('✅ 已生成，可一键转选题');
+  }catch(e){
+    box.innerHTML='<div class="bf-error">❌ 获取失败：'+bfEscapeHtml(e.message)+'<br><span style="font-size:11px;color:var(--text-dim);">请检查 API Key（设置里可配置并测试）或网络。</span></div>';
+    igStatus('');
+  } finally { btn.disabled=false; }
+}
+function igParseTitle(t){
+  return String(t||'').replace(/^标题\s*[:：]\s*/,'').replace(/^###\s*/,'').trim();
+}
+function igParseAngle(l, t){
+  if(/^角度\s*[:：]/.test(t)){ return t.replace(/^角度\s*[:：]\s*/,''); }
+  if(/^切入点\s*[:：]/.test(l)){ return l.replace(/^切入点\s*[:：]\s*/,''); }
+  return l.replace(/^角度\s*[:：]\s*/,'').replace(/^切入点\s*[:：]\s*/,'');
+}
+function igRender(raw, niche){
+  const box=document.getElementById('ig-result');
+  // 归一化：把 # 分隔的段落结构化
+  const blocks=String(raw||'').split(/\n(?=#{2,4}\s*灵感|\n#{2,4})|\n(?=###)/);
+  const items=[];
+  blocks.forEach(function(block){
+    if(!block.trim()) return;
+    const lines=block.split('\n').map(function(l){return l.trim();}).filter(Boolean);
+    if(!lines.length) return;
+    // 标题行优先：含"标题："的行
+    let title='', angle='', cut='', why='';
+    lines.forEach(function(l){
+      const t=l.match(/^标题\s*[:：]\s*(.*)$/);
+      if(t){ title=t[1].trim(); return; }
+      const a=l.match(/^角度\s*[:：]\s*(.*)$/);
+      if(a){ angle=a[1].trim(); return; }
+      const c=l.match(/^切入点\s*[:：]\s*(.*)$/);
+      if(c){ cut=c[1].trim(); return; }
+      const w=l.match(/^为什么火\s*[:：]\s*(.*)$/);
+      if(w){ why=w[1].trim(); return; }
+      // 没有标签的行，作为补充
+      const head=l.match(/^#{2,4}\s*灵感\s*\d*/);
+      if(head) return;
+      if(l&&l.length>0&&!title&&l.length<60) title=l;
+      else if(l&&l.length>0) why=(why?why+' ':'')+l;
+    });
+    if(title||angle){ items.push({title:title||'（未命名选题）',angle:angle,cut:cut,why:why}); }
+  });
+  // 兜底：尝试按 ### 已拆出的行再做一次
+  if(!items.length){
+    const lines=String(raw||'').split('\n').map(function(l){return l.trim();}).filter(Boolean);
+    let title='',angle='',cut='',why='';
+    lines.forEach(function(l){
+      const h=l.match(/^#{2,4}\s*灵感\s*\d*/);
+      if(h){ if(title||angle){items.push({title:title||'（未命名）',angle:angle,cut:cut,why:why});} title='';angle='';cut='';why=''; return; }
+      const t=l.match(/^标题\s*[:：]\s*(.*)$/); if(t){title=t[1].trim();return;}
+      const a=l.match(/^角度\s*[:：]\s*(.*)$/); if(a){angle=a[1].trim();return;}
+      const c=l.match(/^切入点\s*[:：]\s*(.*)$/); if(c){cut=c[1].trim();return;}
+      const w=l.match(/^为什么火\s*[:：]\s*(.*)$/); if(w){why=w[1].trim();return;}
+      if(!title&&l.length<60) title=l;
+      else why=(why?why+' ':'')+l;
+    });
+    if(title||angle) items.push({title:title||'（未命名）',angle:angle,cut:cut,why:why});
+  }
+  // 去除空白项
+  const cleaned=items.filter(function(x){ return (x.title&&x.title!=='（未命名选题）')||x.angle; }).slice(0,10);
+  if(!cleaned.length){ box.innerHTML='<div class="bf-error">解析失败，请重试或检查 API 返回。</div>'; return; }
+  box._list=cleaned.map(function(x){
+    const tag = niche||'灵感';
+    const angleText = x.angle||x.cut||x.why||'热点相关切入';
+    return {title:x.title, angle:tag+'｜'+angleText.slice(0,40), source:'AI灵感·'+tag};
+  });
+  box.innerHTML=cleaned.map(function(x,i){
+    const angleHtml=x.angle?'<div class="insp-angle"><b>角度：</b>'+bfEscapeHtml(x.angle)+'</div>':'';
+    const cutHtml=x.cut?'<div class="insp-angle" style="margin-top:3px;"><b>切入点：</b>'+bfEscapeHtml(x.cut)+'</div>':'';
+    const whyHtml=x.why?'<div class="insp-why">🔥 '+bfEscapeHtml(x.why)+'</div>':'';
+    return '<div class="insp-item"><div class="insp-num">'+(i+1)+'</div><div class="insp-body">'
+      +'<div class="insp-title">'+bfEscapeHtml(x.title)+'</div>'+angleHtml+cutHtml+whyHtml
+      +'<div class="insp-acts"><button class="btn" onclick="igToTopic('+i+')">➕ 存入选题</button>'
+      +'<button class="btn" onclick="igToMaterial('+i+')">📚 转素材参考</button></div>'
+      +'</div></div>';
+  }).join('');
+}
+function igCur(i){
+  const box=document.getElementById('ig-result');
+  const arr=(box&&box._list)||[];
+  return arr[i];
+}
+function igToTopic(i){
+  const v=igCur(i); if(!v) return;
+  myTopics.unshift({id:Date.now(), title:v.title, angle:v.angle, source:v.source});
+  saveJSON('wb_topic_topics',myTopics); renderTopics(); renderInspRecent(); showSyncToast('✅ 灵感已存入选题库，去「选题创作」查看','topic');
+}
+function igToMaterial(i){
+  const v=igCur(i); if(!v) return;
+  myMaterials.unshift({id:Date.now(), title:v.title, platform:'bilibili', bgm:'—', script:v.angle||'', tags:'AI灵感'});
+  saveJSON('wb_topic_materials',myMaterials); renderMaterials(); renderInspRecent(); showSyncToast('📚 已转素材参考，同步到「选题创作」','topic');
+}
+
+// 灵感速览：最近存入「选题创作」的灵感（实时热点转 / agent-reach / AI 批量选题）
+function renderInspRecent(){
+  const w=document.getElementById('insp-recent');
+  if(!w) return;
+  const all=loadJSON('wb_topic_topics',[]);
+  if(!all.length){
+    w.innerHTML='<div class="ar-empty">还没有灵感。先用上面「🚀 实时抓取」抓真实爆款，或「✨ 获取灵感」让 AI 批量产出，点「转选题」就会出现在这里。</div>';
+    return;
+  }
+  w.innerHTML=all.slice(0,6).map(function(t){
+    const angle=(t.angle&&t.angle!=='—')?' ｜ 角度：'+bfEscapeHtml(String(t.angle).slice(0,44)):'';
+    return '<div class="ar-item"><div class="ar-body"><div class="ar-title">'+bfEscapeHtml(t.title)+'</div><div class="ar-meta">来源：'+bfEscapeHtml(t.source||'—')+angle+'</div></div>'
+      +'<button class="btn" style="flex-shrink:0;" onclick="goToTab(\'topic\')">管理</button></div>';
+  }).join('');
+}
+
 // ========== INIT ==========
 renderCards();
 renderBgmPanel();
@@ -2981,6 +3445,8 @@ document.getElementById('refreshTime').textContent = '实时监控 · '+new Date
     : '<span class="status-ok">⚡ 已接入 DeepSeek API（内置 Key）</span>';
   st.innerHTML = '<span>'+DEEPSEEK_MODEL+'</span> '+label+'<button class="mc-del" onclick="toggleFab()" style="font-size:12px;" title="去设置换 Key">⚙</button>';
 })();
+// agent-reach 桥接自动检测（仅用于实时抓取，静默跳过）
+setTimeout(function(){ arTest(); }, 1200);
 </script>
 </body>
 </html>

@@ -1,0 +1,4 @@
+﻿agent_reach_cookies.json
+agent_reach_*.json
+__pycache__/
+*.pyc
