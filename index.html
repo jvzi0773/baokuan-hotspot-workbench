@@ -1484,6 +1484,7 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
         <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-xhs')">📕 小红书文案</button>
         <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-title')">🏷️ 起标题</button>
         <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-tags')">#️⃣ 标签组合</button>
+        <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-schedule')">📅 发布策略</button>
       </div>
     </div>
     <div class="chat-box" id="chatbox-ai"></div>
@@ -1525,6 +1526,7 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
       <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-xhs')">📕 小红书文案</button>
       <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-title')">🏷️ 起标题</button>
       <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-tags')">#️⃣ 标签组合</button>
+      <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-schedule')">📅 发布策略</button>
     </div>
   </div>
   <div class="chat-box" id="chatbox-global"></div>
@@ -2960,7 +2962,22 @@ const CHAT_TPLS = {
 方案B - 精准型：垂直精准话题为主
 方案C - 均衡型：大:中:精准 = 3:4:3
 
-每个标签标注：预估流量级别(S/A/B/C) | 标签类型（热点/常青/品牌/活动）`
+每个标签标注：预估流量级别(S/A/B/C) | 标签类型（热点/常青/品牌/活动）`,
+'prompt-schedule':`你是社交媒体运营策略师。
+
+账号信息：
+- 平台：[抖音 / 小红书 / 视频号 / 多平台]
+- 赛道：[填入赛道]
+- 账号阶段：[冷启动期 0-1000粉 / 成长期 / 成熟期]
+- 可投入时间：[每天几小时 / 每周能产出几条]
+- 目标受众活跃时段：[帮我分析]
+
+请输出：
+1. 最佳发布时间表（工作日vs周末，具体到时间段）
+2. 发布频率建议（每天/每周/固定栏目日）
+3. 30天内容排期模板（表格：日期/星期/内容类型/选题方向/发布时间）
+4. 多平台分发策略（同一内容不同平台的差异化）
+5. 冷启动期特殊策略（前10条怎么排）`
 };
 function chatQuickTpl(key, tplId){
   chatQuick(key, CHAT_TPLS[tplId] || '');
