@@ -484,11 +484,6 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
     <svg class="nav-ico" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g11" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9e8ff"/><stop offset="1" stop-color="#a5d8f3"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#g11)"/><circle cx="24" cy="24" r="6" fill="none" stroke="#fff" stroke-width="3"/><path d="M24 11 v4 M24 33 v4 M11 24 h4 M33 24 h4 M17 17 l3 3 M31 31 l3 3 M31 17 l-3 3 M17 31 l-3 3" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
     <span>设置</span>
   </button>
-  <div class="nav-group">小红书采集</div>
-<button class="nav-item" onclick="switchTab('xhs',this)">
-    <svg class="nav-ico" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="gxh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7ba7"/><stop offset="1" stop-color="#ff5c8a"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#gxh)"/><rect x="10" y="12" width="13" height="28" rx="4" fill="none" stroke="#fff" stroke-width="3"/><rect x="27" y="12" width="11" height="18" rx="4" fill="none" stroke="#fff" stroke-width="3"/><path d="M30 34 h5 M31 38 h3" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
-    <span>小红书采集</span>
-  </button>
   <div class="nav-group">AI 助手</div>
 <button class="nav-item" onclick="switchTab('ai',this)">
     <svg class="nav-ico" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g12" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd1e3"/><stop offset="1" stop-color="#c9b8ff"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#g12)"/><rect x="10" y="13" width="28" height="20" rx="5" fill="none" stroke="#fff" stroke-width="3"/><path d="M15 26 L19 22 L22 25 L26 19 L30 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 33 v3 M24 36 h2" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
@@ -586,7 +581,7 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
         <select id="ar-platform" onchange="arLoginLink()">
           <option value="bilibili">📺 B站（可用）</option>
           <option value="shipinhao">🎬 视频号（待解锁）</option>
-          <option value="xiaohongshu">📕 小红书（扫码登录）</option>
+          <option value="xiaohongshu">📕 小红书（用下方 Spider_XHS 采集）</option>
           <option value="douyin">📱 抖音（扫码登录）</option>
           <option value="weibo">🌐 微博（扫码登录）</option>
         </select>
@@ -614,6 +609,97 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
     </div>
     <div class="ar-channels" id="ar-channels"></div>
     <div class="ar-result" id="ar-result"></div>
+  </div>
+
+  <div class="benchmark-panel xhs-panel">
+    <div class="benchmark-header">
+      <h3>📕 小红书采集 <span class="ar-beta">Spider_XHS 采集</span></h3>
+      <span class="bf-tip">小红书平台专用采集器（纯 HTTP 签名，比 agent-reach 快）。连接本机 Spider_XHS 桥接服务（python xhs_bridge.py）：搜索笔记 / 笔记详情(无水印图&视频) / 用户主页笔记 / 评论导出。手机访问时地址填电脑局域网 IP。</span>
+    </div>
+
+    <!-- 桥接与登录 -->
+    <div class="bf-row">
+      <div class="bf-item" style="flex:2;">
+        <label>桥接地址</label>
+        <input id="xhs-url" value="http://127.0.0.1:8811" placeholder="http://127.0.0.1:8811">
+      </div>
+      <div class="bf-item">
+        <label>登录状态</label>
+        <input id="xhs-loginstat" value="检测中…" readonly style="background:var(--bg);color:var(--text-dim);">
+      </div>
+    </div>
+    <div id="xhs-login-row" style="display:none;margin-bottom:12px;align-items:center;flex-wrap:wrap;gap:10px;">
+      <div style="text-align:center;">
+        <img id="xhs-qrcode" alt="二维码" style="width:180px;height:180px;border:1px solid var(--border);border-radius:12px;background:#fff;">
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">用小红书 App 扫码</div>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <div id="xhs-qrmsg" style="font-size:13px;margin-bottom:6px;">正在生成二维码…</div>
+        <button class="btn" onclick="xhsQrStart()">↻ 刷新二维码</button>
+      </div>
+    </div>
+    <div class="bf-actions">
+      <button class="btn btn-primary" onclick="xhsTest()">🔌 测试连接</button>
+      <button class="btn" onclick="xhsQrStart()">🔐 扫码登录</button>
+      <button class="btn" onclick="xhsCookieLogin()">🍪 Cookie 登录</button>
+      <button class="btn" onclick="xhsLogout()">🚪 退出登录</button>
+      <span class="bf-status" id="xhs-status"></span>
+    </div>
+
+    <!-- 采集动作 -->
+    <div class="xhs-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px;">
+      <button class="btn xhs-tab" data-xhs="search" onclick="xhsShow('search',this)">🔍 搜索笔记</button>
+      <button class="btn xhs-tab" data-xhs="note" onclick="xhsShow('note',this)">📄 笔记详情</button>
+      <button class="btn xhs-tab" data-xhs="user" onclick="xhsShow('user',this)">👤 用户笔记</button>
+      <button class="btn xhs-tab" data-xhs="comments" onclick="xhsShow('comments',this)">💬 评论采集</button>
+    </div>
+
+    <div id="xhs-search">
+      <div class="bf-row" style="margin-top:6px;">
+        <div class="bf-item" style="flex:3;">
+          <label>关键词</label>
+          <input id="xhs-q" placeholder="例如：北京 探店 甜品">
+        </div>
+        <div class="bf-item">
+          <label>数量</label>
+          <select id="xhs-num"><option value="10" selected>10</option><option value="20">20</option><option value="50">50</option></select>
+        </div>
+        <div class="bf-item">
+          <label>排序</label>
+          <select id="xhs-sort">
+            <option value="0">综合</option><option value="2">最热</option>
+            <option value="1">最新</option><option value="3">最多评论</option><option value="4">最多收藏</option>
+          </select>
+        </div>
+      </div>
+      <div class="bf-actions"><button class="btn btn-primary" onclick="xhsSearch()">🚀 搜索</button><span class="bf-status" id="xhs-search-status"></span></div>
+    </div>
+
+    <div id="xhs-note" style="display:none;">
+      <div class="bf-row" style="margin-top:6px;">
+        <div class="bf-item" style="flex:3;"><label>笔记链接</label><input id="xhs-note-url" placeholder="https://www.xiaohongshu.com/explore/xxx"></div>
+      </div>
+      <div class="bf-actions"><button class="btn btn-primary" onclick="xhsNote()">📥 抓取详情</button><span class="bf-status" id="xhs-note-status"></span></div>
+    </div>
+
+    <div id="xhs-user" style="display:none;">
+      <div class="bf-row" style="margin-top:6px;">
+        <div class="bf-item" style="flex:3;"><label>用户主页链接</label><input id="xhs-user-url" placeholder="https://www.xiaohongshu.com/user/profile/xxx"></div>
+      </div>
+      <div class="bf-actions"><button class="btn btn-primary" onclick="xhsUser()">👤 抓取用户笔记</button><span class="bf-status" id="xhs-user-status"></span></div>
+    </div>
+
+    <div id="xhs-comments" style="display:none;">
+      <div class="bf-row" style="margin-top:6px;">
+        <div class="bf-item" style="flex:3;"><label>笔记链接</label><input id="xhs-cmt-url" placeholder="https://www.xiaohongshu.com/explore/xxx"></div>
+      </div>
+      <div class="bf-actions"><button class="btn btn-primary" onclick="xhsComments()">💬 抓取全部评论</button><span class="bf-status" id="xhs-cmt-status"></span></div>
+    </div>
+
+    <div class="ar-result" id="xhs-result" style="margin-top:12px;"></div>
+    <div class="bf-actions" style="justify-content:flex-end;">
+      <button class="btn" onclick="xhsExport()">⬇️ 导出 CSV</button>
+    </div>
   </div>
 
   <div class="benchmark-panel">
@@ -1496,100 +1582,6 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
     <div class="chat-input-row" style="margin-top:10px;">
       <textarea id="chatinput-ai" class="mini-textarea" placeholder="问工作台 AI 助手… Enter 发送" style="min-height:52px;" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend('ai');}"></textarea>
       <button class="btn btn-primary" onclick="chatSend('ai')">发送</button>
-    </div>
-  </div>
-</div>
-
-<!-- TAB X: 小红书采集（Spider_XHS 本地桥接） -->
-<div class="tab-content" id="tab-xhs">
-  <div class="benchmark-panel xhs-panel">
-    <div class="benchmark-header">
-      <h3>📕 小红书采集 <span class="ar-beta">本地桥接</span></h3>
-      <span class="bf-tip">连接本机 Spider_XHS 桥接服务（python xhs_bridge.py），纯 HTTP 签名采集小红书数据：关键词搜索笔记 / 笔记详情(无水印图&视频) / 用户主页笔记 / 评论导出。手机访问时地址填电脑局域网 IP。</span>
-    </div>
-
-    <!-- 桥接与登录 -->
-    <div class="bf-row">
-      <div class="bf-item" style="flex:2;">
-        <label>桥接地址</label>
-        <input id="xhs-url" value="http://127.0.0.1:8811" placeholder="http://127.0.0.1:8811">
-      </div>
-      <div class="bf-item">
-        <label>登录状态</label>
-        <input id="xhs-loginstat" value="检测中…" readonly style="background:var(--bg);color:var(--text-dim);">
-      </div>
-    </div>
-    <div id="xhs-login-row" style="display:none;margin-bottom:12px;align-items:center;flex-wrap:wrap;gap:10px;">
-      <div style="text-align:center;">
-        <img id="xhs-qrcode" alt="二维码" style="width:180px;height:180px;border:1px solid var(--border);border-radius:12px;background:#fff;">
-        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">用小红书 App 扫码</div>
-      </div>
-      <div style="flex:1;min-width:200px;">
-        <div id="xhs-qrmsg" style="font-size:13px;margin-bottom:6px;">正在生成二维码…</div>
-        <button class="btn" onclick="xhsQrStart()">↻ 刷新二维码</button>
-      </div>
-    </div>
-    <div class="bf-actions">
-      <button class="btn btn-primary" onclick="xhsTest()">🔌 测试连接</button>
-      <button class="btn" onclick="xhsQrStart()">🔐 扫码登录</button>
-      <button class="btn" onclick="xhsCookieLogin()">🍪 Cookie 登录</button>
-      <button class="btn" onclick="xhsLogout()">🚪 退出登录</button>
-      <span class="bf-status" id="xhs-status"></span>
-    </div>
-
-    <!-- 采集动作 -->
-    <div class="xhs-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px;">
-      <button class="btn xhs-tab" data-xhs="search" onclick="xhsShow('search',this)">🔍 搜索笔记</button>
-      <button class="btn xhs-tab" data-xhs="note" onclick="xhsShow('note',this)">📄 笔记详情</button>
-      <button class="btn xhs-tab" data-xhs="user" onclick="xhsShow('user',this)">👤 用户笔记</button>
-      <button class="btn xhs-tab" data-xhs="comments" onclick="xhsShow('comments',this)">💬 评论采集</button>
-    </div>
-
-    <div id="xhs-search">
-      <div class="bf-row" style="margin-top:6px;">
-        <div class="bf-item" style="flex:3;">
-          <label>关键词</label>
-          <input id="xhs-q" placeholder="例如：北京 探店 甜品">
-        </div>
-        <div class="bf-item">
-          <label>数量</label>
-          <select id="xhs-num"><option value="10" selected>10</option><option value="20">20</option><option value="50">50</option></select>
-        </div>
-        <div class="bf-item">
-          <label>排序</label>
-          <select id="xhs-sort">
-            <option value="0">综合</option><option value="2">最热</option>
-            <option value="1">最新</option><option value="3">最多评论</option><option value="4">最多收藏</option>
-          </select>
-        </div>
-      </div>
-      <div class="bf-actions"><button class="btn btn-primary" onclick="xhsSearch()">🚀 搜索</button><span class="bf-status" id="xhs-search-status"></span></div>
-    </div>
-
-    <div id="xhs-note" style="display:none;">
-      <div class="bf-row" style="margin-top:6px;">
-        <div class="bf-item" style="flex:3;"><label>笔记链接</label><input id="xhs-note-url" placeholder="https://www.xiaohongshu.com/explore/xxx"></div>
-      </div>
-      <div class="bf-actions"><button class="btn btn-primary" onclick="xhsNote()">📥 抓取详情</button><span class="bf-status" id="xhs-note-status"></span></div>
-    </div>
-
-    <div id="xhs-user" style="display:none;">
-      <div class="bf-row" style="margin-top:6px;">
-        <div class="bf-item" style="flex:3;"><label>用户主页链接</label><input id="xhs-user-url" placeholder="https://www.xiaohongshu.com/user/profile/xxx"></div>
-      </div>
-      <div class="bf-actions"><button class="btn btn-primary" onclick="xhsUser()">👤 抓取用户笔记</button><span class="bf-status" id="xhs-user-status"></span></div>
-    </div>
-
-    <div id="xhs-comments" style="display:none;">
-      <div class="bf-row" style="margin-top:6px;">
-        <div class="bf-item" style="flex:3;"><label>笔记链接</label><input id="xhs-cmt-url" placeholder="https://www.xiaohongshu.com/explore/xxx"></div>
-      </div>
-      <div class="bf-actions"><button class="btn btn-primary" onclick="xhsComments()">💬 抓取全部评论</button><span class="bf-status" id="xhs-cmt-status"></span></div>
-    </div>
-
-    <div class="ar-result" id="xhs-result" style="margin-top:12px;"></div>
-    <div class="bf-actions" style="justify-content:flex-end;">
-      <button class="btn" onclick="xhsExport()">⬇️ 导出 CSV</button>
     </div>
   </div>
 </div>
