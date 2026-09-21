@@ -484,6 +484,11 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
     <svg class="nav-ico" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g11" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9e8ff"/><stop offset="1" stop-color="#a5d8f3"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#g11)"/><circle cx="24" cy="24" r="6" fill="none" stroke="#fff" stroke-width="3"/><path d="M24 11 v4 M24 33 v4 M11 24 h4 M33 24 h4 M17 17 l3 3 M31 31 l3 3 M31 17 l-3 3 M17 31 l-3 3" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
     <span>设置</span>
   </button>
+  <div class="nav-group">小红书采集</div>
+<button class="nav-item" onclick="switchTab('xhs',this)">
+    <svg class="nav-ico" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="gxh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7ba7"/><stop offset="1" stop-color="#ff5c8a"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#gxh)"/><rect x="10" y="12" width="13" height="28" rx="4" fill="none" stroke="#fff" stroke-width="3"/><rect x="27" y="12" width="11" height="18" rx="4" fill="none" stroke="#fff" stroke-width="3"/><path d="M30 34 h5 M31 38 h3" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+    <span>小红书采集</span>
+  </button>
   <div class="nav-group">AI 助手</div>
 <button class="nav-item" onclick="switchTab('ai',this)">
     <svg class="nav-ico" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g12" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd1e3"/><stop offset="1" stop-color="#c9b8ff"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#g12)"/><rect x="10" y="13" width="28" height="20" rx="5" fill="none" stroke="#fff" stroke-width="3"/><path d="M15 26 L19 22 L22 25 L26 19 L30 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 33 v3 M24 36 h2" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
@@ -1494,6 +1499,101 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
     </div>
   </div>
 </div>
+
+<!-- TAB X: 小红书采集（Spider_XHS 本地桥接） -->
+<div class="tab-content" id="tab-xhs">
+  <div class="benchmark-panel xhs-panel">
+    <div class="benchmark-header">
+      <h3>📕 小红书采集 <span class="ar-beta">本地桥接</span></h3>
+      <span class="bf-tip">连接本机 Spider_XHS 桥接服务（python xhs_bridge.py），纯 HTTP 签名采集小红书数据：关键词搜索笔记 / 笔记详情(无水印图&视频) / 用户主页笔记 / 评论导出。手机访问时地址填电脑局域网 IP。</span>
+    </div>
+
+    <!-- 桥接与登录 -->
+    <div class="bf-row">
+      <div class="bf-item" style="flex:2;">
+        <label>桥接地址</label>
+        <input id="xhs-url" value="http://127.0.0.1:8811" placeholder="http://127.0.0.1:8811">
+      </div>
+      <div class="bf-item">
+        <label>登录状态</label>
+        <input id="xhs-loginstat" value="检测中…" readonly style="background:var(--bg);color:var(--text-dim);">
+      </div>
+    </div>
+    <div id="xhs-login-row" style="display:none;margin-bottom:12px;align-items:center;flex-wrap:wrap;gap:10px;">
+      <div style="text-align:center;">
+        <img id="xhs-qrcode" alt="二维码" style="width:180px;height:180px;border:1px solid var(--border);border-radius:12px;background:#fff;">
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">用小红书 App 扫码</div>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <div id="xhs-qrmsg" style="font-size:13px;margin-bottom:6px;">正在生成二维码…</div>
+        <button class="btn" onclick="xhsQrStart()">↻ 刷新二维码</button>
+      </div>
+    </div>
+    <div class="bf-actions">
+      <button class="btn btn-primary" onclick="xhsTest()">🔌 测试连接</button>
+      <button class="btn" onclick="xhsQrStart()">🔐 扫码登录</button>
+      <button class="btn" onclick="xhsCookieLogin()">🍪 Cookie 登录</button>
+      <button class="btn" onclick="xhsLogout()">🚪 退出登录</button>
+      <span class="bf-status" id="xhs-status"></span>
+    </div>
+
+    <!-- 采集动作 -->
+    <div class="xhs-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px;">
+      <button class="btn xhs-tab" data-xhs="search" onclick="xhsShow('search',this)">🔍 搜索笔记</button>
+      <button class="btn xhs-tab" data-xhs="note" onclick="xhsShow('note',this)">📄 笔记详情</button>
+      <button class="btn xhs-tab" data-xhs="user" onclick="xhsShow('user',this)">👤 用户笔记</button>
+      <button class="btn xhs-tab" data-xhs="comments" onclick="xhsShow('comments',this)">💬 评论采集</button>
+    </div>
+
+    <div id="xhs-search">
+      <div class="bf-row" style="margin-top:6px;">
+        <div class="bf-item" style="flex:3;">
+          <label>关键词</label>
+          <input id="xhs-q" placeholder="例如：北京 探店 甜品">
+        </div>
+        <div class="bf-item">
+          <label>数量</label>
+          <select id="xhs-num"><option value="10" selected>10</option><option value="20">20</option><option value="50">50</option></select>
+        </div>
+        <div class="bf-item">
+          <label>排序</label>
+          <select id="xhs-sort">
+            <option value="0">综合</option><option value="2">最热</option>
+            <option value="1">最新</option><option value="3">最多评论</option><option value="4">最多收藏</option>
+          </select>
+        </div>
+      </div>
+      <div class="bf-actions"><button class="btn btn-primary" onclick="xhsSearch()">🚀 搜索</button><span class="bf-status" id="xhs-search-status"></span></div>
+    </div>
+
+    <div id="xhs-note" style="display:none;">
+      <div class="bf-row" style="margin-top:6px;">
+        <div class="bf-item" style="flex:3;"><label>笔记链接</label><input id="xhs-note-url" placeholder="https://www.xiaohongshu.com/explore/xxx"></div>
+      </div>
+      <div class="bf-actions"><button class="btn btn-primary" onclick="xhsNote()">📥 抓取详情</button><span class="bf-status" id="xhs-note-status"></span></div>
+    </div>
+
+    <div id="xhs-user" style="display:none;">
+      <div class="bf-row" style="margin-top:6px;">
+        <div class="bf-item" style="flex:3;"><label>用户主页链接</label><input id="xhs-user-url" placeholder="https://www.xiaohongshu.com/user/profile/xxx"></div>
+      </div>
+      <div class="bf-actions"><button class="btn btn-primary" onclick="xhsUser()">👤 抓取用户笔记</button><span class="bf-status" id="xhs-user-status"></span></div>
+    </div>
+
+    <div id="xhs-comments" style="display:none;">
+      <div class="bf-row" style="margin-top:6px;">
+        <div class="bf-item" style="flex:3;"><label>笔记链接</label><input id="xhs-cmt-url" placeholder="https://www.xiaohongshu.com/explore/xxx"></div>
+      </div>
+      <div class="bf-actions"><button class="btn btn-primary" onclick="xhsComments()">💬 抓取全部评论</button><span class="bf-status" id="xhs-cmt-status"></span></div>
+    </div>
+
+    <div class="ar-result" id="xhs-result" style="margin-top:12px;"></div>
+    <div class="bf-actions" style="justify-content:flex-end;">
+      <button class="btn" onclick="xhsExport()">⬇️ 导出 CSV</button>
+    </div>
+  </div>
+</div>
+
 </main>
 </div>
 
@@ -3507,6 +3607,199 @@ document.getElementById('refreshTime').textContent = '实时监控 · '+new Date
 })();
 // agent-reach 桥接自动检测（仅用于实时抓取，静默跳过）
 setTimeout(function(){ arTest(); }, 1200);
+
+// ========== 小红书采集（Spider_XHS 本地桥接） ==========
+const XHS_STORE = 'wb_xhs_capture';
+function xhsBase(){ return (document.getElementById('xhs-url').value.trim()||'http://127.0.0.1:8811').replace(/\/+$/,''); }
+function xhsSt(id,msg){ const el=document.getElementById(id); if(el) el.textContent=msg; }
+function xhsErr(m){ return '<div class="bf-error">❌ '+arEsc(m)+'</div>'; }
+
+function xhsApi(path, body){
+  return fetch(xhsBase()+path, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(body||{})
+  }).then(function(r){ return r.json(); });
+}
+function xhsSave(data){
+  let arr=[]; try{ arr=JSON.parse(localStorage.getItem(XHS_STORE)||'[]'); }catch(e){}
+  arr.push({time:Date.now(), type:data.type, data:data.data});
+  if(arr.length>50) arr=arr.slice(-50);
+  localStorage.setItem(XHS_STORE, JSON.stringify(arr));
+}
+
+function xhsTest(){
+  const st=document.getElementById('xhs-status');
+  st.innerHTML='<span class="spinner"></span>连接中…';
+  fetch(xhsBase()+'/health').then(r=>r.json()).then(function(d){
+    if(!d.ok){ st.innerHTML='❌ 服务异常'; return; }
+    const on = d.login ? '✅ 已登录'+(d.nickname?(' · '+d.nickname):'') : '⛔ 未登录';
+    document.getElementById('xhs-loginstat').value = on;
+    st.innerHTML = '<span style="color:var(--ok)">✅ 已连接</span>（'+(d.spider?'Spider_XHS 就绪':'库未就绪')+'）';
+  }).catch(function(e){
+    st.innerHTML='❌ 无法连接：'+arEsc(e.message)+'<br><span style="font-size:11px;color:var(--text-dim);">请在电脑运行：python xhs_bridge.py</span>';
+  });
+}
+
+let xhsPoll = null;
+function xhsQrStart(){
+  const st=document.getElementById('xhs-status');
+  st.innerHTML='<span class="spinner"></span>正在生成二维码…';
+  xhsApi('/login/qr/start',{}).then(function(d){
+    if(!d.ok){ st.innerHTML='<span style="color:var(--warn)">'+arEsc(d.msg)+'</span>'; return; }
+    document.getElementById('xhs-login-row').style.display='flex';
+    document.getElementById('xhs-qrmsg').textContent='正在等待扫码…';
+    // 显示二维码图片
+    const img=document.getElementById('xhs-qrcode');
+    img.src=xhsBase()+'/login/qr.png?t='+Date.now();
+    clearInterval(xhsPoll);
+    xhsPoll=setInterval(function(){
+      xhsApi('/login/qr/status',{}).then(function(s){
+        document.getElementById('xhs-qrmsg').textContent = (s.status==='done'?'✅ 登录成功！':s.msg||'');
+        if(s.status==='done'){
+          clearInterval(xhsPoll);
+          document.getElementById('xhs-login-row').style.display='none';
+          document.getElementById('xhs-loginstat').value='✅ 已登录'+(s.nickname?(' · '+s.nickname):'');
+          st.innerHTML='<span style="color:var(--ok)">✅ 扫码登录成功</span>';
+        } else if(s.status==='expired'||s.status==='timeout'||s.status==='error'){
+          clearInterval(xhsPoll);
+          document.getElementById('xhs-qrmsg').textContent = (s.msg||'二维码失效')+'，点「刷新二维码」重新生成';
+        }
+      }).catch(function(){});
+    },2000);
+  }).catch(function(e){ st.innerHTML='❌ '+arEsc(e.message); });
+}
+
+function xhsCookieLogin(){
+  const ck=prompt('粘贴小红书完整 Cookie（支持 Cookie-Editor 导出的 Header String）：');
+  if(!ck) return;
+  const st=document.getElementById('xhs-status');
+  st.innerHTML='<span class="spinner"></span>正在登录…';
+  xhsApi('/login/cookie',{cookies:ck}).then(function(d){
+    if(!d.ok){ st.innerHTML='<span style="color:#e53e3e">❌ '+arEsc(d.msg)+'</span>'; return; }
+    document.getElementById('xhs-loginstat').value='✅ 已登录'+(d.nickname?(' · '+d.nickname):'');
+    st.innerHTML='<span style="color:var(--ok)">✅ Cookie 登录成功</span>';
+  }).catch(function(e){ st.innerHTML='❌ '+arEsc(e.message); });
+}
+
+function xhsLogout(){
+  xhsApi('/logout',{}).then(function(){
+    document.getElementById('xhs-loginstat').value='未登录';
+    document.getElementById('xhs-status').innerHTML='🚪 已退出登录';
+    document.getElementById('xhs-login-row').style.display='none';
+  }).catch(function(e){ document.getElementById('xhs-status').innerHTML='❌ '+arEsc(e.message); });
+}
+
+function xhsShow(name, el, activeTab){
+  document.querySelectorAll('.xhs-tab').forEach(function(b){ b.classList.remove('active'); });
+  if(el) el.classList.add('active');
+  ['search','note','user','comments'].forEach(function(k){
+    document.getElementById('xhs-'+k).style.display = k===name?'block':'none';
+  });
+  // 首次进入自动检测
+  if(!document.getElementById('xhs-loginstat').value.startsWith('✅')) xhsTest();
+}
+
+function xhsRenderNotes(notes){
+  if(!notes||!notes.length) return '<div class="ar-empty">没有找到结果</div>';
+  return '<div class="ar-list">'+notes.map(function(n,i){
+    const cover=n.cover?'<img src="'+n.cover+'" style="width:52px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;">':'<div style="width:52px;height:52px;border-radius:8px;background:#f0e9db;display:flex;align-items:center;justify-content:center;flex-shrink:0;">📕</div>';
+    return '<div class="ar-item" style="display:flex;gap:10px;align-items:flex-start;padding:9px;border-bottom:1px solid var(--border);">'+cover+
+      '<div style="flex:1;min-width:0;"><div style="font-weight:600;line-height:1.4;">'+arEsc(n.title||'（无标题）')+'</div>'+
+      '<div style="font-size:11px;color:var(--text-dim);margin-top:3px;">👍'+n.likes+' · ⭐'+n.collects+' · 💬'+n.comments+(n.author?(' · '+arEsc(n.author)):'')+'</div>'+
+      '<div style="margin-top:4px;"><a target="_blank" rel="noopener" style="font-size:11px;color:var(--accent);" href="'+arEsc(n.url)+'">打开原笔记 ↗</a></div></div></div>';
+  }).join('')+'</div>';
+}
+
+let xhsLast = null;
+function xhsSearch(){
+  const q=document.getElementById('xhs-q').value.trim();
+  if(!q){ alert('请输入关键词'); return; }
+  xhsSt('xhs-search-status','<span class="spinner"></span>搜索中…');
+  xhsApi('/search',{q:q, num:parseInt(document.getElementById('xhs-num').value), sort:parseInt(document.getElementById('xhs-sort').value)}).then(function(d){
+    xhsSt('xhs-search-status','');
+    if(!d.ok){ document.getElementById('xhs-result').innerHTML=xhsErr(d.msg||'搜索失败'); return; }
+    xhsLast={type:'search', data:d.notes};
+    xhsSave({type:'search',data:d.notes});
+    document.getElementById('xhs-result').innerHTML='<div class="bf-ok">✅ 共 '+d.notes.length+' 条（关键词：'+arEsc(q)+'）</div>'+xhsRenderNotes(d.notes);
+  }).catch(function(e){ xhsSt('xhs-search-status',''); document.getElementById('xhs-result').innerHTML=xhsErr(e.message); });
+}
+
+function xhsNote(){
+  const url=document.getElementById('xhs-note-url').value.trim();
+  if(!url){ alert('请输入笔记链接'); return; }
+  xhsSt('xhs-note-status','<span class="spinner"></span>抓取中…');
+  xhsApi('/note',{url:url}).then(function(d){
+    xhsSt('xhs-note-status','');
+    if(!d.ok){ document.getElementById('xhs-result').innerHTML=xhsErr(d.msg||'抓取失败'); return; }
+    const n=d.note;
+    xhsLast={type:'note', data:n};
+    xhsSave({type:'note',data:n});
+    const imgs=(n.images.length?n.images.map(function(u){return '<img src="'+u+'" style="width:60px;height:60px;object-fit:cover;border-radius:6px;">';}).join(''):'<span style="font-size:12px;color:var(--text-dim);">无图</span>');
+    document.getElementById('xhs-result').innerHTML =
+      '<div class="bf-ok">✅ 已抓取笔记详情</div>'+
+      '<div style="padding:10px;background:#fff;border:1px solid var(--border);border-radius:12px;margin-top:8px;">'+
+      '<div style="font-weight:600;font-size:15px;">'+arEsc(n.title)+'</div>'+
+      '<div style="font-size:12px;color:var(--text-dim);margin:6px 0;">👍'+n.likes+' · ⭐'+n.collects+' · 💬'+n.comments+(n.type==='video'?' · 🎬视频':'')+(n.author?(' · '+arEsc(n.author)):'')+'</div>'+
+      '<div style="font-size:12px;white-space:pre-wrap;margin-bottom:8px;">'+arEsc(n.desc)+'</div>'+
+      '<div style="display:flex;flex-wrap:wrap;gap:6px;">'+imgs+'</div>'+
+      (n.video?'<div style="margin-top:8px;"><a target="_blank" rel="noopener" class="btn" href="'+arEsc(n.video)+'">📥 下载无水印视频</a></div>':'')+
+      '</div>';
+  }).catch(function(e){ xhsSt('xhs-note-status',''); document.getElementById('xhs-result').innerHTML=xhsErr(e.message); });
+}
+
+function xhsUser(){
+  const url=document.getElementById('xhs-user-url').value.trim();
+  if(!url){ alert('请输入用户主页链接'); return; }
+  xhsSt('xhs-user-status','<span class="spinner"></span>抓取中…');
+  xhsApi('/user',{url:url}).then(function(d){
+    xhsSt('xhs-user-status','');
+    if(!d.ok){ document.getElementById('xhs-result').innerHTML=xhsErr(d.msg||'抓取失败'); return; }
+    xhsLast={type:'user', data:d.notes};
+    xhsSave({type:'user',data:d.notes});
+    document.getElementById('xhs-result').innerHTML='<div class="bf-ok">✅ 该用户 '+d.notes.length+' 条笔记</div>'+xhsRenderNotes(d.notes);
+  }).catch(function(e){ xhsSt('xhs-user-status',''); document.getElementById('xhs-result').innerHTML=xhsErr(e.message); });
+}
+
+function xhsComments(){
+  const url=document.getElementById('xhs-cmt-url').value.trim();
+  if(!url){ alert('请输入笔记链接'); return; }
+  xhsSt('xhs-cmt-status','<span class="spinner"></span>评论较多，抓取中…');
+  xhsApi('/comments',{url:url}).then(function(d){
+    xhsSt('xhs-cmt-status','');
+    if(!d.ok){ document.getElementById('xhs-result').innerHTML=xhsErr(d.msg||'抓取失败'); return; }
+    xhsLast={type:'comments', data:d.comments};
+    xhsSave({type:'comments',data:d.comments});
+    const html=d.comments.map(function(c){
+      const subs=(c.subs&&c.subs.length)?'<div style="margin:6px 0 0 22px;border-left:2px solid var(--border);padding-left:10px;">'+c.subs.map(function(s){return '<div style="font-size:12px;margin-bottom:4px;"><b>'+arEsc(s.nickname)+'：</b>'+arEsc(s.content)+'</div>';}).join('')+'</div>':'';
+      return '<div class="ar-item" style="border-bottom:1px dashed var(--border);"><b>'+arEsc(c.nickname)+'</b> <span style="font-size:11px;color:var(--text-dim);">👍'+c.likes+'</span><div style="margin:4px 0;font-size:13px;">'+arEsc(c.content)+'</div>'+subs+'</div>';
+    }).join('');
+    document.getElementById('xhs-result').innerHTML='<div class="bf-ok">✅ 共 '+d.comments.length+' 条一级评论</div>'+html;
+  }).catch(function(e){ xhsSt('xhs-cmt-status',''); document.getElementById('xhs-result').innerHTML=xhsErr(e.message); });
+}
+
+function xhsExport(){
+  if(!xhsLast){ alert('请先抓取数据'); return; }
+  let rows, header;
+  if(xhsLast.type==='comments'){
+    header=['昵称','点赞','内容','时间'];
+    rows=xhsLast.data.map(function(c){ return [c.nickname,c.likes,c.content,c.time]; });
+    if(xhsLast.data.some(function(c){return c.subs&&c.subs.length;})){ rows.push([]); rows.push(['--- 二级评论 ---']); }
+  } else {
+    const arr=Array.isArray(xhsLast.data)?xhsLast.data:[xhsLast.data];
+    header=['标题','链接','点赞','收藏','评论','作者'];
+    rows=arr.map(function(n){ return [n.title,n.url,n.likes,n.collects,n.comments,n.author]; });
+  }
+  const csv='\uFEFF'+[header, ...rows].map(function(r){ return r.map(xhsCsvEsc).join(','); }).join('\n');
+  const b=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(b);
+  a.download='小红书采集_'+Date.now()+'.csv';
+  a.click();
+}
+function xhsCsvEsc(v){ const s=String(v==null?'':v); return /[",\n]/.test(s)?('"'+s.replace(/"/g,'""')+'"'):s; }
+
+// 自动检测桥接（静默）
+setTimeout(function(){ xhsTest(); }, 2600);
 </script>
 </body>
 </html>
