@@ -271,6 +271,12 @@ details.template-chip .prompt-panel{margin-top:10px;border:1px solid var(--borde
 /* ===== AI 对话 ===== */
 .chat-card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;}
 .chat-quick{display:flex;gap:8px;flex-wrap:wrap;}
+.chat-tpl{padding:8px 12px 0;flex-shrink:0;border-top:1px dashed var(--border);}
+.tpl-group{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px;}
+.tpl-label{width:100%;font-size:11px;font-weight:700;color:var(--text-dim);}
+.btn-tpl{padding:4px 8px;font-size:11px;border-radius:8px;line-height:1.4;}
+.btn-tpl:hover{transform:translateY(-1px);}
+.chat-tpl.tpl-flat{padding:6px 0 4px;border-top:none;}
 
 /* ===== 内容创作：功能标签切换 ===== */
 .cw-subtabs{display:flex;gap:4px;margin-bottom:14px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:4px;overflow-x:auto;min-width:0;max-width:100%;}
@@ -477,6 +483,11 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
 <button class="nav-item" onclick="switchTab('settings',this)">
     <svg class="nav-ico" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g11" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9e8ff"/><stop offset="1" stop-color="#a5d8f3"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#g11)"/><circle cx="24" cy="24" r="6" fill="none" stroke="#fff" stroke-width="3"/><path d="M24 11 v4 M24 33 v4 M11 24 h4 M33 24 h4 M17 17 l3 3 M31 31 l3 3 M31 17 l-3 3 M17 31 l-3 3" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
     <span>设置</span>
+  </button>
+  <div class="nav-group">AI 助手</div>
+<button class="nav-item" onclick="switchTab('ai',this)">
+    <svg class="nav-ico" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g12" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd1e3"/><stop offset="1" stop-color="#c9b8ff"/></linearGradient></defs><rect x="2" y="2" width="44" height="44" rx="13" fill="url(#g12)"/><rect x="10" y="13" width="28" height="20" rx="5" fill="none" stroke="#fff" stroke-width="3"/><path d="M15 26 L19 22 L22 25 L26 19 L30 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 33 v3 M24 36 h2" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+    <span>AI 助手</span>
   </button>
   <div class="sidebar-foot">💬 AI 助手在右下角<br>数据仅存本浏览器</div>
 </aside>
@@ -703,90 +714,6 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
     </div>
     <div class="benchmark-result" id="topic-result" style="display:none;"></div>
   </div>
-  
-  <div class="prompt-panel">
-    <div class="prompt-card">
-      <h3><span class="num">3</span>爆款选题挖掘</h3>
-      <div class="desc">基于当前热点+你的赛道，生成10个爆款选题，含爆款逻辑分析、内容形式建议和预估爆款指数。方括号[ ]内替换为你的实际情况。</div>
-      <textarea id="prompt-topic" readonly>你是一位爆款内容选题分析师。
-
-当前信息：
-- 平台：[抖音 / 小红书 / 视频号]
-- 赛道：[填入你的赛道]
-- 账号定位：[填入一句话定位]
-- 近期热点：[AI公司收购旧书销毁 / C罗结婚 / 一箭双星 / A股大涨 / 苹果5万亿]
-
-请输出10个爆款选题，每个包含：
-1. 选题标题（吸引眼球，但不过度标题党）
-2. 爆款逻辑（情绪共鸣 / 实用价值 / 猎奇心理 / 争议性 / 蹭热点）
-3. 内容形式建议（口播 / 剧情 / 教程 / 测评 / vlog / 图文）
-4. 预估爆款指数（1-10分）
-
-选题要求：3个蹭热点 + 4个常青 + 3个争议/互动选题</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-topic')">📋 复制提示词</button></div>
-    </div>
-    <div class="prompt-card">
-      <h3><span class="num">4</span>爆款选题拆解</h3>
-      <div class="desc">拆解一条爆款内容，提取可复用的方法论和内容公式。</div>
-      <textarea id="prompt-breakdown" readonly>你是短视频爆款拆解专家。
-
-爆款内容信息：
-- 平台：[抖音 / 小红书]
-- 内容标题：[填入标题]
-- 内容形式：[口播 / 剧情 / 教程]
-- 大致数据：[播放量 / 点赞 / 评论]
-- 内容核心：[简要描述内容]
-
-请拆解：
-1. 钩子分析：前3秒/封面用了什么钩子（好奇/恐惧/利益/情绪/反差）
-2. 结构拆解：按时间段拆解（0-3秒/3-15秒/15-30秒）
-3. 情绪曲线：标注高潮点
-4. 爆款因子：火的3个核心原因
-5. 可复用模板：提取一个内容公式
-6. 我的改编建议：如何用到[你的赛道]</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-breakdown')">📋 复制提示词</button></div>
-    </div>
-    <div class="prompt-card">
-      <h3><span class="num">15</span>热点借势判断</h3>
-      <div class="desc">热点出现时快速判断是否值得跟进，以及怎么切入。</div>
-      <textarea id="prompt-hotjudge" readonly>你是热点营销策划师。
-
-热点信息：
-- 热点事件：[简要描述]
-- 热点来源：[微博热搜 / 抖音热榜 / 小红书热点]
-- 当前热度：[刚爆发2小时内 / 发酵中 / 大面积刷屏]
-- 我的赛道：[填入]
-
-请分析：
-1. 生命周期预判：还能火多久（小时/天/周）
-2. 赛道匹配度（1-10分）
-3. 风险评估：争议/负面/封号风险
-4. 内容方向建议：3个具体选题角度
-5. 时效要求：最晚何时发出才有流量
-6. 最终建议：跟 / 不跟 / 观望</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-hotjudge')">📋 复制提示词</button></div>
-    </div>
-    <div class="prompt-card">
-      <h3><span class="num">14</span>竞品分析</h3>
-      <div class="desc">深度分析对标账号的内容策略和变现模式，找到差异化切入点。</div>
-      <textarea id="prompt-compete" readonly>你是竞品分析专家。
-
-对标账号信息：
-- 平台：[抖音 / 小红书]
-- 账号名：[填入]
-- 粉丝量：[填入]
-- 我的主赛道：[填入]
-
-请分析：
-1. 内容拆解：近30天主题分布+爆款特征
-2. 人设分析：定位/视觉/语言风格
-3. 运营策略：频率/时间/互动
-4. 变现模式：带货/广告/付费/引流
-5. 差异化机会：可切入的角度
-6. 可直接借鉴的3个做法</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-compete')">📋 复制提示词</button></div>
-    </div>
-  </div>
 
   </div>
 <div class="topic-step active" id="ts-2">
@@ -888,83 +815,6 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
     </div>
     <div class="benchmark-result" id="bf-result" style="display:none;"></div>
   </div>
-  <div class="prompt-panel">
-    <div class="prompt-card">
-      <h3><span class="num">1</span>账号人设定位</h3>
-      <div class="desc">输出完整定位方案：人设三要素+一句话定位+内容支柱+视觉风格+对标账号。</div>
-      <textarea id="prompt-position" readonly>你是一位拥有5年经验的社交媒体账号策划师。
-
-我的基本信息：
-- 平台：[抖音 / 小红书 / 视频号 / B站]
-- 赛道/领域：[美食探店 / 职场成长 / 母婴育儿 / 知识科普]
-- 我的优势：[填入你的独特优势]
-- 目标受众：[填入目标人群描述]
-
-请输出：
-1. 账号人设三要素：身份标签+性格特征+差异化记忆点
-2. 一句话定位（15字以内）
-3. 内容pillars（3-5个方向，每个附2个选题示例）
-4. 视觉风格建议（色调/字体/封面排版）
-5. 参考对标账号（2-3个，说明可借鉴点）</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-position')">📋 复制提示词</button></div>
-    </div>
-    <div class="prompt-card">
-      <h3><span class="num">2</span>目标受众画像</h3>
-      <div class="desc">深度描绘受众：基础画像+内容偏好+核心痛点+情绪触发词+消费意愿。</div>
-      <textarea id="prompt-audience" readonly>你是用户研究专家。
-
-- 我的赛道：[填入赛道]
-- 我的平台：[填入平台]
-- 初步目标人群：[填入目标人群描述]
-
-请输出受众画像：
-1. 基础画像：年龄段/性别比/城市/职业/收入区间
-2. 内容偏好：喜欢什么类型/观看时长/活跃时段
-3. 核心痛点：5个最让他们焦虑或困扰的问题
-4. 情绪触发词：10个能引发共鸣/转发的关键词
-5. 消费意愿：对什么有付费意愿+价格敏感度
-6. 平台行为：搜索vs推荐/评论习惯/收藏vs点赞比例</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-audience')">📋 复制提示词</button></div>
-    </div>
-    <div class="prompt-card">
-      <h3><span class="num">17</span>平台规则速查</h3>
-      <div class="desc">梳理平台最新规则红线：违禁内容+限流特征+违禁词+广告规则+申诉渠道。</div>
-      <textarea id="prompt-rules" readonly>你是社交媒体合规顾问。
-
-我的赛道：[填入]
-平台：[抖音 / 小红书 / 视频号]
-
-请输出：
-1. 绝对禁止的内容类型（会导致封号）
-2. 容易被限流的内容特征
-3. 违禁词/敏感词清单（按赛道分类）
-4. 广告/带货相关规则（报备/挂链接合规）
-5. 申诉渠道和恢复流程
-6. 近期平台政策变化</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-rules')">📋 复制提示词</button></div>
-    </div>
-    <div class="prompt-card">
-      <h3><span class="num">18</span>变现路径规划</h3>
-      <div class="desc">从0到100万粉各阶段变现策略+选品建议+广告报价参考+私域引流方案。</div>
-      <textarea id="prompt-monetize" readonly>你是社交媒体商业化顾问。
-
-账号信息：
-- 平台：[填入]
-- 赛道：[填入]
-- 当前粉丝：[X]
-- 内容类型：[填入]
-- 已有变现方式：[无 / 广告 / 带货 / 知识付费 / 其他]
-
-请输出：
-1. 变现成熟度评估
-2. 变现路径图：1000粉→1万粉→10万粉→100万粉各阶段策略
-3. 选品/选商建议（品类+佣金区间）
-4. 广告报价参考（按当前粉丝量级合理报价）
-5. 私域引流方案
-6. 变现内容占比建议（多少变现vs价值内容，避免掉粉）</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-monetize')">📋 复制提示词</button></div>
-    </div>
-  </div>
 
 </div>  
 </div>
@@ -979,7 +829,6 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
     <button class="cw-tab-btn" onclick="switchCwPane('fw',this)">🚫 违禁词</button>
     <button class="cw-tab-btn" onclick="switchCwPane('mx',this)">📊 内容矩阵</button>
     <button class="cw-tab-btn" onclick="switchCwPane('ps',this)">🕐 发布策略</button>
-    <button class="cw-tab-btn" onclick="switchCwPane('tpl',this)">📋 模板</button>
   </div>
 <div class="cw-pane active" id="cw-gen">
 <div class="benchmark-panel">
@@ -1162,84 +1011,6 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
     </div>
     </div>
   </details>
-</div>
-<div class="cw-pane" id="cw-tpl">
-  <div class="prompt-panel">
-    <div class="prompt-card">
-      <h3><span class="num">5</span>短视频拍摄脚本生成</h3>
-      <div class="desc">按分镜表输出完整脚本：镜头 | 时长 | 画面 | 台词 | 字幕 | BGM。</div>
-      <textarea id="prompt-script" readonly>你是专业短视频编剧。
-
-脚本需求：
-- 平台：[抖音 / 视频号 / 小红书视频]
-- 选题：[填入选题]
-- 视频时长：[15秒 / 30秒 / 60秒 / 90秒]
-- 内容形式：[口播 / 剧情 / 教程 / 测评 / vlog]
-- 风格调性：[专业干货 / 搞笑 / 治愈 / 犀利吐槽 / 知识科普]
-- 出镜人数：[1人 / 2人 / 不出镜]
-
-请按表格输出完整脚本：
-| 镜头 | 时长 | 画面描述 | 台词/旁白 | 字幕/贴纸 | BGM建议 |
-
-要求：前3秒强钩子 + 每15秒信息增量 + 结尾互动引导 + 台词口语化</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-script')">📋 复制提示词</button></div>
-    </div>
-    <div class="prompt-card">
-      <h3><span class="num">6</span>小红书图文笔记文案</h3>
-      <div class="desc">完整种草笔记：5个标题选项+正文+图片文案+SEO关键词+话题标签。</div>
-      <textarea id="prompt-xhs" readonly>你是小红书爆款笔记写手。
-
-笔记需求：
-- 主题：[填入主题]
-- 笔记类型：[干货教程 / 好物推荐 / 探店打卡 / 测评对比]
-- 目标关键词：[填入2-3个SEO关键词]
-- 图片数量：[3图 / 6图 / 9图]
-- 人设调性：[知性姐姐 / 搞钱女孩 / 宝妈 / 学生党]
-
-请输出：
-【标题】5个选项（数字型/痛点型/好奇型/对比型/身份认同型）
-【正文】500-800字（开头痛点→分段干货→结尾引导互动）
-【图片文案】每张图封面文字+内容建议
-【话题标签】5-8个，大流量+精准话题组合</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-xhs')">📋 复制提示词</button></div>
-    </div>
-    <div class="prompt-card">
-      <h3><span class="num">7</span>标题生成器（通用）</h3>
-      <div class="desc">7种策略生成20个标题，标注字数+策略类型+点击吸引力+风险词检查。</div>
-      <textarea id="prompt-title" readonly>你是社交媒体标题专家。
-
-内容信息：
-- 平台：[抖音 / 小红书 / 视频号]
-- 内容主题：[填入主题]
-- 核心价值：[知识/快乐/省钱/避坑/灵感]
-- 目标情绪：[震惊/温暖/学到了/被治愈/想讨论]
-
-请生成20个标题，策略覆盖（每种2-3个）：
-反常识型 / 数字清单型 / 痛点放大型 / 身份标签型 / 悬念好奇型 / 对比反转型 / 利益驱动型
-
-每个标题标注：字数 | 策略类型 | 点击吸引力(1-5星) | 是否含违禁/限流风险词</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-title')">📋 复制提示词</button></div>
-    </div>
-    <div class="prompt-card">
-      <h3><span class="num">8</span>话题标签组合</h3>
-      <div class="desc">三套标签方案（冲量型/精准型/均衡型），标注流量级别S/A/B/C。</div>
-      <textarea id="prompt-tags" readonly>你是社交媒体流量运营专家。
-
-内容信息：
-- 平台：[抖音 / 小红书 / 视频号]
-- 内容主题：[填入主题]
-- 赛道：[填入赛道]
-- 目标：[涨粉 / 引流 / 品牌曝光 / 带货转化]
-
-请生成3套标签方案（每套8-12个）：
-方案A - 冲量型：大流量泛话题为主
-方案B - 精准型：垂直精准话题为主
-方案C - 均衡型：大:中:精准 = 3:4:3
-
-每个标签标注：预估流量级别(S/A/B/C) | 标签类型（热点/常青/品牌/活动）</textarea>
-      <div class="btn-row"><button class="btn" onclick="copyPrompt('prompt-tags')">📋 复制提示词</button></div>
-    </div>
-  </div>
 </div>
 </div><div class="tab-content" id="tab-ops">
   <div class="cw-subtabs">
@@ -1681,6 +1452,47 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
     </div>
   </div>
 </div>
+
+<!-- TAB 9: AI 助手 -->
+<div class="tab-content" id="tab-ai">
+  <div class="benchmark-panel">
+    <div class="benchmark-header">
+      <h3>💬 AI 助手</h3>
+      <span class="bf-tip">选模板填入或直接提问，AI 即时回复（DeepSeek）· 对话与右下角悬浮窗独立保存</span>
+    </div>
+    <div class="chat-quick" style="margin-bottom:8px;">
+      <button class="btn" onclick="chatQuick('ai','帮我生成5个爆款选题，赛道是')">🎯 选题</button>
+      <button class="btn" onclick="chatQuick('ai','帮我写一条小红书种草文案，主题是')">✍️ 文案</button>
+      <button class="btn" onclick="chatQuick('ai','帮我分析这条数据：播放5000点赞200评论50')">📊 复盘</button>
+      <button class="btn" onclick="chatQuick('ai','今天有什么热点适合蹭，赛道是')">🔥 热点</button>
+    </div>
+    <div class="chat-tpl tpl-flat">
+      <div class="tpl-group"><span class="tpl-label">① 账号定位 · 点一下填入模板，填空后发送</span>
+        <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-position')">🎭 人设定位</button>
+        <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-audience')">👥 受众画像</button>
+        <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-rules')">🚫 平台规则</button>
+        <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-monetize')">💰 变现规划</button>
+      </div>
+      <div class="tpl-group"><span class="tpl-label">② AI 选题 · 点一下填入模板，填空后发送</span>
+        <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-topic')">💥 爆款挖掘</button>
+        <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-breakdown')">🔍 选题拆解</button>
+        <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-hotjudge')">🔥 热点借势</button>
+        <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-compete')">🕵️ 竞品分析</button>
+      </div>
+      <div class="tpl-group"><span class="tpl-label">③ 内容创作 · 点一下填入模板，填空后发送</span>
+        <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-script')">🎬 脚本生成</button>
+        <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-xhs')">📕 小红书文案</button>
+        <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-title')">🏷️ 起标题</button>
+        <button class="btn btn-tpl" onclick="chatQuickTpl('ai','prompt-tags')">#️⃣ 标签组合</button>
+      </div>
+    </div>
+    <div class="chat-box" id="chatbox-ai"></div>
+    <div class="chat-input-row" style="margin-top:10px;">
+      <textarea id="chatinput-ai" class="mini-textarea" placeholder="问工作台 AI 助手… Enter 发送" style="min-height:52px;" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend('ai');}"></textarea>
+      <button class="btn btn-primary" onclick="chatSend('ai')">发送</button>
+    </div>
+  </div>
+</div>
 </main>
 </div>
 
@@ -1694,6 +1506,26 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
     <button class="btn" onclick="chatQuick('global','帮我写一条小红书种草文案，主题是')">✍️ 文案</button>
     <button class="btn" onclick="chatQuick('global','帮我分析这条数据：播放5000点赞200评论50')">📊 复盘</button>
     <button class="btn" onclick="chatQuick('global','今天有什么热点适合蹭，赛道是')">🔥 热点</button>
+  </div>
+  <div class="chat-tpl">
+    <div class="tpl-group"><span class="tpl-label">① 账号定位 · 点一下填入模板，填空后发送</span>
+      <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-position')">🎭 人设定位</button>
+      <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-audience')">👥 受众画像</button>
+      <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-rules')">🚫 平台规则</button>
+      <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-monetize')">💰 变现规划</button>
+    </div>
+    <div class="tpl-group"><span class="tpl-label">② AI 选题 · 点一下填入模板，填空后发送</span>
+      <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-topic')">💥 爆款挖掘</button>
+      <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-breakdown')">🔍 选题拆解</button>
+      <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-hotjudge')">🔥 热点借势</button>
+      <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-compete')">🕵️ 竞品分析</button>
+    </div>
+    <div class="tpl-group"><span class="tpl-label">③ 内容创作 · 点一下填入模板，填空后发送</span>
+      <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-script')">🎬 脚本生成</button>
+      <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-xhs')">📕 小红书文案</button>
+      <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-title')">🏷️ 起标题</button>
+      <button class="btn btn-tpl" onclick="chatQuickTpl('global','prompt-tags')">#️⃣ 标签组合</button>
+    </div>
   </div>
   <div class="chat-box" id="chatbox-global"></div>
   <div class="chat-input-row">
@@ -2497,6 +2329,40 @@ async function genTitles(){
   finally{ btn.disabled=false; }
 }
 
+// ========== 发布策略：AI 生成（内容创作 → 🕐 发布策略） ==========
+function psQuick(pre){
+  document.getElementById('ps-input').value = pre;
+  document.getElementById('ps-input').focus();
+}
+function genPubStrategy(){
+  const text = document.getElementById('ps-input').value.trim();
+  if(!text){ alert('请先描述你的情况（平台 / 赛道 / 目标 / 每周产出量）'); return; }
+  const status = document.getElementById('ps-status');
+  const box = document.getElementById('ps-result');
+  const apiKey = getDsKey('hot-apikey');
+  if(!apiKey){ alert('请先在「实时热点」或「设置」配置 DeepSeek API Key'); return; }
+  status.innerHTML = '<span class="spinner"></span>生成中…';
+  box.style.display = 'block';
+  box.innerHTML = '<div class="bf-loading"><span class="spinner"></span>AI 正在制定发布策略，请稍候…</div>';
+  const prompt = '你是社交媒体运营策略师。\n\n我的情况：' + text + '\n\n请按以下五部分输出可执行的发布策略（用清晰 Markdown）：\n1. 最佳发布时间表（工作日vs周末，具体到时间段）\n2. 发布频率建议（每天/每周/固定栏目日）\n3. 30天内容排期模板（表格：日期/星期/内容类型/选题方向/发布时间）\n4. 多平台分发策略（同一内容不同平台的差异化）\n5. 冷启动期特殊策略（前10条怎么排）';
+  fetch(DEEPSEEK_API, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+    body: JSON.stringify({model:DEEPSEEK_MODEL, messages:[{role:'user',content:prompt}], stream:false})
+  })
+  .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+  .then(function(d){
+    const md = d.choices && d.choices[0] && d.choices[0].message ? d.choices[0].message.content : '';
+    if(!md) throw new Error('返回内容为空');
+    box.innerHTML = bfRenderMarkdown(md);
+    status.innerHTML = '✅ 发布策略已生成';
+  })
+  .catch(function(e){
+    box.innerHTML = '<div class="bf-error">❌ 生成失败：'+bfEscapeHtml(e.message)+'<br>请检查 DeepSeek API Key 是否正确、网络是否可用。</div>';
+    status.innerHTML = '';
+  });
+}
+
 // ========== 新增：发布策略（创作排期 / 数据复盘） ==========
 let schedItems = loadJSON('wb_pub_schedule', []);
 const SCHED_STEPS=[['outline','大纲'],['script','脚本'],['shoot','拍摄'],['edit','剪辑'],['publish','发布']];
@@ -2900,7 +2766,8 @@ function delEvent(id){ nfEvents=nfEvents.filter(function(x){return x.id!==id;});
 
 // ========== AI 助手（融入各功能模块） ==========
 const CHAT_DEFS = {
-  global:{sys:'你是「自媒体工作台」的 AI 运营助手，精通抖音/小红书/视频号/B站运营，覆盖选题/文案/标题/拆爆款/复盘/热点/排期。回答简洁、实用、可执行，中文输出，适度用 Markdown。',hello:'我是工作台 AI 助手：选题、文案、标题、拆爆款、复盘、热点……直接问我。'}
+  global:{sys:'你是「自媒体工作台」的 AI 运营助手，精通抖音/小红书/视频号/B站运营，覆盖选题/文案/标题/拆爆款/复盘/热点/排期。回答简洁、实用、可执行，中文输出，适度用 Markdown。',hello:'我是工作台 AI 助手：选题、文案、标题、拆爆款、复盘、热点……直接问我。'},
+  ai:{sys:'你是「自媒体工作台」的 AI 运营助手，精通抖音/小红书/视频号/B站运营，覆盖选题/文案/标题/拆爆款/复盘/热点/排期。回答简洁、实用、可执行，中文输出，适度用 Markdown。',hello:'我是工作台 AI 助手：选题、文案、标题、拆爆款、复盘、热点……直接问我。'}
 };
 let chatState = {};
 function toggleFab(){ document.getElementById('fabPop').classList.toggle('open'); }
@@ -2922,6 +2789,181 @@ function renderChatBox(key){
 function chatQuick(key, pre){
   document.getElementById('chatinput-' + key).value = pre;
   document.getElementById('chatinput-' + key).focus();
+}
+const CHAT_TPLS = {
+'prompt-position':`你是一位拥有5年经验的社交媒体账号策划师。
+
+我的基本信息：
+- 平台：[抖音 / 小红书 / 视频号 / B站]
+- 赛道/领域：[美食探店 / 职场成长 / 母婴育儿 / 知识科普]
+- 我的优势：[填入你的独特优势]
+- 目标受众：[填入目标人群描述]
+
+请输出：
+1. 账号人设三要素：身份标签+性格特征+差异化记忆点
+2. 一句话定位（15字以内）
+3. 内容pillars（3-5个方向，每个附2个选题示例）
+4. 视觉风格建议（色调/字体/封面排版）
+5. 参考对标账号（2-3个，说明可借鉴点）`,
+'prompt-audience':`你是用户研究专家。
+
+- 我的赛道：[填入赛道]
+- 我的平台：[填入平台]
+- 初步目标人群：[填入目标人群描述]
+
+请输出受众画像：
+1. 基础画像：年龄段/性别比/城市/职业/收入区间
+2. 内容偏好：喜欢什么类型/观看时长/活跃时段
+3. 核心痛点：5个最让他们焦虑或困扰的问题
+4. 情绪触发词：10个能引发共鸣/转发的关键词
+5. 消费意愿：对什么有付费意愿+价格敏感度
+6. 平台行为：搜索vs推荐/评论习惯/收藏vs点赞比例`,
+'prompt-rules':`你是社交媒体合规顾问。
+
+我的赛道：[填入]
+平台：[抖音 / 小红书 / 视频号]
+
+请输出：
+1. 绝对禁止的内容类型（会导致封号）
+2. 容易被限流的内容特征
+3. 违禁词/敏感词清单（按赛道分类）
+4. 广告/带货相关规则（报备/挂链接合规）
+5. 申诉渠道和恢复流程
+6. 近期平台政策变化`,
+'prompt-monetize':`你是社交媒体商业化顾问。
+
+账号信息：
+- 平台：[填入]
+- 赛道：[填入]
+- 当前粉丝：[X]
+- 内容类型：[填入]
+- 已有变现方式：[无 / 广告 / 带货 / 知识付费 / 其他]
+
+请输出：
+1. 变现成熟度评估
+2. 变现路径图：1000粉→1万粉→10万粉→100万粉各阶段策略
+3. 选品/选商建议（品类+佣金区间）
+4. 广告报价参考（按当前粉丝量级合理报价）
+5. 私域引流方案
+6. 变现内容占比建议（多少变现vs价值内容，避免掉粉）`,
+'prompt-topic':`你是一位爆款内容选题分析师。
+
+当前信息：
+- 平台：[抖音 / 小红书 / 视频号]
+- 赛道：[填入你的赛道]
+- 账号定位：[填入一句话定位]
+- 近期热点：[AI公司收购旧书销毁 / C罗结婚 / 一箭双星 / A股大涨 / 苹果5万亿]
+
+请输出10个爆款选题，每个包含：
+1. 选题标题（吸引眼球，但不过度标题党）
+2. 爆款逻辑（情绪共鸣 / 实用价值 / 猎奇心理 / 争议性 / 蹭热点）
+3. 内容形式建议（口播 / 剧情 / 教程 / 测评 / vlog / 图文）
+4. 预估爆款指数（1-10分）
+
+选题要求：3个蹭热点 + 4个常青 + 3个争议/互动选题`,
+'prompt-breakdown':`你是短视频爆款拆解专家。
+
+爆款内容信息：
+- 平台：[抖音 / 小红书]
+- 内容标题：[填入标题]
+- 内容形式：[口播 / 剧情 / 教程]
+- 大致数据：[播放量 / 点赞 / 评论]
+- 内容核心：[简要描述内容]
+
+请拆解：
+1. 钩子分析：前3秒/封面用了什么钩子（好奇/恐惧/利益/情绪/反差）
+2. 结构拆解：按时间段拆解（0-3秒/3-15秒/15-30秒）
+3. 情绪曲线：标注高潮点
+4. 爆款因子：火的3个核心原因
+5. 可复用模板：提取一个内容公式
+6. 我的改编建议：如何用到[你的赛道]`,
+'prompt-hotjudge':`你是热点营销策划师。
+
+热点信息：
+- 热点事件：[简要描述]
+- 热点来源：[微博热搜 / 抖音热榜 / 小红书热点]
+- 当前热度：[刚爆发2小时内 / 发酵中 / 大面积刷屏]
+- 我的赛道：[填入]
+
+请分析：
+1. 生命周期预判：还能火多久（小时/天/周）
+2. 赛道匹配度（1-10分）
+3. 风险评估：争议/负面/封号风险
+4. 内容方向建议：3个具体选题角度
+5. 时效要求：最晚何时发出才有流量
+6. 最终建议：跟 / 不跟 / 观望`,
+'prompt-compete':`你是竞品分析专家。
+
+对标账号信息：
+- 平台：[抖音 / 小红书]
+- 账号名：[填入]
+- 粉丝量：[填入]
+- 我的主赛道：[填入]
+
+请分析：
+1. 内容拆解：近30天主题分布+爆款特征
+2. 人设分析：定位/视觉/语言风格
+3. 运营策略：频率/时间/互动
+4. 变现模式：带货/广告/付费/引流
+5. 差异化机会：可切入的角度
+6. 可直接借鉴的3个做法`,
+'prompt-script':`你是专业短视频编剧。
+
+脚本需求：
+- 平台：[抖音 / 视频号 / 小红书视频]
+- 选题：[填入选题]
+- 视频时长：[15秒 / 30秒 / 60秒 / 90秒]
+- 内容形式：[口播 / 剧情 / 教程 / 测评 / vlog]
+- 风格调性：[专业干货 / 搞笑 / 治愈 / 犀利吐槽 / 知识科普]
+- 出镜人数：[1人 / 2人 / 不出镜]
+
+请按表格输出完整脚本：
+| 镜头 | 时长 | 画面描述 | 台词/旁白 | 字幕/贴纸 | BGM建议 |
+
+要求：前3秒强钩子 + 每15秒信息增量 + 结尾互动引导 + 台词口语化`,
+'prompt-xhs':`你是小红书爆款笔记写手。
+
+笔记需求：
+- 主题：[填入主题]
+- 笔记类型：[干货教程 / 好物推荐 / 探店打卡 / 测评对比]
+- 目标关键词：[填入2-3个SEO关键词]
+- 图片数量：[3图 / 6图 / 9图]
+- 人设调性：[知性姐姐 / 搞钱女孩 / 宝妈 / 学生党]
+
+请输出：
+【标题】5个选项（数字型/痛点型/好奇型/对比型/身份认同型）
+【正文】500-800字（开头痛点→分段干货→结尾引导互动）
+【图片文案】每张图封面文字+内容建议
+【话题标签】5-8个，大流量+精准话题组合`,
+'prompt-title':`你是社交媒体标题专家。
+
+内容信息：
+- 平台：[抖音 / 小红书 / 视频号]
+- 内容主题：[填入主题]
+- 核心价值：[知识/快乐/省钱/避坑/灵感]
+- 目标情绪：[震惊/温暖/学到了/被治愈/想讨论]
+
+请生成20个标题，策略覆盖（每种2-3个）：
+反常识型 / 数字清单型 / 痛点放大型 / 身份标签型 / 悬念好奇型 / 对比反转型 / 利益驱动型
+
+每个标题标注：字数 | 策略类型 | 点击吸引力(1-5星) | 是否含违禁/限流风险词`,
+'prompt-tags':`你是社交媒体流量运营专家。
+
+内容信息：
+- 平台：[抖音 / 小红书 / 视频号]
+- 内容主题：[填入主题]
+- 赛道：[填入赛道]
+- 目标：[涨粉 / 引流 / 品牌曝光 / 带货转化]
+
+请生成3套标签方案（每套8-12个）：
+方案A - 冲量型：大流量泛话题为主
+方案B - 精准型：垂直精准话题为主
+方案C - 均衡型：大:中:精准 = 3:4:3
+
+每个标签标注：预估流量级别(S/A/B/C) | 标签类型（热点/常青/品牌/活动）`
+};
+function chatQuickTpl(key, tplId){
+  chatQuick(key, CHAT_TPLS[tplId] || '');
 }
 async function chatSend(key){
   const input = document.getElementById('chatinput-' + key);
@@ -3431,6 +3473,7 @@ renderTrendPanel();
 renderTopics(); renderMaterials(); renderSched(); renderReviews(); refreshBgmPick();
 renderNurture(); renderFollows(); renderObserve(); renderEvents();
 renderChatBox('global');
+renderChatBox('ai');
 document.getElementById('set-apikey').value = localStorage.getItem('bf_deepseek_key')||'';
 document.getElementById('pub-date').value = todayStr();
 renderCalAll();
