@@ -569,12 +569,12 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
   <div class="benchmark-panel ar-panel">
     <div class="benchmark-header">
       <h3>🔎 ① agent-reach 实时抓取 <span class="ar-beta">本地桥接</span></h3>
-      <span class="bf-tip">连接本机 agent-reach 桥接服务，真实抓取平台实时内容（当前已接通 B站，更多平台按提示解锁）。手机访问时桥接地址填电脑局域网 IP。</span>
+      <span class="bf-tip">连接本机 agent-reach 桥接服务，真实抓取平台实时内容（当前已接通 B站，更多平台按提示解锁）。<b>手机/其他设备访问</b>：桥接地址改填电脑局域网 IP（如 http://172.20.10.4:8799，需与电脑同一 Wi-Fi），填一次自动记住；电脑本机用默认 127.0.0.1 即可。若电脑开了 Clash/VPN 等代理，请把 127.0.0.1 加入代理绕过名单。</span>
     </div>
     <div class="bf-row">
       <div class="bf-item" style="flex:2;">
         <label>桥接地址</label>
-        <input id="ar-url" value="http://127.0.0.1:8799" placeholder="http://127.0.0.1:8799">
+        <input id="ar-url" value="http://127.0.0.1:8799" placeholder="http://127.0.0.1:8799" onchange="saveBridgeUrls()">
       </div>
       <div class="bf-item">
         <label>平台</label>
@@ -614,14 +614,14 @@ details.fold-card .fold-body .benchmark-panel{margin-bottom:0;}
   <div class="benchmark-panel xhs-panel">
     <div class="benchmark-header">
       <h3>📕 小红书采集 <span class="ar-beta">Spider_XHS 采集</span></h3>
-      <span class="bf-tip">小红书平台专用采集器（纯 HTTP 签名，比 agent-reach 快）。连接本机 Spider_XHS 桥接服务（python xhs_bridge.py）：搜索笔记 / 笔记详情(无水印图&视频) / 用户主页笔记 / 评论导出。手机访问时地址填电脑局域网 IP。</span>
+      <span class="bf-tip">小红书平台专用采集器（纯 HTTP 签名，比 agent-reach 快）。连接本机 Spider_XHS 桥接服务（python xhs_bridge.py）：搜索笔记 / 笔记详情(无水印图&视频) / 用户主页笔记 / 评论导出。<b>手机/其他设备访问</b>：地址改填电脑局域网 IP（如 http://172.20.10.4:8811，同一 Wi-Fi），填一次自动记住。</span>
     </div>
 
     <!-- 桥接与登录 -->
     <div class="bf-row">
       <div class="bf-item" style="flex:2;">
         <label>桥接地址</label>
-        <input id="xhs-url" value="http://127.0.0.1:8811" placeholder="http://127.0.0.1:8811">
+        <input id="xhs-url" value="http://127.0.0.1:8811" placeholder="http://127.0.0.1:8811" onchange="saveBridgeUrls()">
       </div>
       <div class="bf-item">
         <label>登录状态</label>
@@ -3603,6 +3603,20 @@ setTimeout(function(){ arTest(); }, 1200);
 // ========== 小红书采集（Spider_XHS 本地桥接） ==========
 const XHS_STORE = 'wb_xhs_capture';
 function xhsBase(){ return (document.getElementById('xhs-url').value.trim()||'http://127.0.0.1:8811').replace(/\/+$/,''); }
+// 桥接地址记忆：手机填过局域网 IP 后自动保存，下次打开不用重填
+function saveBridgeUrls(){
+  try{
+    localStorage.setItem('wb_ar_url', document.getElementById('ar-url').value.trim());
+    localStorage.setItem('wb_xhs_url', document.getElementById('xhs-url').value.trim());
+  }catch(e){}
+}
+(function(){
+  try{
+    var a=localStorage.getItem('wb_ar_url'), x=localStorage.getItem('wb_xhs_url');
+    if(a) document.getElementById('ar-url').value=a;
+    if(x) document.getElementById('xhs-url').value=x;
+  }catch(e){}
+})();
 function xhsSt(id,msg){ const el=document.getElementById(id); if(el) el.textContent=msg; }
 function xhsErr(m){ return '<div class="bf-error">❌ '+arEsc(m)+'</div>'; }
 
